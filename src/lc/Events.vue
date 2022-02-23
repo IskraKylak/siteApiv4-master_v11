@@ -1,0 +1,65 @@
+<template>
+  <div class="wrap_preloader lc" v-if="loading">
+    <preloader :width="90" :height="90"></preloader>
+  </div>
+  <div class="lc_content" v-if="myAcc.role === 'admin' && !loading">
+    <TableBase/>
+
+    <div class="box-btn-plus">
+      <button @click="modalValidate = !this.modalValidate" class="btn-plus" >
+        +
+      </button>
+    </div>
+    <ModalAddEvent v-if="modalValidate" @close="closeModal()"/>
+  </div>
+</template>
+<script>
+import TableBase from '@/components/TableBase.vue'
+import axios from 'axios'
+import preloader from '@/components/UI/Preloader.vue'
+import ModalAddEvent from '@/components/ModalAddEvent.vue'
+export default {
+  data () {
+    return {
+      myAcc: [],
+      loading: false,
+      modalValidate: false
+    }
+  },
+  components: {
+    TableBase,
+    preloader,
+    ModalAddEvent
+  },
+  created () {
+    this.getNotify()
+  },
+  methods: {
+    closeModal () {
+      this.modalValidate = false
+      this.getNotify()
+    },
+    async getNotify() {
+      this.loading = true
+      await axios({
+        method: 'GET',
+        url: ('https://asprof-test.azurewebsites.net/api/me/'),
+        headers: {
+          'Authorization': 'Bearer ' + this.$store.getters.getToken
+        }
+      }).then(respons => {
+        let res = respons.data
+        this.$store.dispatch('setMyAcc', res)
+        // this.messages = res;
+      })
+        .catch(error => {
+          console.log(error)
+        })
+        .finally(() => (this.loading = false))
+      this.myAcc = this.$store.getters.getMyAcc
+    }
+  }
+}
+</script>
+<style scoped src="@/assets/lc/css/style.css">
+</style>

@@ -1,0 +1,338 @@
+<template>
+  <div class="wrap_preloader lc" v-if="loading">
+    <preloader :width="90" :height="90"></preloader>
+  </div>
+  <div v-if="!loading" class="wrap_table_component">
+    <div class="import-excel">
+      <h2 class="main_title">Користувачі</h2>
+      <a href="https://asprof-test.azurewebsites.net/api/users/excel/" class="import_btn">ЕКСПОРТ В EXCEL</a>
+    </div>
+    <div class="wrap_search">
+      <input type="search" class="input px:width-25" placeholder="Пошук" v-model="searchInput"
+             @keyup="searchEvent">
+    </div>
+    <div class="wrap_table">
+      <div class="table table_user">
+        <div class="thead">
+          <div class="tr">
+            <div class="th" v-for="th in columns" :key="th">
+              <div>
+                <span @click.prevent="sortByColumn(th.name)">{{ th.text }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tbody">
+          <div class="tr" v-for="td in filteredEntries" :key="td">
+            <div class="td">{{ td.id }}</div>
+            <div class="td">{{ td.full_name }}</div>
+            <div class="td">{{ td.job_name }}</div>
+            <div class="td">{{ td.start_activity_date }}</div>
+            <div class="td">{{ td.phone }}</div>
+            <div class="td">{{ td.email }}</div>
+            <div class="td">
+              <div @click="goToEvent(td.id)" class="icon_svg_table icon_svg_table_edit">
+                <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
+                </svg>
+              </div>
+              <span class="icon_svg_table icon_svg_table_remove">
+            <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
+              d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
+          </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table_foot">
+        <div class="table_length">
+          Total Rows: {{ entries.length }}
+        </div>
+        <div class="table_visible_page">
+          <div>
+            <span>Rows per page:</span>
+            <select v-model="currentEntries" class="select" @change="paginateEntries">
+              <option v-for="se in showEntries" :key="se" :value="se">{{ se }}</option>
+            </select>
+          </div>
+          <div>
+            <div class="start:flex-items">{{ showInfo.from }} - {{ showInfo.to }} of {{ showInfo.of }} entries</div>
+          </div>
+          <div class="pagination_arr">
+            <span :class="['nav-item', { 'disabled': currentPage === 1 }]">
+              <a href="#" class="nav-link"
+                 @click.prevent="(currentPage < 1) ? currentPage = 1 : currentPage -= 1, paginateEntries()">
+                <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
+                  d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"></path></svg>
+              </a>
+            </span>
+            <span :class="['nav-item', { 'disabled': currentPage === allPages }]">
+              <a href="#" class="nav-link"
+                 @click.prevent="(currentPage > allPages) ? currentPage = allPages : currentPage += 1, paginateEntries()">
+                <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
+                  d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path></svg>
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--      <div class="between:flex y:margin-3">-->
+
+  <!--        <div class="end:flex center:items">-->
+  <!--          <ul class="pagination:nav">-->
+  <!--            <li :class="['nav-item', { 'disabled': currentPage === 1 }]">-->
+  <!--              <a href="#" class="nav-link" @click.prevent="currentPage = 1, paginateEntries()">First</a>-->
+  <!--            </li>-->
+  <!--            <li :class="['nav-item', { 'disabled': currentPage === 1 }]">-->
+  <!--              <a href="#" class="nav-link"-->
+  <!--                 @click.prevent="(currentPage < 1) ? currentPage = 1 : currentPage -= 1, paginateEntries()">Prev</a>-->
+  <!--            </li>-->
+  <!--            <li v-for="pagi in showPagination" :key="pagi"-->
+  <!--                :class="['nav-item', {'ellipsis': pagi === '...', 'active': pagi === currentPage}]">-->
+  <!--              <a href="#" class="nav-link" @click.prevent="paginateEvent(pagi)">{{ pagi }}</a>-->
+  <!--            </li>-->
+  <!--            <li :class="['nav-item', { 'disabled': currentPage === allPages }]">-->
+  <!--              <a href="#" class="nav-link"-->
+  <!--                 @click.prevent="(currentPage > allPages) ? currentPage = allPages : currentPage += 1, paginateEntries()">Next</a>-->
+  <!--            </li>-->
+  <!--            <li :class="['nav-item', { 'disabled': currentPage === allPages }]">-->
+  <!--              <a href="#" class="nav-link" @click.prevent="currentPage = allPages, paginateEntries()">Last</a>-->
+  <!--            </li>-->
+  <!--          </ul>-->
+  <!--        </div>-->
+  <!--      </div>-->
+</template>
+<script>
+import { $array } from 'alga-js'
+import axios from 'axios'
+import preloader from '@/components/UI/Preloader.vue'
+
+export default {
+  name: 'DataTable',
+  components: {
+    preloader
+  },
+  data () {
+    return {
+      loading: false,
+      columns: [
+        {
+          name: 'id',
+          text: 'ID'
+        },
+        {
+          name: 'name',
+          text: 'ПІБ'
+        },
+        {
+          name: 'specialty',
+          text: 'Спеціальність'
+        },
+        {
+          name: 'date',
+          text: 'Дата Реєстрації'
+        },
+        {
+          name: 'tel',
+          text: 'Номер телефона'
+        },
+        {
+          name: 'email',
+          text: 'E-mail'
+        },
+        {
+          name: 'action',
+          text: 'Дії'
+        }
+      ],
+      entries: [],
+      showEntries: [5, 10, 25, 50, 100],
+      currentEntries: 10,
+      filteredEntries: [],
+      currentPage: 1,
+      allPages: 1,
+      searchInput: '',
+      searchEntries: [],
+      col: {
+        id: '',
+        name: '',
+        specialty: '',
+        date: '',
+        tel: '',
+        email: '',
+        action: ''
+      },
+      sortcol: {
+        id: '',
+        name: '',
+        specialty: '',
+        date: '',
+        tel: '',
+        email: '',
+        action: ''
+      }
+    }
+  },
+  computed: {
+    // info () {
+    //   return this.$store.getters.getEventsApi
+    // },
+    showInfo () {
+      const getCurrentEntries = (this.searchEntries.length <= 0) ? this.entries : this.searchEntries
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      // this.allPages = $array.pages(this.entries, this.currentEntries)
+      return $array.show(getCurrentEntries, this.currentPage, this.currentEntries)
+    },
+    showPagination () {
+      return $array.pagination(this.allPages, this.currentPage, 3)
+    }
+  },
+  created () {
+    this.getNotify()
+    console.log(this.$store.getters.getEventsApi)
+  },
+  methods: {
+    goToEvent (prodId) {
+      this.$router.push({
+        name: 'lc-updateuser',
+        params: { Pid: prodId }
+      })
+    },
+    async getNotify () {
+      this.loading = true
+      await axios({
+        method: 'GET',
+        url: ('https://asprof-test.azurewebsites.net/api/users/'),
+        headers: {
+          'Authorization': 'Bearer ' + this.$store.getters.getToken
+        }
+      }).then(respons => {
+        let res = respons.data
+        this.$store.dispatch('setUsers', res)
+        // this.messages = res;
+      })
+        .catch(error => {
+          console.log(error)
+        })
+        .finally(() => (this.loading = false))
+      this.entries = this.$store.getters.getUsers
+      // this.paginateData(this.entries)
+      this.filteredEntries = $array.paginate(this.entries, this.currentPage, this.currentEntries)
+      this.allPages = $array.pages(this.entries, this.currentEntries)
+    },
+    paginateEntries () {
+      if (this.searchInput.length >= 3) {
+        this.searchEntries = $array.search(this.entries, this.searchInput)
+        this.paginateData(this.searchEntries)
+        // this.filteredEntries = $array.paginate(this.searchEntries, this.currentPage, this.currentEntries)
+        // this.allPages = $array.pages(this.searchEntries, this.currentEntries)
+      } else {
+        this.searchEntries = []
+        // this.filteredEntries = $array.paginate(this.entries, this.currentPage, this.currentEntries)
+        // this.allPages = $array.pages(this.entries, this.currentEntries)
+        this.searchEntries = []
+        this.paginateData(this.entries)
+        this.col = {
+          name: '',
+          position: '',
+          office: '',
+          extension: '',
+          startdate: '',
+          salary: ''
+        }
+      }
+    },
+    paginateData (data) {
+      this.filteredEntries = $array.paginate(data, this.currentPage, this.currentEntries)
+      this.allPages = $array.pages(data, this.currentEntries)
+    },
+    paginateEvent (page) {
+      this.currentPage = page
+      this.paginateEntries()
+    },
+    searchEvent () {
+      this.currentPage = 1
+      this.paginateEntries()
+    },
+    getCurrentEntries () {
+      return (this.searchEntries.length <= 0) ? this.entries : this.searchEntries
+    },
+    sortByColumn (column) {
+      this.col = {
+        name: '',
+        position: '',
+        office: '',
+        extension: '',
+        startdate: '',
+        salary: ''
+      }
+      let sortedEntries = this.getCurrentEntries()
+      const sortedColumn = this.sortcol[column]
+      if (sortedColumn === '') {
+        this.sortcol[column] = 'asc'
+        sortedEntries = $array.sorted(this.getCurrentEntries(), column, 'asc')
+      } else if (sortedColumn === 'asc') {
+        this.sortcol[column] = 'desc'
+        sortedEntries = $array.sorted(this.getCurrentEntries(), column, 'desc')
+      } else if (sortedColumn === 'desc') {
+        this.sortcol[column] = ''
+      }
+      this.paginateData(sortedEntries)
+    }
+  }
+}
+</script>
+<style scoped src="@/assets/lc/css/table.css">
+</style>
+
+<style>
+.import-excel {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-bottom: 20px
+}
+
+.import_btn {
+  background-color: #1faeea;
+  padding: 8px 22px;
+  font-size: .9375rem;
+  border-radius: 4px;
+  color: #fff;
+  letter-spacing: .02857em;
+  line-height: 1.75;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.import_btn:hover {
+  background-color: #303f9f
+}
+
+.table_static_wrapper {
+  margin-bottom: 170px
+}
+
+.desc_course {
+  height: 113px
+}
+
+.form-bottom {
+  margin-top: 60px
+}
+
+.profile-bottom_title {
+  font-size: 24px;
+  font-weight: 700
+}
+
+</style>
