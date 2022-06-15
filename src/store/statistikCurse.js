@@ -5,8 +5,7 @@ export default {
   mutations: {
     setStatCurs(state, payload) {
       state.statCurse = payload
-    },
-
+    }
   },
   actions: {
     setStatCurs ({commit}, payload) {

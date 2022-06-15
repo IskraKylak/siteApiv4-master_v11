@@ -51,6 +51,19 @@
         <legend>Місце проведення</legend>
         <input type="text" v-model="singleEvent.place" class="profile_input">
       </fieldset>
+      <div class="draft">
+        <input type="checkbox" class="checkbox" id="checkbox3" v-model="singleEvent.is_free"/>
+        <label for="checkbox3">Безкоштовна подія</label>
+      </div>
+      <div class="draft">
+        <input type="checkbox" class="checkbox" id="checkbox2" v-model="singleEvent.need_pay"/>
+        <label for="checkbox2">Платна подія</label>
+      </div>
+
+      <fieldset>
+        <legend>Ціна (грн.)</legend>
+        <input type="text" v-model="singleEvent.price" class="profile_input">
+      </fieldset>
 
       <div class="draft">
         <input type="checkbox" class="checkbox" id="checkbox" v-model="singleEvent.is_draft"/>
@@ -509,6 +522,9 @@ export default {
         registered: this.singleEvent.registered,
         certificate_title: this.singleEvent.certificate_title,
         language: this.singleEvent.language,
+        need_pay: this.singleEvent.need_pay,
+        price: this.singleEvent.price,
+        is_free: this.singleEvent.is_free
         // partners_banner: this.singleEvent.id,
         // media_partners_set: this.singleEvent.id,
         // main_partners_set: this.singleEvent.id,

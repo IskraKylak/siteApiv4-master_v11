@@ -14,6 +14,7 @@ import specialization from './specialization'
 import singleEvent from './singleEvent'
 import user from './user'
 import bmo from './bmo'
+import certificate from './certificate'
 
 export default createStore({
   state: {
@@ -45,6 +46,7 @@ export default createStore({
     specialization,
     singleEvent,
     user,
-    bmo
+    bmo,
+    certificate
   }
 })

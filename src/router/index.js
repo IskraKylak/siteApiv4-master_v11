@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import NotFound from '@/views/404.vue'
 import store from '@/store/index.js'
 
@@ -162,7 +162,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 })
 router.beforeEach((to, from, next) => {

@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="container">
     <div class="wrap_form_reg">
       <h2 class="title_form">РЕЄСТРАЦІЯ</h2>

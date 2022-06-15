@@ -178,13 +178,7 @@ export default {
       }
     },
     showEvents (day) {
-
-      let year = this.title2.split('-')[0]
-      let mounth = this.title2.split('-')[1]
-      if (mounth < 10) {
-        mounth = '0' + mounth
-      }
-      var data = `${year}-${mounth}-${day}`
+      let data = `${this.title2}-${day}`
       this.$emit('showEvents', { data: data })
     },
     init () {

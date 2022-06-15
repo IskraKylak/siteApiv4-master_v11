@@ -644,16 +644,11 @@ body {
 .main_page .section-1 .box_content .box_img img {
   position: absolute;
   top: 0;
-  left: 50%;
-  bottom: 0;
-  -webkit-transform: translate(-50%, 0);
-  -moz-transform: translate(-50%, 0);
-  -o-transform: translate(-50%, 0);
-  -ms-transform: translate(-50%, 0);
-  transform: translate(-50%, 0);
+  left: 0;
   display: block;
   height: 100%;
-  width: auto;
+  width: 100%;
+  object-fit: cover;
 }
 /* line 783, ../sass/screen.scss */
 .main_page .section-1 .box_content .box_text {

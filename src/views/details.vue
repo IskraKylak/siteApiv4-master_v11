@@ -1,39 +1,38 @@
 <template>
-  <div class="wrap_preloader" v-if="loading">
-    <preloader :width="90" :height="90"></preloader>
-  </div>
-  <div v-if="!loading" class="details">
+<!--  <div class="wrap_preloader" v-if="loading">-->
+<!--    <preloader :width="90" :height="90"></preloader>-->
+<!--  </div>-->
+  <div v-if="!loading && product" class="details">
     <div class="event">
       <div>
         <section class="event_section-2" id="1">
           <div class="wrap_img" v-if="product.image != null">
             <img :src="product.image" alt="img"/>
           </div>
-
-        </section>
-        <section class="event_section-3" id="2">
-            <div class="box_content banner_content">
-              <h1 class="">
+          <div class="box_content">
+            <div class="box_left">
+              <h1 class="title_event">
                 {{ product.name }}
               </h1>
-              <div class="box_right">
-                <div class="box box_date">
-                  <p>{{ day }} {{ monthString }} {{ year }}</p>
-                </div>
-                <div class="box box_clock">
-                  <p>{{ time }}</p>
-                </div>
-                <div class="box box_adress">
-                  <p>{{ product.place }}</p>
-                </div>
-              </div>
               <div v-html="product.description" class="description_event">
               </div>
             </div>
-
+            <div class="box_right">
+              <div class="box box_date">
+                <p>{{ day }} {{ monthString }} {{ year }}</p>
+              </div>
+              <div class="box box_clock">
+                <p>{{ time }}</p>
+              </div>
+              <div class="box box_adress">
+                <p>{{ product.place }}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="event_section-3" id="2">
           <div class="box_content">
             <div class="box_left">
-
               <h2>Любі колеги!</h2>
             </div>
             <div class="box_right" v-html="product.text">
@@ -47,7 +46,26 @@
             </div>
             <div class="box_link">
               <a :href="product.event_documents" class="link link-1" target="_blank">Програма</a>
-              <a href="#" class="link link-2">Зареєструватись на семінар</a>
+              <a
+                href="#"
+                v-if="!product.registered"
+                @click.prevent="registerSeminar()"
+                class="link link-2"
+              >
+                Зареєструватись на семінар
+              </a>
+              <h3 class="register" v-else>
+                Ви зареєстровані!
+              </h3>
+              <a
+                href="#"
+                v-if="(product.need_pay && !product.paid)"
+                @click.prevent="goLiqPay()"
+                class="link link-2"
+                target="_blank"
+              >
+                Придбати
+              </a>
             </div>
           </div>
         </section>
@@ -271,13 +289,18 @@
                 </div>
               </div>
             </div>
-            <button v-if="product.test !== null && product.youtube_id_1 !== null" class="btn_testing"
-                    v-on:click="goToTest(proId)" :disabled="btn_on">Пройти тестування
+            <button
+              v-if="product.test !== null && product.youtube_id_1 !== null"
+              class="btn_testing"
+              @click="goToTest(proId)"
+              :disabled="btn_on"
+            >
+              Пройти тестування
             </button>
           </div>
         </section>
-        <section v-if="product.media_partners_set.length !== 0" class="event_section-10" id="7">
-          <div class="box_content">
+        <section v-if="product.media_partners_set" class="event_section-10" id="7">
+          <div class="box_content" v-if="product.media_partners_set.length !== 0">
             <h2>МЕДІА ПАРТНЕРИ</h2>
             <div class="box_partners">
               <div class="box" v-for="(media_partner, idx) in product.media_partners_set" :key="idx">
@@ -293,8 +316,8 @@
             </div>
           </div>
         </section>
-        <section class="event_section-11" v-if="product.main_partners_set.length != 0">
-          <div class="box_content">
+        <section class="event_section-11" v-if="product.main_partners_set">
+          <div class="box_content" v-if="product.main_partners_set.length != 0">
             <div class="box_title">
               <h2>ПАРТНЕРИ</h2>
               <p>
@@ -323,8 +346,8 @@
             </div>
           </div>
         </section>
-        <section class="event_section-12" v-if="product.partners_set.length != 0">
-          <div class="box_content">
+        <section class="event_section-12" v-if="product.partners_set">
+          <div class="box_content" v-if="product.partners_set.length != 0">
             <div class="box box-1" v-for="(partners, idx) in product.partners_set" :key="idx">
               <a :href="partners.link" class="link">
                 <img
@@ -372,10 +395,13 @@
         <img :src="product.image" class="img-fluid" /> -->
       </div>
     </div>
+    <div id="liqpay_checkout"></div>
   </div>
 
 </template>
+
 <script>
+
 import axios from 'axios'
 import preloader from '@/components/UI/Preloader.vue'
 import { YoutubeVue3 } from 'youtube-vue3'
@@ -387,6 +413,7 @@ export default {
   },
   data () {
     return {
+      LiqPay: '',
       btn_on: true,
       form_question1: {
         question: '',
@@ -416,16 +443,24 @@ export default {
   // },
   computed: {
     year () {
-      return this.product.start_date.split('T')[0].split('-')[0]
+      if (this.product.start_date) {
+        return this.product.start_date.split('T')[0].split('-')[0]
+      }
+      return ''
     },
     month () {
-      return this.product.start_date.split('T')[0].split('-')[1]
+      if (this.product.start_date) {
+        return this.product.start_date.split('T')[0].split('-')[1]
+      }
+      return ''
     },
     monthString () {
       for (let i = 1; i < this.mounth_mas.length; i++) {
         // console.log('monthString ' + this.product.start_date.split('T')[0].split('-')[1])
-        if (this.product.start_date.split('T')[0].split('-')[1] == i + 1) {
-          return this.mounth_mas[i]
+        if (this.product.start_date !== undefined) {
+          if (parseInt(this.product.start_date.split('T')[0].split('-')[1]) == i + 1) {
+            return this.mounth_mas[i]
+          }
         }
       }
       return ''
@@ -483,20 +518,67 @@ export default {
         return ''
       }
     },
-    dateEnd() {
+    dateEnd () {
       return this.product.testing_end_date.split('T')[0]
     }
   },
   methods: {
+    async registerSeminar () {
+      await axios({
+        url: `https://asprof-test.azurewebsites.net/api/events/${this.$route.params.Pid}/register/`,
+        method: 'Post',
+        headers: {
+          Authorization: 'Bearer ' + this.$store.getters.getToken
+        }
+      })
+        .then(respons => {
+          this.$message('Вы зареєстровані!')
+        })
+        .catch(error => {
+          console.log(error)
+          this.$message('Помилка')
+        })
+    },
+    async goLiqPay () {
+      await axios({
+        url: `https://asprof-test.azurewebsites.net/api/events/${this.$route.params.Pid}/pay/`,
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + this.$store.getters.getToken
+        }
+      }).then(respons => {
+        this.$message('Ваше питання відправлено')
+        this.LiqPay = respons.data
+        console.log(this.LiqPay.data)
+        console.log(this.LiqPay.signature)
+        // this.messages = res;
+      })
+        .catch(error => {
+          console.log(error)
+          this.$message('Помилка')
+        })
+        .finally(() => (this.loading = false))
+
+      const form = document.createElement('form')
+      form.action = 'https://www.liqpay.ua/api/3/checkout'
+      form.method = 'POST'
+
+      form.innerHTML = `<input type="hidden" name="data" value="${this.LiqPay.data}"/>
+        <input type="hidden" name="signature" value="${this.LiqPay.signature}"/>`
+
+      document.body.append(form)
+
+      form.submit()
+    },
     onEnded () {
       this.btn_on = false
-      console.log("## OnEnded")
+      console.log('## OnEnded')
     },
     onPaused () {
-      console.log("## OnPaused")
+      console.log('## OnPaused')
     },
     onPlayed () {
-      console.log("## OnPlayed")
+      console.log('## OnPlayed')
     },
 
     goToTest (proId) {
@@ -544,15 +626,19 @@ export default {
     },
     async getNotify () {
       this.loading = true
-      await axios
-        .get(`https://asprof-test.azurewebsites.net/api/events/${this.proId}/`)
-        .then(respons => {
-          this.$store.dispatch('setClEvent', respons.data)
-          // this.messages = res;
-          // console.log('res event ' + res)
-        })
+      await axios({
+        url: `https://asprof-test.azurewebsites.net/api/events/${this.proId}/`,
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + this.$store.getters.getToken
+        }
+      }).then(respons => {
+        this.$store.dispatch('setClEvent', respons.data)
+        // this.messages = res;
+      })
         .catch(error => {
           console.log(error)
+          this.$message('Помилка')
         })
         .finally(() => (this.loading = false))
       this.product = this.$store.getters.getClEvent
@@ -616,43 +702,20 @@ export default {
 </style>
 <style lang="scss">
 
-.event_section-2 {
-  min-height: calc(100vh - 168px);
+.event .event_section-4 .box_content .box_link {
+  display: grid;
+  width: 100%;
+  justify-content: center;
+  grid-template-columns: 20% 40% 20%;
+  @media screen and (max-width: 991px) {
+    grid-template-columns: 100%;
+  }
 }
 
-
-.main_page section.event_section-3 {
-  .banner_content {
-    display: flex;
-    flex-direction: column;
-    margin:0 auto 20px auto;
-
-    h1 {
-      color: #1f4e8c;
-      font-size: 60px;
-      text-align: center;
-    }
-
-    .box_right {
-      display: flex;
-      flex-wrap: wrap;
-      .box {
-        margin-right: 15px;
-        p {
-          color: #a64340;
-          font-weight: bold;
-          font-size: 30px;
-        }
-      }
-    }
-
-    .description_event {
-      text-align: left;
-      font-size: 20px;
-      color: #1f4e8c;
-    }
+.main_page  {
+  h3.register {
+    color: #16c60c;
   }
-
 }
 
 button:disabled,
@@ -897,6 +960,27 @@ button[disabled] {
 
 .box_video {
   overflow: hidden;
+}
+
+.event_section-2 .wrap_img:before {
+  content: "";
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 48, 91, 0.4);
+  position: absolute;
+  z-index: 5;
+}
+
+.event_section-2 .box_content {
+  position: relative;
+  z-index: 10;
+}
+
+.event_section-2 .wrap_img {
+  position: relative;
+  z-index: 1;
 }
 
 .event .event_section-2 {

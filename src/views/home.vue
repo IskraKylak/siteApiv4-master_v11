@@ -1,12 +1,12 @@
 <template>
-  <div class="">
+  <div class="" v-if="info">
     <div class="wrap_preloader" v-if="loading">
       <preloader :width="90" :height="90"></preloader>
     </div>
     <div>
       <section class="section-1">
         <div class="box_slider slider-1">
-          <div class="item" v-for="baner in baners" :key="baner">
+          <div class="item" v-for="(baner, idx) in baners" :key="idx">
             <div class="box_content">
               <div class="box_img">
                 <img
@@ -31,7 +31,7 @@
       </section>
       <section class="section-2">
         <div class="box_content">
-          <div class="box_left">
+          <div class="box_left" v-if="info.banner3">
             <img
               width="100%"
               height="auto"
@@ -220,7 +220,7 @@
                 height="150px"
                 loading="lazy"
                 :src="info.first_logo"
-                alt=""
+                alt="img"
                 data-aos="zoom-in"
               />
             </a>
@@ -232,24 +232,24 @@
                 height="93px"
                 loading="lazy"
                 :src="info.second_logo"
-                alt=""
+                alt="img"
                 data-aos="zoom-in"
               />
             </a>
           </div>
-          <!-- <div class="box_mini box_mini-3">
+          <div class="box_mini box_mini-3">
             <a href="#" class="box_img">
               <img
                 width="240px"
                 height="158px"
                 loading="lazy"
-                src="../images/sct-4_logo-3.webp"
-                alt=""
+                :src="info.third_logo"
+                alt="img"
                 data-aos="zoom-in"
                 data-aos-delay="600"
               />
             </a>
-          </div> -->
+          </div>
         </div>
       </section>
     </div>
@@ -305,6 +305,7 @@ export default {
   computed: {
     baners () {
       if (this.banner) {
+        // eslint-disable-next-line vue/no-async-in-computed-properties
         setTimeout(function () {
           initSlider()
           AOS.init()
@@ -362,16 +363,16 @@ var block_show = false
 //   }
 // }
 
-$(window).scroll(function () {
-  scrollTracking()
-})
+// $(window).scroll(function () {
+//   scrollTracking()
+// })
 
 $(function () {
   // isVisible();
   // $(window).scroll(function (event) {
   //   isVisible();
   // });
-  scrollTracking()
+  // scrollTracking()
   $(window).scroll(function () {
     if ($(this).scrollTop() != 0) {
       $('#toTop').fadeIn()
@@ -462,6 +463,18 @@ $(function () {
 <style scoped src="@/assets/css/screen.css">
 </style>
 <style>
+
+.main_page .section-1 div.box_content .box_img img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: auto;
+  transform: none;
+  display: block;
+  height: auto;
+  width: 100%;
+  object-fit: contain;
+}
 
 .visibility {
   display: none!important;

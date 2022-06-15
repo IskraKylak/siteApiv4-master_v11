@@ -2,7 +2,7 @@
   <div class="wrap_preloader" v-if="loading">
     <preloader :width="90" :height="90"></preloader>
   </div>
-  <div class="presidium" v-if="!loading">
+  <div class="presidium" v-if="!loading && info">
     <div class="box_bread_crumbs">
       <div class="box_content container">
         <a href="#">Головна </a><a href="#">{{ info.title }}</a>
@@ -131,5 +131,20 @@ export default {
   justify-content: center;
   align-items: center;
   min-height: 90vh;
+}
+
+.presidium .presidium_section-1 .box_content .box_mini .box_img:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: auto;
+  bottom: auto;
+  opacity: 0;
+  z-index: 1;
+  transition: all .25s linear;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
 }
 </style>

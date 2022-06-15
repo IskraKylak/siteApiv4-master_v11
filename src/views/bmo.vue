@@ -2,7 +2,7 @@
   <div class="wrap_preloader" v-if="loading">
     <preloader :width="90" :height="90"></preloader>
   </div>
-  <div v-if="!loading" class="bmo-bpr active">
+  <div v-if="!loading && bmo" class="bmo-bpr active">
     <section class="section-1">
       <div class="item">
         <a href="#" class="box_content">
@@ -110,15 +110,15 @@ export default {
     this.getNotify()
   },
   methods: {
-    async getNotify() {
+    async getNotify () {
       this.loading = true
       await axios
-        .get("https://asprof-test.azurewebsites.net/api/content/asprofosvit/BmoNpr/?format=json")
+        .get('https://asprof-test.azurewebsites.net/api/content/asprofosvit/BmoNpr/?format=json')
         .then(respons => {
           let res = respons.data
           this.$store.dispatch('setBmoNpr', res)
           // this.messages = res;
-          console.log("res event " + res)
+          // console.log("res event " + res)
         })
         .catch(error => {
           console.log(error)

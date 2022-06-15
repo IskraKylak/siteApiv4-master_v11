@@ -2,7 +2,7 @@
   <div class="wrap_preloader" v-if="loading">
     <preloader :width="90" :height="90"></preloader>
   </div>
-  <div class="experts">
+  <div class="experts" v-if="experts">
     <div class="box_bread_crumbs">
       <div class="box_content container">
         <a href="#">Головна </a><a href="#">Експерти</a>
@@ -65,7 +65,7 @@ export default {
           let res = respons.data
           this.$store.dispatch('setExperts', res)
           // this.messages = res;
-          console.log("res event " + res)
+          // console.log("res event " + res)
         })
         .catch(error => {
           console.log(error)
@@ -94,4 +94,19 @@ export default {
   align-items: center;
   min-height: 90vh;
 }
+.experts .experts_section-1 .box_content .box_mini .box_img:before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  right: auto;
+  bottom: auto;
+  left: 0px;
+  opacity: 0;
+  z-index: 1;
+  transition: all .25s linear;
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+}
+
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="lc_content" v-if="myAcc.role === 'admin'">
     <div class="import-excel">
-      <h2 class="main_title">Статистика по курсам</h2>
+      <h2 class="main_title">Статистика по семінарам</h2>
       <a href="https://asprof-test.azurewebsites.net/api/statistics/events/summary/excel/" class="import_btn">ЕКСПОРТ В EXCEL</a>
     </div>
     <TableStatisticCurses />

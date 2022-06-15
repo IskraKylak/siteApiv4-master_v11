@@ -30,29 +30,38 @@
               <h3>Найближча подія</h3>
               <div class="box_bottom">
                 <div class="box_date">
-                  <p>{{ nearest_event.normal_date }}</p>
+                  <p>12 березня 2020</p>
                 </div>
                 <div class="box_location">
-                  <p>{{ nearest_event.place }}</p>
+                  <p>Київ, Україна</p>
                 </div>
               </div>
             </div>
             <div class="box_text">
               <h4>
-                <a href="#" @click.prevent="goTodetail(nearest_event.id)"
-                >{{ nearest_event.name }}</a
+                <a href="#"
+                >Симуляційний тренінг «Методика інсталяції та догляду
+                  акушерських пессаріїв»</a
                 >
               </h4>
-              <div v-html="nearest_event.description">
-              </div>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                nulla pariatur. Excepteur sint occaecat
+              </p>
             </div>
           </div>
         </div>
         <div class="box_right">
-          <div class="wrap_img">
+          <div class="box_img">
             <img
               loading="lazy"
-              :src="nearest_event.image"
+              width="100"
+              height="444"
+              src="@/assets/images/calendar_sct-2_img-1.jpg"
               alt=""
             />
           </div>
@@ -64,7 +73,6 @@
         <h3><a href="#">Усi заходи</a></h3>
       </div>
       <!-- {{ info }} -->
-
       <div class="box_content container" v-if="info1">
         <div v-for="(item, idx) in usersSort" class="item" :key="idx">
           <div @click="goTodetail(item.id)" class="box">
@@ -96,6 +104,7 @@
         </div>
       </div>
     </div>
+    <!-- {{ info1 }} -->
     <div class="box_pagination container">
       <ul class="pagination">
         <li><a href="#" class="prev" @click.prevent="prevPage"></a></li>
@@ -132,7 +141,6 @@ export default {
   },
   data () {
     return {
-      nearest_event: '',
       page: {
         current: 1,
         length: 3,
@@ -160,7 +168,6 @@ export default {
     },
     filterEvent (data) {
       // alert(data.data)
-      // console.log(data)
       this.info1 = []
       for (let index = 0; index < this.info2.length; ++index) {
         // alert((this.info2[index].start_date).split('T')[0] + " = " + data.data)
@@ -188,9 +195,8 @@ export default {
           console.log(error)
         })
         .finally(() => (this.loading = false))
-      this.info1 = this.$store.getters.getClEvent.reverse()
+      this.info1 = this.$store.getters.getClEvent
       this.info2 = this.$store.getters.getClEvent
-      this.nearest_event = this.info1[0]
       this.pag = Math.ceil(this.info1.length / this.page.length)
 
     },
@@ -215,7 +221,6 @@ export default {
         this.page.current += 1
         this.active = this.page.current
       }
-
     }
   },
   computed: {
@@ -233,12 +238,15 @@ export default {
       }
 
       for (let i = 0; i < this.info1.length; i++) {
+        // this.info1[i].normal_date = this.info1[i].start_date.split('T')[0] + ' '
+        //   + this.info1[i].start_date.split('T')[1].split(':')[0] + ':'
+        //   + this.info1[i].start_date.split('T')[1].split(':')[1]
+
         var newDate = new Date(Date.parse(this.info1[i].start_date))
         this.info1[i].normal_date = newDate.toLocaleDateString(newDate) + ' ' + newDate.toTimeString(newDate).substring(0, 5);
       }
 
       // console.log(this.info1[0])
-
       return this.info1
         .filter((row, index) => {
           let start = (this.page.current - 1) * this.page.length
@@ -272,7 +280,7 @@ export default {
 </script>
 <style scoped src="@/assets/css/screen.css">
 </style>
-<style scoped lang="scss">
+<style scoped>
 
 .calendar_section-3 .box_content.container {
   display: grid;
@@ -305,16 +313,6 @@ export default {
 .box_right {
   display: flex;
   justify-content: flex-end;
-  .wrap_img {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    img {
-      position: absolute;
-      object-fit: cover;
-      height: 100%;
-    }
-  }
 }
 
 .box_text h4 {
@@ -394,12 +392,5 @@ export default {
   color: #fff;
   margin: 0 2px;
   cursor: pointer;
-}
-
-.event_section-2:before {
-  content:"";
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 </style>
