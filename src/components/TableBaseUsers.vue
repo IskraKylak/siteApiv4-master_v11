@@ -192,7 +192,7 @@ export default {
   },
   created () {
     this.getNotify()
-    console.log(this.$store.getters.getEventsApi)
+    // console.log(this.$store.getters.getEventsApi)
   },
   methods: {
     goToEvent (prodId) {

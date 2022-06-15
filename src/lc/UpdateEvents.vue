@@ -620,7 +620,7 @@ export default {
             Authorization: 'Bearer ' + this.$store.getters.getToken
           }
         }).then(respons => {
-          console.log(respons)
+          // console.log(respons)
           this.$message('Партнера видалено!')
         })
           .catch(error => {
@@ -636,7 +636,7 @@ export default {
             Authorization: 'Bearer ' + this.$store.getters.getToken
           }
         }).then(respons => {
-          console.log(respons)
+          // console.log(respons)
           this.$message('Партнера видалено!')
         })
           .catch(error => {
@@ -652,7 +652,7 @@ export default {
             Authorization: 'Bearer ' + this.$store.getters.getToken
           }
         }).then(respons => {
-          console.log(respons)
+          // console.log(respons)
           this.$message('Партнера видалено!')
         })
           .catch(error => {
@@ -663,15 +663,16 @@ export default {
       }
       this.getNotify()
     },
+    // eslint-disable-next-line camelcase
     clickModal (tab, id, id_event) {
-      console.log('clickModal: ' + id)
-      console.log('clickModal tab: ' + tab)
-      console.log('clickModal id_event: ' + id_event)
+      // console.log('clickModal: ' + id)
+      // console.log('clickModal tab: ' + tab)
+      // console.log('clickModal id_event: ' + id_event)
       this.modalValidate = !this.modalValidate
       this.isPartner = tab
       this.idItem = id
+      // eslint-disable-next-line camelcase
       this.idEvent = id_event
-
     },
     closeModal () {
       this.modalValidate = false
@@ -706,7 +707,7 @@ export default {
         }
       })
         .then(respons => {
-          console.log(respons.data)
+          // console.log(respons.data)
           this.$store.dispatch('setSingleEvent', respons.data)
           // console.log(typeof this.$store.getters.getSingleEvent.id)
         })
@@ -787,23 +788,23 @@ export default {
       }
     },
     handleInit (editor) {
-      console.log('Initialized')
+      // console.log('Initialized')
     },
 
     handleDestroy (editor) {
-      console.log('Destroyed')
+      // console.log('Destroyed')
     },
 
     handleChange (value) {
-      console.log('Changed')
+      // console.log('Changed')
     },
 
     handleInput (value) {
-      console.log('Input')
+      // console.log('Input')
     },
 
     handleError (err) {
-      console.log('An error occurred')
+      // console.log('An error occurred')
     }
   }
 }

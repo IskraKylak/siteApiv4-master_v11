@@ -174,7 +174,7 @@ export default {
         title: this.questions[idx].title,
         multiple_answers: this.questions[idx].multiple_answers,
       }
-      console.log(elem)
+      // console.log(elem)
       await axios({
         method: 'PUT',
         url: (`https://asprof-test.azurewebsites.net/api/events/${this.proId}/test/questions/${this.questions[idx].id}/`),
@@ -245,7 +245,7 @@ export default {
         }
       })
         .then(respons => {
-          console.log(respons.data)
+          // console.log(respons.data)
           this.questions = respons.data
           for (let i = 0; i < this.questions.length; i++) {
             this.questions[i].update = false
@@ -346,9 +346,6 @@ export default {
       })
         .catch(error => {
           console.log(error)
-          if(error === 500) {
-            alert('fsfsf')
-          }
           this.$message('Помилка')
         })
     }

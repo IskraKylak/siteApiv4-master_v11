@@ -44,6 +44,9 @@
             <div class="box_title">
               <h2>ПОПЕРЕДНЯ РЕЄСТРАЦІЯ ОБОВ'ЯЗКОВА!</h2>
             </div>
+            <h3 class="register" style="text-align: center; font-size: 30px" v-if="product.registered">
+              Ви зареєстровані!
+            </h3>
             <div class="box_link">
               <a :href="product.event_documents" class="link link-1" target="_blank">Програма</a>
               <a
@@ -54,9 +57,6 @@
               >
                 Зареєструватись на семінар
               </a>
-              <h3 class="register" v-else>
-                Ви зареєстровані!
-              </h3>
               <a
                 href="#"
                 v-if="(product.need_pay && !product.paid)"
@@ -222,7 +222,11 @@
           </div>
           <hr/>
         </section>
-        <section class="event_section-9" id="6" v-if="product.test !== null && product.youtube_id_1 !== null">
+        <section
+          class="event_section-9"
+          id="6"
+          v-if="product.test !== null && product.youtube_id_1 !== null && product.registered && (product.paid || product.is_free)"
+        >
           <div class="box_content">
             <h2 v-if="product.youtube_id_2 !== null">Трансляція відбувається у двох залах одночасно</h2>
             <div class="wrap_zal" v-if="product.youtube_id_2 !== null && product.youtube_id_1 !== null">
@@ -299,8 +303,9 @@
             </button>
           </div>
         </section>
-        <section v-if="product.media_partners_set" class="event_section-10" id="7">
-          <div class="box_content" v-if="product.media_partners_set.length !== 0">
+        <div v-if="product.media_partners_set">
+          <section  class="event_section-10" id="7" v-if="product.media_partners_set.length !== 0">
+          <div class="box_content" >
             <h2>МЕДІА ПАРТНЕРИ</h2>
             <div class="box_partners">
               <div class="box" v-for="(media_partner, idx) in product.media_partners_set" :key="idx">
@@ -316,8 +321,10 @@
             </div>
           </div>
         </section>
-        <section class="event_section-11" v-if="product.main_partners_set">
-          <div class="box_content" v-if="product.main_partners_set.length != 0">
+        </div>
+        <div v-if="product.main_partners_set">
+          <section class="event_section-11" v-if="product.main_partners_set.length != 0">
+          <div class="box_content" >
             <div class="box_title">
               <h2>ПАРТНЕРИ</h2>
               <p>
@@ -346,8 +353,10 @@
             </div>
           </div>
         </section>
-        <section class="event_section-12" v-if="product.partners_set">
-          <div class="box_content" v-if="product.partners_set.length != 0">
+        </div>
+        <div v-if="product.partners_set">
+          <section class="event_section-12" v-if="product.partners_set.length != 0">
+          <div class="box_content" >
             <div class="box box-1" v-for="(partners, idx) in product.partners_set" :key="idx">
               <a :href="partners.link" class="link">
                 <img
@@ -361,6 +370,7 @@
             </div>
           </div>
         </section>
+        </div>
         <section class="event_section-13" id="8">
           <div class="box_title">
             <h2>КОНТАКТИ</h2>
@@ -533,6 +543,7 @@ export default {
       })
         .then(respons => {
           this.$message('Вы зареєстровані!')
+          this.getNotify()
         })
         .catch(error => {
           console.log(error)
@@ -547,10 +558,7 @@ export default {
           Authorization: 'Bearer ' + this.$store.getters.getToken
         }
       }).then(respons => {
-        this.$message('Ваше питання відправлено')
         this.LiqPay = respons.data
-        console.log(this.LiqPay.data)
-        console.log(this.LiqPay.signature)
         // this.messages = res;
       })
         .catch(error => {
@@ -703,12 +711,12 @@ export default {
 <style lang="scss">
 
 .event .event_section-4 .box_content .box_link {
-  display: grid;
+  display: flex;
   width: 100%;
   justify-content: center;
-  grid-template-columns: 20% 40% 20%;
+  grid-gap: 20px;
+  flex-wrap: wrap;
   @media screen and (max-width: 991px) {
-    grid-template-columns: 100%;
   }
 }
 
