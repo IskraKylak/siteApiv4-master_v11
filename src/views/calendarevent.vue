@@ -160,7 +160,6 @@ export default {
   },
   methods: {
     goTodetail (prodId) {
-      let proId = prodId
       this.$router.push({
         name: 'details',
         params: { Pid: prodId }

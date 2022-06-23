@@ -11,7 +11,7 @@
         </div>
         <div
           class="table_content"
-          v-for="(elem, idx) in certificatesCourse"
+          v-for="(elem, idx) in certificatesEvent"
           :key="idx"
         >
           <div class="left_content">
@@ -36,7 +36,7 @@
         </div>
         <div
           class="table_content"
-          v-for="(elem, idx) in certificatesEvent"
+          v-for="(elem, idx) in certificatesCourse"
           :key="idx"
         >
           <div class="left_content">

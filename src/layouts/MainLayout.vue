@@ -37,9 +37,15 @@ export default {
 </script>
 <style scoped src="@/assets/lc/css/style.min.css">
 </style>
-<style>
+<style lang="scss">
 .main-lc {
   margin-top: -160px;
+  @media (max-width: 768px) {
+    margin-top: -111px;
+  }
+  @media (max-width: 480px) {
+    margin-top: -92px;
+  }
 }
 body {
   margin: 0;

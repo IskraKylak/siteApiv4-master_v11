@@ -45,48 +45,86 @@
         </div>
         <div class="top-menu nav" id="navigation">
           <div class="box_enter modal" v-if="tokkent === ''">
-            <router-link class="link" to="/in-login">Вхід</router-link>
-            <router-link class="link" to="/register">Реєстрація</router-link>
+            <router-link class="link" v-on:click="openMenu = !openMenu" to="/in-login">Вхід</router-link>
+            <router-link class="link" v-on:click="openMenu = !openMenu" to="/register">Реєстрація</router-link>
           </div>
           <div class="box_enter modal" v-else>
-            <router-link class="link" to="/lc-profile">{{ myAcc.email }}</router-link>
+            <router-link class="link" v-on:click="openMenu = !openMenu" to="/lc-profile">{{ myAcc.email }}</router-link>
           </div>
           <ul>
             <li>
-              <router-link class="link link-2" to="/"
-              >Про асоціацію</router-link
+              <router-link
+                class="link link-2"
+                to="/"
+                v-on:click="openMenu = !openMenu"
               >
+                Про асоціацію
+              </router-link>
             </li>
             <li>
-              <router-link class="link link-2" to="/presidium"
-              >Президіум</router-link
+              <router-link
+                class="link link-2"
+                to="/presidium"
+                v-on:click="openMenu = !openMenu"
               >
+                Президіум
+              </router-link>
             </li>
             <li>
-              <router-link class="link link-2" to="/calendarevent"
-              >Календарь <br />заходів</router-link
+              <router-link
+                class="link link-2"
+                v-on:click="openMenu = !openMenu"
+                to="/calendarevent"
               >
+                Календарь <br />заходів
+              </router-link>
               <!-- <a class="link link-2" href="#">Календарь <br />заходів</a> -->
             </li>
             <li>
-              <a class="link link-3" href="#">Галерея</a>
+              <a
+                class="link link-3"
+                v-on:click="openMenu = !openMenu"
+                href="#"
+              >
+                Галерея
+              </a>
             </li>
             <li>
-              <a class="link link-3" href="#">Журнали</a>
+              <a
+                class="link link-3"
+                href="#"
+                v-on:click="openMenu = !openMenu"
+              >
+                Журнали
+              </a>
             </li>
             <li>
-              <router-link class="link link-2" to="/bmo">БМО-БПР</router-link>
+              <router-link
+                class="link link-2"
+                to="/bmo"
+                v-on:click="openMenu = !openMenu"
+              >
+                БМО-БПР
+              </router-link>
               <!-- <a class="link link-2" href="#">БМО-БПР</a> -->
             </li>
             <li class="link link-2">
-              <router-link class="link link-2" to="/experts"
-              >Експерты</router-link
+              <router-link
+                class="link link-2"
+                to="/experts"
+                v-on:click="openMenu = !openMenu"
               >
+                Експерты
+              </router-link>
             </li>
             <li>
-              <router-link class="link link-2" to="/contact"
-              >Контакти</router-link
+              <router-link
+                class="link link-2"
+                to="/contact"
+                v-on:click="openMenu = !openMenu"
               >
+                Контакти
+              </router-link>
             </li>
           </ul>
 <!--          <div class="box_enter">-->
@@ -132,6 +170,7 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
+          this.$store.dispatch('logout')
           console.log(error)
         })
         .finally(() => (this.loading = false))

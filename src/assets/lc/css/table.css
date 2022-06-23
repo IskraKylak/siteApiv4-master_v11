@@ -114,19 +114,21 @@
 .table_foot {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .table_length {
     display: flex;
     align-items: center;
     height: 52px;
-    padding: 0 25px;
+    padding: 0 10px;
 }
 
 .table_visible_page {
     display: flex;
     align-items: center;
-    height: 52px;
+    min-height: 52px;
+    flex-wrap: wrap;
 }
 
 .table_visible_page select.select {

@@ -2031,6 +2031,7 @@ body {
     background-color: rgba(0, 38, 120, 0.7);
     box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.33);
     padding: 0 20px;
+    z-index: 99;
   }
   /* line 1779, ../sass/screen.scss */
   .main_page .header-scroll .container .box_top {
@@ -2259,6 +2260,7 @@ body {
   /* line 1963, ../sass/screen.scss */
   .main_page header {
     position: fixed;
+    z-index: 99;
   }
   /* line 1965, ../sass/screen.scss */
   .main_page header .container {
@@ -2512,6 +2514,10 @@ body {
   }
 }
 @media (max-width: 480px) {
+  .main_page {
+    padding-top: 92px;
+  }
+
   /* line 2178, ../sass/screen.scss */
   .main_page h1,
   .main_page .text-h1 {
@@ -2630,9 +2636,9 @@ body {
 }
 @media (max-width: 400px) {
   /* line 2282, ../sass/screen.scss */
-  .main_page header {
-    padding: 10px;
-  }
+  /*.main_page header {*/
+  /*  padding: 10px;*/
+  /*}*/
   /* line 2287, ../sass/screen.scss */
   .main_page header .container .box_top nav ul li a {
     font-size: 20px;

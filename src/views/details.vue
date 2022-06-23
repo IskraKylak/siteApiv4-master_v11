@@ -534,49 +534,61 @@ export default {
   },
   methods: {
     async registerSeminar () {
-      await axios({
-        url: `https://asprof-test.azurewebsites.net/api/events/${this.$route.params.Pid}/register/`,
-        method: 'Post',
-        headers: {
-          Authorization: 'Bearer ' + this.$store.getters.getToken
-        }
-      })
-        .then(respons => {
-          this.$message('Вы зареєстровані!')
-          this.getNotify()
+      if (this.$store.getters.getToken) {
+        await axios({
+          url: `https://asprof-test.azurewebsites.net/api/events/${this.$route.params.Pid}/register/`,
+          method: 'Post',
+          headers: {
+            Authorization: 'Bearer ' + this.$store.getters.getToken
+          }
         })
-        .catch(error => {
-          console.log(error)
-          this.$message('Помилка')
+          .then(respons => {
+            this.$message('Вы зареєстровані!')
+            this.getNotify()
+          })
+          .catch(error => {
+            console.log(error)
+            this.$message('Помилка')
+          })
+      } else {
+        this.$router.push({
+          name: 'inLogin'
         })
+      }
     },
     async goLiqPay () {
-      await axios({
-        url: `https://asprof-test.azurewebsites.net/api/events/${this.$route.params.Pid}/pay/`,
-        method: 'GET',
-        headers: {
-          Authorization: 'Bearer ' + this.$store.getters.getToken
-        }
-      }).then(respons => {
-        this.LiqPay = respons.data
-        // this.messages = res;
-      })
-        .catch(error => {
-          console.log(error)
-          this.$message('Помилка')
+      if (this.$store.getters.getToken) {
+        await axios({
+          url: `https://asprof-test.azurewebsites.net/api/events/${this.$route.params.Pid}/pay/`,
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + this.$store.getters.getToken
+          }
+        }).then(respons => {
+          this.LiqPay = respons.data
+          // this.messages = res;
         })
-        .finally(() => (this.loading = false))
+          .catch(error => {
+            console.log(error)
+            this.$message('Помилка')
+          })
+          .finally(() => (this.loading = false))
 
-      const form = document.createElement('form')
-      form.action = 'https://www.liqpay.ua/api/3/checkout'
-      form.method = 'POST'
+        const form = document.createElement('form')
+        form.action = 'https://www.liqpay.ua/api/3/checkout'
+        form.method = 'POST'
 
-      form.innerHTML = `<input type="hidden" name="data" value="${this.LiqPay.data}"/>
+        form.innerHTML = `<input type="hidden" name="data" value="${this.LiqPay.data}"/>
         <input type="hidden" name="signature" value="${this.LiqPay.signature}"/>`
 
-      document.body.append(form)
+        document.body.append(form)
 
-      form.submit()
+        form.submit()
+      } else {
+        this.$router.push({
+          name: 'inLogin'
+        })
+      }
     },
     onEnded () {
       this.btn_on = false
@@ -634,21 +646,36 @@ export default {
     },
     async getNotify () {
       this.loading = true
-      await axios({
-        url: `https://asprof-test.azurewebsites.net/api/events/${this.proId}/`,
-        method: 'GET',
-        headers: {
-          Authorization: 'Bearer ' + this.$store.getters.getToken
-        }
-      }).then(respons => {
-        this.$store.dispatch('setClEvent', respons.data)
-        // this.messages = res;
-      })
-        .catch(error => {
-          console.log(error)
-          this.$message('Помилка')
+      if (this.$store.getters.getToken) {
+        await axios({
+          url: `https://asprof-test.azurewebsites.net/api/events/${this.proId}/`,
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + this.$store.getters.getToken
+          }
+        }).then(respons => {
+          this.$store.dispatch('setClEvent', respons.data)
+          // this.messages = res;
         })
-        .finally(() => (this.loading = false))
+          .catch(error => {
+            console.log(error)
+            this.$message('Помилка')
+          })
+          .finally(() => (this.loading = false))
+      } else {
+        await axios({
+          url: `https://asprof-test.azurewebsites.net/api/events/${this.proId}/`,
+          method: 'GET',
+        }).then(respons => {
+          this.$store.dispatch('setClEvent', respons.data)
+          // this.messages = res;
+        })
+          .catch(error => {
+            console.log(error)
+            this.$message('Помилка')
+          })
+          .finally(() => (this.loading = false))
+      }
       this.product = this.$store.getters.getClEvent
       // console.log(this.product.media_partners_set)
     }
