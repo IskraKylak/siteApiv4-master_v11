@@ -1,5 +1,8 @@
 <template>
-  <div class="calendar">
+  <div class="calendar" :class="headTrue() ? 'true' : ''">
+    <!--    {{ dataEventYM }}-->
+    <!--    {{ dataEventD }}-->
+    <!--    {{ title2 }}-->
     <div class="header">
       <button @click="prev">&#9668;</button>
       <span class="title">{{ title }}</span>
@@ -16,66 +19,107 @@
     </div>
     <div class="week" v-for="(week, idx) in weeks" :key="idx">
       <div class="day selectable"
-           :class="day == 0 ? 'hide' : ''"
+           :class="day == 0 ? 'hide' : '', dayTrue(day) ? 'class-red' : ''"
            v-for="(day, idx) in week" @click="showEvents(day)" :key="idx">
-           <div 
-            class="day-wrap"
-            :class="{'selected_day' : dayTrue(day, this.month, this.year)}" 
-            @click="returnData(day)"
-          >
-              {{ day }} 
-           </div>
+        {{ day }}
       </div>
     </div>
   </div>
 </template>
 <script>
 import axios from 'axios'
+
 const DATE = new Date()
 const DAYS = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
 const MONTHS = ['Cічень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень']
 const daysInYearMonth = (y, m) => new Date(y, m, 0).getDate()
 export default {
+  // props: {
+  //   dataEventYM: {
+  //     type: Object
+  //   },
+  //   dataEventD: {
+  //     type: Object
+  //   }
+  // },
   data () {
     return {
-      eventTrue: [],
+      title: '-',
+      title2: '',
       month: 0,
       year: 0,
       days: [],
       weeks: [],
+      eventTrue: [],
+      trueDay: false
     }
   },
   mounted () {
     this.init()
   },
-  computed: {
-    // daySel () {
-    //   let date = new Date('2021-02-12T12:00:00');
-    //   return date.getDate()
-    // },
-    // MonthSel () {
-    //   let date = new Date('2021-12-12T12:00:00');
-    //   return date.getMonth() + 1
-    // },
-    // YearSel () {
-    //   let date = new Date('2021-02-12T12:00:00');
-    //   return date.getFullYear()
-    // }
-  },
   created () {
     this.getNotify()
   },
-  methods: {
-    dayTrue (day, month, year) {
-      let calendarStr = day + "." + month + "." + year
+  computed: {
+    dataEventYM () {
+      let dataEvent = []
+      let dataEvent1 = []
       for (let index = 0; index < this.eventTrue.length; ++index) {
-        let date = new Date(this.eventTrue[index].start_date)
-        let dataItem = date.getDate() + "." + date.getMonth() + "." + date.getFullYear()
-        // console.log('dataItem ' + dataItem)
-        if(dataItem == calendarStr) {
-            return true
+        dataEvent.push((this.eventTrue[index].start_date).split('T')[0].split('-')[0])
+      }
+      for (let index = 0; index < this.eventTrue.length; ++index) {
+        dataEvent1.push((this.eventTrue[index].start_date).split('T')[0].split('-')[1])
+      }
+      for (let index = 0; index < dataEvent.length; ++index) {
+        dataEvent[index] = `${dataEvent[index]}-${dataEvent1[index]}`
+      }
+      return dataEvent
+    },
+    dataEventY () {
+      let dataEvent = []
+      for (let index = 0; index < this.eventTrue.length; ++index) {
+        dataEvent.push((this.eventTrue[index].start_date).split('T')[0].split('-')[0])
+      }
+      return dataEvent
+    },
+    dataEventM () {
+      let dataEvent = []
+      for (let index = 0; index < this.eventTrue.length; ++index) {
+        dataEvent.push((this.eventTrue[index].start_date).split('T')[0].split('-')[1])
+      }
+      return dataEvent
+    },
+    dataEventD () {
+      let dataEvent = []
+      for (let index = 0; index < this.eventTrue.length; ++index) {
+        dataEvent.push((this.eventTrue[index].start_date).split('T')[0].split('-')[2])
+      }
+      return dataEvent
+    }
+  },
+  methods: {
+    headTrue () {
+      for (let index = 0; index < this.eventTrue.length; ++index) {
+        // alert((this.eventTrue[index].start_date).split('T')[0].split('-')[0] + '=' + this.year + "  " + parseInt((this.eventTrue[index].start_date).split('T')[0].split('-')[1]) +'='+ parseInt((this.month+1)))
+        if ((this.eventTrue[index].start_date).split('T')[0].split('-')[0] == this.year && parseInt((this.eventTrue[index].start_date).split('T')[0].split('-')[1]) == parseInt((this.month+1))) {
+          // alert((this.eventTrue[index].start_date).split('T')[0].split('-')[0] + ' ' + this.year)
+          // alert(parseInt((this.eventTrue[index].start_date).split('T')[0].split('-')[1]) + " " + (this.month+1))
+          // alert((this.eventTrue[index].start_date).split('T')[0].split('-')[1] + " " + this.year)
+          // alert((this.eventTrue[index].start_date).split('T')[0].split('-')[1] + " " + (this.month+1))
+          this.trueDay = true
+          return true
         }
-          
+      }
+      return false
+    },
+    dayTrue(day) {
+      for (let index = 0; index < this.eventTrue.length; ++index) {
+        // alert((this.eventTrue[index].start_date).split('T')[0].split('-')[1] + " " + (this.title2).split('-')[1])
+        if (parseInt((this.eventTrue[index].start_date).split('T')[0].split('-')[1]) == (this.title2).split('-')[1]) {
+          if(day == (this.eventTrue[index].start_date).split('T')[0].split('-')[2]) {
+            return true
+          }
+        }
       }
       return false
     },
@@ -92,10 +136,6 @@ export default {
         .finally(() => (this.loading = false))
       this.eventTrue = this.$store.getters.getClEvent
     },
-    returnData (day) {
-      let strData = day + '-' + (this.month + 1) + '-' + this.year
-      this.$emit('dataSelect', strData)
-    },
     next () {
       this.update(new Date(this.year, this.month + 1, 1))
     },
@@ -109,10 +149,10 @@ export default {
       return new Date(this.year, this.month, 1).getDay()
     },
     setTitle () {
+      this.title2 = `${this.year}-${this.month + 1}`
       this.title = `${MONTHS[this.month]} ${this.year}`
     },
     update (date) {
-      
       if (date) {
         this.month = date.getMonth()
         this.year = date.getFullYear()
@@ -145,22 +185,12 @@ export default {
   }
 }
 </script>
+<style scoped src="@/assets/lc/css/table.css">
+</style>
 <style scoped>
 
 * {
   box-sizing: border-box
-}
-
-.day-wrap {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 3px;
-}
-.selected_day {
-  background: #e1cd00;
 }
 
 .week.days {

@@ -12,17 +12,46 @@
       <div class="box_content container">
         <div class="box_left">
           <h2>календар заходів</h2>
-
+          <div class="list-product">
+            <div v-for="(item, idx) in masCalendarView" class="list-product__item" :key="idx">
+              <div @click="goTodetail(item.id)" class="box">
+                <div class="box_img">
+                  <img
+                    loading="lazy"
+                    :src="item.image"
+                    alt="img"
+                  />
+                  <div class="box_date">
+                    <p class="date_number">{{ item.day }}</p>
+                    <p class="date_month">{{ item.mounth }}</p>
+                  </div>
+                </div>
+                <div class="box_text">
+                  <h4>
+                    {{ item.name.split(' ').slice(0, 6).join(' ') + ' ...' }}
+                  </h4>
+                </div>
+                <div class="box_bottom">
+                  <div class="box_date">
+                    <p>{{ item.normal_date }}</p>
+                  </div>
+                  <div class="box_location">
+                    <p>{{ item.place }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="box_right">
           <div id="datepicker">
-            <Calendar @showEvents='filterEvent'/>
+            <Calendar @dataSelect='dataSelect'/>
           </div>
         </div>
       </div>
     </section>
-    <div class="calendar_section-2">
+    <div class="calendar_section-2" v-if="nearestItem">
       <div class="box_content">
         <div class="box_left">
           <div class="box_inner">
@@ -30,27 +59,19 @@
               <h3>Найближча подія</h3>
               <div class="box_bottom">
                 <div class="box_date">
-                  <p>12 березня 2020</p>
+                  <p>{{ nearestItem.day }} {{ nearestItem.mounth }} {{ nearestItem.yaer }}</p>
                 </div>
                 <div class="box_location">
-                  <p>Київ, Україна</p>
+                  <p>{{ nearestItem.place }}, Україна</p>
                 </div>
               </div>
             </div>
             <div class="box_text">
               <h4>
-                <a href="#"
-                >Симуляційний тренінг «Методика інсталяції та догляду
-                  акушерських пессаріїв»</a
-                >
+                <a href="#"  @click.prevent="goTodetail(nearestItem.id)">{{ nearestItem.name }}</a>
               </h4>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat
+                {{ nearestItem.description }}
               </p>
             </div>
           </div>
@@ -61,7 +82,7 @@
               loading="lazy"
               width="100"
               height="444"
-              src="@/assets/images/calendar_sct-2_img-1.jpg"
+              :src="nearestItem.image"
               alt=""
             />
           </div>
@@ -104,7 +125,6 @@
         </div>
       </div>
     </div>
-    <!-- {{ info1 }} -->
     <div class="box_pagination container">
       <ul class="pagination">
         <li><a href="#" class="prev" @click.prevent="prevPage"></a></li>
@@ -149,36 +169,31 @@ export default {
       active: 1,
       data: '',
       info1: [],
-      info2: [],
       loading: false,
+      masCalendarView: [],
       mounth: [
-        'Cічня', 'Лютого', 'Березеня', 'Квітеня', 'Травеня', 'Червеня', 'Липеня', 'Серпеня', 'Вересеня', 'Жовтень', 'Листопада', 'Грудня']
+        'Cічня', 'Лютого', 'Березня', 'Квітня', 'Травня', 'Червня', 'Липня', 'Серпня', 'Вересня', 'Жовтня', 'Листопада', 'Грудня']
     }
   },
   created () {
     this.getNotify()
   },
   methods: {
+    dataSelect (data) {
+      this.masCalendarView = []
+      for (let i = 0; i < this.info1.length; i++) {
+        let normData = new Date(this.info1[i].start_date)
+        normData = normData.getDate() + "-" + (normData.getMonth() + 1) + "-" + normData.getFullYear()
+        if(normData === data) {
+          this.masCalendarView.push(this.info1[i])
+        }
+      }
+    },
     goTodetail (prodId) {
       this.$router.push({
         name: 'details',
         params: { Pid: prodId }
       })
-    },
-    filterEvent (data) {
-      // alert(data.data)
-      this.info1 = []
-      for (let index = 0; index < this.info2.length; ++index) {
-        // alert((this.info2[index].start_date).split('T')[0] + " = " + data.data)
-        if ((this.info2[index].start_date).split('T')[0] === data.data) {
-          // alert('true')
-          // this.info1 = this.info1[index]
-          // this.info1 = []
-          this.info1.push(this.info2[index])
-          // console.log(this.info1)
-        }
-      }
-      if (this.info1.length === 0) this.info1 = this.info2
     },
     async getNotify () {
       this.loading = true
@@ -195,7 +210,6 @@ export default {
         })
         .finally(() => (this.loading = false))
       this.info1 = this.$store.getters.getClEvent
-      this.info2 = this.$store.getters.getClEvent
       this.pag = Math.ceil(this.info1.length / this.page.length)
 
     },
@@ -224,62 +238,144 @@ export default {
   },
   computed: {
     usersSort () {
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      // console.log(this.info1.length)
       for (let i = 0; i < this.info1.length; i++) {
-        // console.log('mounth ' + parseInt(this.info1[i].start_date.split('T')[0].split('-')[1]))
+        this.info1[i].normal_date = new Date(this.info1[i].start_date).toLocaleDateString();
         for (let n = 0; n < this.mounth.length; n++) {
 
           if (parseInt(this.info1[i].start_date.split('T')[0].split('-')[1]) == (n + 1)) {
             this.info1[i].mounth = this.mounth[n]
+            this.info1[i].day = new Date(this.info1[i].start_date).getDate()
+            this.info1[i].yaer = new Date(this.info1[i].start_date).getFullYear()
           }
         }
       }
-
-      for (let i = 0; i < this.info1.length; i++) {
-        // this.info1[i].normal_date = this.info1[i].start_date.split('T')[0] + ' '
-        //   + this.info1[i].start_date.split('T')[1].split(':')[0] + ':'
-        //   + this.info1[i].start_date.split('T')[1].split(':')[1]
-
-        var newDate = new Date(Date.parse(this.info1[i].start_date))
-        this.info1[i].normal_date = newDate.toLocaleDateString(newDate) + ' ' + newDate.toTimeString(newDate).substring(0, 5);
-      }
-
-      // console.log(this.info1[0])
       return this.info1
         .filter((row, index) => {
           let start = (this.page.current - 1) * this.page.length
           let end = this.page.current * this.page.length
           if (index >= start && index < end) return true
         })
+    },
+    nearestItem () {
+      let item = false
+      let itemOldData = false
+      let date = new Date().getTime();
+      for (let index = 0; index < this.info1.length; ++index) {
+          let dateItem = new Date(this.info1[index].start_date).getTime();
+          if(date < dateItem) {
+              if (item){
+                if(dateItem < itemOldData) {
+                  itemOldData = dateItem
+                  item = this.info1[index]
+                }
+                
+              } else {
+                itemOldData = dateItem
+                item = this.info1[index]
+              }
+                
+           }     
+      }
+      return item
     }
-    // dataEventYM() {
-    //   let dataEvent = [];
-    //   let dataEvent1 = [];
-    //   for (let index = 0; index < this.info2.length; ++index) {
-    //     dataEvent.push((this.info2[index].start_date).split('T')[0].split('-')[0])
-    //   }
-    //   for (let index = 0; index < this.info2.length; ++index) {
-    //     dataEvent1.push((this.info2[index].start_date).split('T')[0].split('-')[1])
-    //   }
-    //   for (let index = 0; index < dataEvent.length; ++index) {
-    //     dataEvent[index] = `${dataEvent[index]}-${dataEvent1[index]}`
-    //   }
-    //   return dataEvent
-    // },
-    // dataEventD() {
-    //   let dataEvent = [];
-    //   for (let index = 0; index < this.info2.length; ++index) {
-    //     dataEvent.push((this.info2[index].start_date).split('T')[0].split('-')[2])
-    //   }
-    //   return dataEvent
-    // }
   }
 }
 </script>
 <style scoped src="@/assets/css/screen.css">
 </style>
-<style scoped>
+<style scoped lang="scss">
+
+.list-product__item {
+  max-width: 360px;
+  background: #f7f6f6;
+  box-shadow: 0px 9px 12px rgba(216, 216, 216, 40%);
+
+  .box_text {
+    padding: 21px 35px 6px 35px;
+    font-size: 15px;
+    color: var(--main-color);
+    text-transform: none;
+    transition: all .25s linear;
+    line-height: 1.7;
+
+    h4 {
+      font-size: 15px;
+      color: var(--main-color);
+      text-transform: none;
+      transition: all .25s linear;
+      line-height: 1.7;
+      min-height: 50px;
+    }
+  }
+
+  .box_bottom {
+    padding: 10px 35px 27px;
+    .box_date {
+      padding-left: 28px;
+      background-image: url(/img/icon-calendar.ef86b879.svg);
+      background-position: left center;
+      background-repeat: no-repeat;
+      background-size: 17px;
+      p {
+        font-size: 15px;
+        color: var(--color-gray);
+        font-weight: 500;
+      }
+    }
+    .box_location {
+      padding-left: 28px;
+      background-image: url(/img/icon-map.58a179a1.svg);
+      background-position: left top;
+      background-repeat: no-repeat;
+      background-size: 17px;
+      margin-top: 10px;
+      p {
+        font-size: 15px;
+        color: var(--color-gray);
+        font-weight: 500;
+      }
+    }
+  }
+
+  .box_img {
+    min-height: 300px;
+    max-height: 300px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+
+    .box_date {
+      position: absolute;
+      top: 0;
+      left: 34px;
+      border-top: 14px solid var(--color-orange);
+      box-shadow: 3px 3px 10px #000;
+      background: #fff;
+      padding: 0 15px 10px;
+
+      .date_number {
+        text-align: center;
+        color: var(--main-color);
+        font-weight: 700;
+        font-size: 30px;
+        line-height: 1.2;
+      }
+
+      .date_month {
+        text-align: center;
+        color: var(--main-color);
+        font-size: 18px;
+        font-weight: 600;
+        line-height: .8;
+      }
+    }
+
+    img {
+      position: absolute;
+      object-fit: contain;
+    }
+  }
+}
 
 .calendar_section-3 .box_content.container {
   display: grid;

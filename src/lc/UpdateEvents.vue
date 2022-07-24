@@ -172,7 +172,7 @@
       <div class="radio_block radio_block1_update_evenets">
         <div class="radio radio_item">
           <input class="custom-radio" type="radio" id="color-1">
-          <label for="color-1">Український</label>
+          <label for="color-1">Українська</label>
         </div>
 
         <div class="radio radio_item">

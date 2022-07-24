@@ -134,12 +134,22 @@
             </div>
           </div>
         </section>
+<!--        {{ product }}-->
         <section class="event_section-7" id="5">
           <div class="box_content">
             <div class="box_title">
               <h2>
                 Після закінчення заходу зареєстровані учасники матимуть
-                можливість отримати сертифікати НУОЗУ ім. П.Л. Шупика 10 балів
+                можливість отримати сертифікати НУОЗУ ім. П.Л. Шупика
+                <span v-if="product.points > 4">
+                  {{ product.points}} балів
+                </span>
+                <span v-if="product.points > 1 && product.points < 5">
+                  {{ product.points}} бали
+                </span>
+                <span v-if="product.points === 1">
+                  {{ product.points}} бал
+                </span>
               </h2>
             </div>
             <div class="box_text">
@@ -225,7 +235,7 @@
         <section
           class="event_section-9"
           id="6"
-          v-if="product.test !== null && product.youtube_id_1 !== null && product.registered && (product.paid || product.is_free)"
+          v-if="product.youtube_id_1 !== null"
         >
           <div class="box_content">
             <h2 v-if="product.youtube_id_2 !== null">Трансляція відбувається у двох залах одночасно</h2>
@@ -256,7 +266,7 @@
                 </div>
                 <div class="box_video">
                   <iframe :src="'https://www.youtube.com/embed/' + product.youtube_id_2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<!--                  <YoutubeVue3 ref="youtube" :videoid="product.youtube_id_2" :loop="1"/>-->
+                  <!-- <YoutubeVue3 ref="youtube" :videoid="product.youtube_id_2" :loop="1"/> -->
                 </div>
                 <div class="wrap_programs_panel">
                   <button class="btn-program">
@@ -294,7 +304,7 @@
               </div>
             </div>
             <button
-              v-if="product.test !== null && product.youtube_id_1 !== null"
+              v-if="product.test !== null && product.youtube_id_1 !== null && product.registered && (product.paid || product.is_free)"
               class="btn_testing"
               @click="goToTest(proId)"
               :disabled="btn_on"
@@ -345,6 +355,7 @@
                  :class="'link-media' + (idx + 1)"
                  v-for="(main_partners, idx) in product.main_partners_set" :key="idx" target="_blank">
                 <img
+                  v-if="main_partners.image"
                   loading="lazy"
                   :src="main_partners.image"
                   :alt="main_partners.name"
@@ -419,7 +430,7 @@ export default {
   name: 'details',
   components: {
     preloader,
-    YoutubeVue3
+    YoutubeVue3,
   },
   data () {
     return {
@@ -438,19 +449,12 @@ export default {
       product: {},
       loading: false,
       mounth_mas: [
-        'cічня', 'лютого', 'березеня', 'квітеня', 'травеня', 'червеня', 'липеня', 'серпеня', 'вересеня', 'жовтня', 'листопада', 'грудня']
+        'cічня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня']
     }
   },
   created () {
     this.getNotify()
   },
-  // computed: {
-  //   description: function () {
-  //     for( let i = 0; i <this.info )
-  //     console.log(this.info.description)
-  //     return this.product.description.innerHTML
-  //   }
-  // },
   computed: {
     year () {
       if (this.product.start_date) {
