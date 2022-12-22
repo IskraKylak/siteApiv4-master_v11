@@ -23,7 +23,7 @@
             <router-link class="link" to="/lc-profile">{{ myAcc.email }}</router-link>
           </div>
           <div class="box_messendger">
-            <a class="link_facebook" href="https://www.facebook.com/"
+            <a class="link_facebook" :href="infoContact.facebook_link"
             >facebook</a
             >
           </div>
@@ -145,7 +145,10 @@ export default {
   data () {
     return {
       myAcc: [],
-      openMenu: false
+      openMenu: false,
+      infoContact: {
+        facebook_link: ''
+      }
     }
   },
   computed: {
@@ -158,6 +161,18 @@ export default {
   },
   methods: {
     async getNotify () {
+      await axios({
+        method: 'GET',
+        url: ('https://asprof-test.azurewebsites.net/api/content/hippocrates/contacts/'),
+      }).then(response => {
+        this.infoContact.facebook_link = response.data.facebook_link
+        // this.messages = res;
+      })
+        .catch(error => {
+          this.$store.dispatch('logout')
+          console.log(error)
+        })
+        .finally()
       await axios({
         method: 'GET',
         url: ('https://asprof-test.azurewebsites.net/api/me/'),

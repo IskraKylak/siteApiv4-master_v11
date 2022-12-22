@@ -235,18 +235,23 @@
         <section
           class="event_section-9"
           id="6"
-          v-if="product.youtube_id_1 !== null"
+          v-if="product.youtube_id_1 !== null && product.youtube_id_1 !== ''" 
         >
           <div class="box_content">
-            <h2 v-if="product.youtube_id_2 !== null">Трансляція відбувається у двох залах одночасно</h2>
-            <div class="wrap_zal" v-if="product.youtube_id_2 !== null && product.youtube_id_1 !== null">
-              <div class="box box-1" v-if="product.youtube_id_1 !== null">
+            <h2 v-if="product.youtube_id_2 !== null && product.youtube_id_2 !== ''">Трансляція відбувається у двох залах одночасно</h2>
+            <div 
+              :class="{'wrap_zal' : product.youtube_id_2 !== null && product.youtube_id_2 !== ''}" 
+              v-if="product.youtube_id_1 !== null && product.youtube_id_1 !== ''"
+            >
+              <div 
+                class="box box-1"
+              >
                 <div class="box_title">
                   <h3>ЗАЛ 1</h3>
                 </div>
-                <div class="box_video">
-                  <YoutubeVue3 ref="youtube" :videoid="product.youtube_id_1" :loop="1"
-                               @ended="onEnded" @paused="onPaused" @played="onPlayed"/>
+                <div class="box_video" v-if="product.youtube_id_1 !== '' && product.youtube_id_1 !== null && product.youtube_id_1 !== undefined">
+                  
+                  <YoutubeVue3 ref="youtube" :controls="1" :videoid="product.youtube_id_1" :width="480" :height="320" @ended="onEnded"/>
                 </div>
                 <div class="wrap_programs_panel">
                   <button class="btn-program">
@@ -260,13 +265,18 @@
                   </form>
                 </div>
               </div>
-              <div class="box box-2" v-if="product.youtube_id_2 !== null">
+              <div class="box box-2" v-if="product.youtube_id_2 !== null && product.youtube_id_2 !== ''">
                 <div class="box_title">
                   <h3>ЗАЛ 2</h3>
                 </div>
-                <div class="box_video">
-                  <iframe :src="'https://www.youtube.com/embed/' + product.youtube_id_2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                  <!-- <YoutubeVue3 ref="youtube" :videoid="product.youtube_id_2" :loop="1"/> -->
+                <div class="box_video" v-show="product.youtube_id_2 !== '' && product.youtube_id_2 !== null && product.youtube_id_2 !== undefined">
+                  <YouTube 
+                    :src="product.youtube_id_2" 
+                    @state-change="endVideo"
+                    ref="youtube"
+                    width="100%" 
+                    height="100%" 
+                  />
                 </div>
                 <div class="wrap_programs_panel">
                   <button class="btn-program">
@@ -281,33 +291,12 @@
                 </div>
               </div>
             </div>
-            <div v-else>
-              <div class="box box-1" v-if="product.youtube_id_1 !== null">
-                <div class="box_title">
-                  <h3>ЗАЛ 1</h3>
-                </div>
-                <div class="box_video">
-                  <YoutubeVue3 ref="youtube" :videoid="product.youtube_id_1" :loop="1"
-                               @ended="onEnded" @paused="onPaused" @played="onPlayed"/>
-                </div>
-                <div class="wrap_programs_panel">
-                  <button class="btn-program">
-                    Завантажити програму хол №A
-                  </button>
-                  <form class="wrap_form_question" @submit.prevent="onSubmit1">
-                    <div class="wrap_inputs">
-                      <input type="text" placeholder="Задати питання спікеру" v-model="form_question1.question">
-                    </div>
-                    <button class="btn_post">Відправити</button>
-                  </form>
-                </div>
-              </div>
-            </div>
+            
             <button
               v-if="product.test !== null && product.youtube_id_1 !== null && product.registered && (product.paid || product.is_free)"
               class="btn_testing"
               @click="goToTest(proId)"
-              :disabled="btn_on"
+              :disabled="ytVideo1 !== 0 && ytVideo2 !== 0"
             >
               Пройти тестування
             </button>
@@ -426,14 +415,19 @@
 import axios from 'axios'
 import preloader from '@/components/UI/Preloader.vue'
 import { YoutubeVue3 } from 'youtube-vue3'
+import YouTube from 'vue3-youtube'
 export default {
   name: 'details',
   components: {
+    axios,
     preloader,
     YoutubeVue3,
+    YouTube 
   },
   data () {
     return {
+      ytVideo1: 1,
+      ytVideo2: 1,
       LiqPay: '',
       btn_on: true,
       form_question1: {
@@ -458,21 +452,21 @@ export default {
   computed: {
     year () {
       if (this.product.start_date) {
-        return this.product.start_date.split('T')[0].split('-')[0]
+        return new Date(this.product.start_date).getFullYear()
       }
       return ''
     },
     month () {
       if (this.product.start_date) {
-        return this.product.start_date.split('T')[0].split('-')[1]
+        return new Date(this.product.start_date).getMonth()
       }
       return ''
     },
     monthString () {
+      let month = new Date(this.product.start_date).getMonth()
       for (let i = 1; i < this.mounth_mas.length; i++) {
-        // console.log('monthString ' + this.product.start_date.split('T')[0].split('-')[1])
         if (this.product.start_date !== undefined) {
-          if (parseInt(this.product.start_date.split('T')[0].split('-')[1]) == i + 1) {
+          if (month == i) {
             return this.mounth_mas[i]
           }
         }
@@ -481,62 +475,81 @@ export default {
     },
     day () {
       if (this.product.start_date) {
-        return this.product.start_date.split('T')[0].split('-')[2]
+        return new Date(this.product.start_date).getDate()
       }
       return ''
     },
     time () {
       if (this.product.start_date) {
-        return this.product.start_date.split('T')[1].split(':')[0] + ':' + this.product.start_date.split('T')[1].split(':')[1]
+        let hours = new Date(this.product.start_date).getHours()
+        let minutes = new Date(this.product.start_date).getMinutes()
+        return hours + ":" + minutes
       }
       return ''
     },
     date () {
       if (this.product.start_date) {
-        return this.product.start_date.split('T')[0]
+        return new Date(this.product.start_date).toLocaleDateString()
       }
       return ''
     },
     yearEnd () {
       if (this.product.testing_end_date) {
-        return this.product.testing_end_date.split('T')[0].split('-')[0]
+        return new Date(this.product.testing_end_date).getFullYear()
       }
       return ''
     },
     monthEnd () {
       if (this.product.testing_end_date) {
-        return this.product.testing_end_date.split('T')[0].split('-')[1]
+        return new Date(this.product.testing_end_date).getMonth()
       }
       return ''
     },
     monthStringEnd () {
+      
+      let month = new Date(this.product.testing_end_date).getMonth()
       for (let i = 1; i < this.mounth_mas.length; i++) {
-        console.log(this.product.start_date.split('T')[0].split('-')[1] + ' = ' + i)
-        if (this.product.testing_end_date.split('T')[0].split('-')[1] == i) {
-          return this.mounth_mas[i - 1]
+        
+        if (month == i) {
+          return this.mounth_mas[i]
         }
       }
       return ''
     },
     dayEnd () {
       if (this.product.testing_end_date) {
-        return this.product.testing_end_date.split('T')[0].split('-')[2]
+        return new Date(this.product.testing_end_date).getDate()
       } else {
         return ''
       }
     },
     timeEnd () {
       if (this.product.testing_end_date) {
-        return this.product.testing_end_date.split('T')[1].split(':')[0] + ':' + this.product.testing_end_date.split('T')[1].split(':')[1]
+        let hours = new Date(this.product.testing_end_date).getHours()
+        let minutes = new Date(this.product.testing_end_date).getMinutes()
+        return hours + ":" + minutes
       } else {
         return ''
       }
     },
     dateEnd () {
-      return this.product.testing_end_date.split('T')[0]
+      if(this.product.testing_end_date)
+        return new Date(this.product.testing_end_date).toLocaleDateString()
+      return ''
     }
   },
+  mounted: function() {
+  },
   methods: {
+    endVideo (e) {
+      this.ytVideo1 = e.data
+    },
+    playCurrentVideo() {
+      this.$refs.youtube.player.playVideo();
+    },
+    onEnded() {
+      this.ytVideo1 = 0
+    },
     async registerSeminar () {
       if (this.$store.getters.getToken) {
         await axios({
@@ -594,17 +607,6 @@ export default {
         })
       }
     },
-    onEnded () {
-      this.btn_on = false
-      console.log('## OnEnded')
-    },
-    onPaused () {
-      console.log('## OnPaused')
-    },
-    onPlayed () {
-      console.log('## OnPlayed')
-    },
-
     goToTest (proId) {
       // alert(proId)
       this.$router.push({
@@ -686,56 +688,7 @@ export default {
   }
 }
 
-// // 2. This code loads the IFrame Player API code asynchronously.
-// var tag = document.createElement('script')
-//
-// tag.src = 'https://www.youtube.com/iframe_api'
-// var firstScriptTag = document.getElementsByTagName('script')[0]
-// firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
-//
-// // 3. This function creates an <iframe> (and YouTube player)
-// //    after the API code downloads.
-// var player
-//
-// window.onYouTubeIframeAPIReady () => () {
-//   alert(1)
-//   player = new YT.Player('player', {
-//     height: '360',
-//     width: '640',
-//     videoId: 'G7FRlymHcPA',
-//     events: {
-//       'onReady': onPlayerReady,
-//       'onStateChange': onPlayerStateChange
-//     }
-//   })
-// }
-//
-// // 4. The API will call this function when the video player is ready.
-// function onPlayerReady (event) {
-//   alert(2)
-//   event.target.playVideo()
-// }
-//
-// // 5. The API calls this function when the player's state changes.
-// //    The function indicates that when playing a video (state=1),
-// //    the player should play for six seconds and then stop.
-// var done = false
-//
-// function onPlayerStateChange (event) {
-//   alert(3)
-//   if (event.data == YT.PlayerState.PLAYING && !done) {
-//     setTimeout(stopVideo, 6000)
-//     done = true
-//   }
-//   if (event.data == 0) {
-//     alert('конец')
-//   }
-// }
-//
-// function stopVideo() {
-//   alert(4)
-//   player.stopVideo()
-// }
+
 </script>
 <style scoped src="@/assets/css/screen.css">
 </style>

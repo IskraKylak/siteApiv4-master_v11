@@ -2,15 +2,17 @@
   <div class="wrap_preloader lc" v-if="loading">
     <preloader :width="90" :height="90"></preloader>
   </div>
-  <div class="lc_content" v-if="myAcc.role === 'admin' && !loading">
-    <TableBase/>
+  <div v-if="myAcc" :class="[{'scroll-off' : modalValidate}]">
+    <div class="lc_content" v-if="myAcc.role === 'admin' && !loading">
+      <TableBase/>
 
-    <div class="box-btn-plus">
-      <button @click="modalValidate = !this.modalValidate" class="btn-plus" >
-        +
-      </button>
+      <div class="box-btn-plus">
+        <button @click="modalValidate = !modalValidate" class="btn-plus" >
+          +
+        </button>
+      </div>
+      <ModalAddEvent v-if="modalValidate" @close="closeModal()"/>
     </div>
-    <ModalAddEvent v-if="modalValidate" @close="closeModal()"/>
   </div>
 </template>
 <script>
@@ -57,9 +59,17 @@ export default {
         })
         .finally(() => (this.loading = false))
       this.myAcc = this.$store.getters.getMyAcc
+      console.log('this.myAcc')
+      console.log(this.myAcc)
     }
   }
 }
 </script>
 <style scoped src="@/assets/lc/css/style.css">
+</style>
+
+<style>
+.scroll-off {
+  overflow: hidden;
+}
 </style>

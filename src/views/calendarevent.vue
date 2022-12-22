@@ -15,7 +15,7 @@
           <div class="list-product">
             <div v-for="(item, idx) in masCalendarView" class="list-product__item" :key="idx">
               <div @click="goTodetail(item.id)" class="box">
-                <div class="box_img">
+                <div class="box_img" v-if="item.image">
                   <img
                     loading="lazy"
                     :src="item.image"
@@ -70,8 +70,7 @@
               <h4>
                 <a href="#"  @click.prevent="goTodetail(nearestItem.id)">{{ nearestItem.name }}</a>
               </h4>
-              <p>
-                {{ nearestItem.description }}
+              <p v-html="nearestItem.description">
               </p>
             </div>
           </div>
@@ -95,7 +94,7 @@
       </div>
       <!-- {{ info }} -->
       <div class="box_content container" v-if="info1">
-        <div v-for="(item, idx) in usersSort" class="item" :key="idx">
+        <div v-for="(item, idx) in info1" class="item" :key="idx">
           <div @click="goTodetail(item.id)" class="box">
             <div class="box_img">
               <img
@@ -104,7 +103,7 @@
                 alt=""
               />
               <div class="box_date">
-                <p class="date_number">{{ item.start_date.split('T')[0].split('-')[2] }}</p>
+                <p class="date_number">{{ item.day }}</p>
                 <p class="date_month">{{ item.mounth }}</p>
               </div>
             </div>
@@ -128,14 +127,14 @@
     <div class="box_pagination container">
       <ul class="pagination">
         <li><a href="#" class="prev" @click.prevent="prevPage"></a></li>
-        <li v-for="(tmpPag, idx) in pag"
+        <li v-for="(tmpPag, idx) in pagination"
             :key="idx">
           <a
             href="#"
-            :class="active === (idx + 1) ? 'active' : ''"
-            @click.prevent="openPage(idx + 1)"
+            :class="active === tmpPag ? 'active' : ''"
+            @click.prevent="openPage(tmpPag)"
           >
-            {{ idx + 1 }}
+            {{ tmpPag }}
           </a>
         </li>
         <li>
@@ -157,7 +156,7 @@ export default {
   name: 'calendarevent',
   components: {
     Calendar,
-    preloader
+    preloader,
   },
   data () {
     return {
@@ -169,8 +168,10 @@ export default {
       active: 1,
       data: '',
       info1: [],
+      countItem: 0,
       loading: false,
       masCalendarView: [],
+      nearestItem: {},
       mounth: [
         'Cічня', 'Лютого', 'Березня', 'Квітня', 'Травня', 'Червня', 'Липня', 'Серпня', 'Вересня', 'Жовтня', 'Листопада', 'Грудня']
     }
@@ -198,86 +199,109 @@ export default {
     async getNotify () {
       this.loading = true
       await axios
-        .get('https://asprof-test.azurewebsites.net/api/events/?format=json')
+        .get('https://asprof-test.azurewebsites.net/api/events/?ordering=-start_date&page_size=3')
         .then(respons => {
-          let res = respons.data
+          let res = respons.data.results
+          this.countItem = respons.data.count
           this.$store.dispatch('setClEvent', res)
           // this.messages = res;
-          // console.log("res event " + res)
+          // console.log(res)
         })
         .catch(error => {
           console.log(error)
         })
         .finally(() => (this.loading = false))
-      this.info1 = this.$store.getters.getClEvent
-      this.pag = Math.ceil(this.info1.length / this.page.length)
 
+      this.info1 = this.$store.getters.getClEvent
+
+      for(let i = 0; i < this.info1.length; i++) {
+        this.info1[i].mounth = this.mounth [new Date(this.info1[i].start_date).getMonth()]
+        this.info1[i].day = new Date(this.info1[i].start_date).getDate()
+      }
+
+      this.nearestItem = this.$store.getters.getClEvent[0]
+      this.nearestItem.mounth = this.mounth [new Date(this.nearestItem.start_date).getMonth()]
+      this.nearestItem.day = new Date(this.nearestItem.start_date).getDate()
+      this.pag = Math.ceil(this.info1.length / this.page.length)
     },
-    openPage (idx) {
-      this.active = idx
-      this.page.current = idx
+     async openPage(idx) {
+        this.active =  idx
+        await axios
+        .get(`https://asprof-test.azurewebsites.net/api/events/?ordering=-start_date&page_size=3&page=${idx}`)
+        .then(respons => {
+          let res = respons.data.results
+          this.countItem = respons.data.count
+          this.$store.dispatch('setClEvent', res)
+          // this.messages = res;
+          // console.log(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+        .finally(() => (this.loading = false))
+        this.info1 = this.$store.getters.getClEvent
+        for(let i = 0; i < this.info1.length; i++) {
+          this.info1[i].mounth = this.mounth [new Date(this.info1[i].start_date).getMonth()]
+          this.info1[i].day = new Date(this.info1[i].start_date).getDate()
+        }
     },
-    // sort(e) {
-    //   if (e === this.currentSort) {
-    //     this.currentSortDir = this.currentSortDir === "asc" ? "desc" : "asc";
-    //   }
-    //   this.currentSort = e;
-    // },
-    prevPage () {
-      if (this.page.current > 1) {
-        this.page.current -= 1
-        this.active = this.page.current
+    async prevPage () {
+      if(this.active > 1) {
+        this.active -= 1
+        await axios
+        .get(`https://asprof-test.azurewebsites.net/api/events/?ordering=-start_date&page_size=3&page=${this.active}`)
+        .then(respons => {
+          let res = respons.data.results
+          this.countItem = respons.data.count
+          this.$store.dispatch('setClEvent', res)
+          // this.messages = res;
+          // console.log(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+        .finally(() => (this.loading = false))
+        this.info1 = this.$store.getters.getClEvent
+
+        for(let i = 0; i < this.info1.length; i++) {
+          this.info1[i].mounth = this.mounth [new Date(this.info1[i].start_date).getMonth()]
+          this.info1[i].day = new Date(this.info1[i].start_date).getDate()
+        }
       }
     },
-    nextPage () {
-      if (this.page.current * this.page.length < this.info1.length) {
-        this.page.current += 1
-        this.active = this.page.current
+    async nextPage () {
+      if(this.active < this.pagination) {
+        this.active += 1
+        await axios
+        .get(`https://asprof-test.azurewebsites.net/api/events/?ordering=-start_date&page_size=3&page=${this.active}`)
+        .then(respons => {
+          let res = respons.data.results
+          this.countItem = respons.data.count
+          this.$store.dispatch('setClEvent', res)
+          // this.messages = res;
+          // console.log(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+        .finally(() => (this.loading = false))
+        this.info1 = this.$store.getters.getClEvent
+
+        for(let i = 0; i < this.info1.length; i++) {
+          this.info1[i].mounth = this.mounth [new Date(this.info1[i].start_date).getMonth()]
+          this.info1[i].day = new Date(this.info1[i].start_date).getDate()
+        }
       }
     }
   },
   computed: {
-    usersSort () {
-      for (let i = 0; i < this.info1.length; i++) {
-        this.info1[i].normal_date = new Date(this.info1[i].start_date).toLocaleDateString();
-        for (let n = 0; n < this.mounth.length; n++) {
-
-          if (parseInt(this.info1[i].start_date.split('T')[0].split('-')[1]) == (n + 1)) {
-            this.info1[i].mounth = this.mounth[n]
-            this.info1[i].day = new Date(this.info1[i].start_date).getDate()
-            this.info1[i].yaer = new Date(this.info1[i].start_date).getFullYear()
-          }
+    pagination() {
+        let pag = 0
+        for( let i = 0; i < this.countItem; i+=6) {
+            pag+=1
         }
-      }
-      return this.info1
-        .filter((row, index) => {
-          let start = (this.page.current - 1) * this.page.length
-          let end = this.page.current * this.page.length
-          if (index >= start && index < end) return true
-        })
+        return pag
     },
-    nearestItem () {
-      let item = false
-      let itemOldData = false
-      let date = new Date().getTime();
-      for (let index = 0; index < this.info1.length; ++index) {
-          let dateItem = new Date(this.info1[index].start_date).getTime();
-          if(date < dateItem) {
-              if (item){
-                if(dateItem < itemOldData) {
-                  itemOldData = dateItem
-                  item = this.info1[index]
-                }
-                
-              } else {
-                itemOldData = dateItem
-                item = this.info1[index]
-              }
-                
-           }     
-      }
-      return item
-    }
   }
 }
 </script>
@@ -285,8 +309,17 @@ export default {
 </style>
 <style scoped lang="scss">
 
+.list-product {
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 20px;
+  width: 100%;
+  margin-top: 20px
+}
+
 .list-product__item {
   max-width: 360px;
+  min-width: 360px;
   background: #f7f6f6;
   box-shadow: 0px 9px 12px rgba(216, 216, 216, 40%);
 
@@ -312,7 +345,7 @@ export default {
     padding: 10px 35px 27px;
     .box_date {
       padding-left: 28px;
-      background-image: url(/img/icon-calendar.ef86b879.svg);
+      // background-image: url(/img/icon-calendar.ef86b879.svg);
       background-position: left center;
       background-repeat: no-repeat;
       background-size: 17px;
@@ -324,7 +357,7 @@ export default {
     }
     .box_location {
       padding-left: 28px;
-      background-image: url(/img/icon-map.58a179a1.svg);
+      // background-image: url(/img/icon-map.58a179a1.svg);
       background-position: left top;
       background-repeat: no-repeat;
       background-size: 17px;
@@ -405,7 +438,20 @@ export default {
   padding-top: 0;
 }
 
+.calendar .calendar_section-1 .box_content {
+  grid-gap: 30px;
+}
+
+.calendar .calendar_section-1 .box_content .box_left[data-v-2bc12f1c], .calendar .calendar_section-1 .box_content .box_right {
+  width: max-content; 
+}
+
+.calendar .calendar_section-1 .box_content .box_left {
+  flex: 1 1 auto;
+}
+
 .box_right {
+  
   display: flex;
   justify-content: flex-end;
 }

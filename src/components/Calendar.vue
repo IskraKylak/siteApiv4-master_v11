@@ -67,11 +67,11 @@ export default {
   },
   methods: {
     dayTrue (day, month, year) {
-      let calendarStr = day + "." + month + "." + year
+      let calendarStr = (day + 1) + "." + (month + 1) + "." + year
       for (let index = 0; index < this.eventTrue.length; ++index) {
         let date = new Date(this.eventTrue[index].start_date)
-        let dataItem = date.getDate() + "." + date.getMonth() + "." + date.getFullYear()
-        // console.log('dataItem ' + dataItem)
+        let dataItem = (date.getDate() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear()
+        console.log('dataItem ' + dataItem + ' calendarStr ' + calendarStr)
         if(dataItem == calendarStr) {
             return true
         }
@@ -81,15 +81,16 @@ export default {
     },
     async getNotify () {
       await axios
-        .get('https://asprof-test.azurewebsites.net/api/events/?format=json')
+        .get('https://asprof-test.azurewebsites.net/api/events/?ordering=-start_date&page_size=100')
         .then(respons => {
-          let res = respons.data
+          let res = respons.data.results
           this.$store.dispatch('setClEvent', res)
         })
         .catch(error => {
           console.log(error)
         })
         .finally(() => (this.loading = false))
+      
       this.eventTrue = this.$store.getters.getClEvent
     },
     returnData (day) {

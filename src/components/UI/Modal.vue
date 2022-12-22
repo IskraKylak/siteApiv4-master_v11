@@ -1,6 +1,6 @@
 <template>
   <transition name="modal">
-    <div class="modal__wrapper" @click="$emit('close')">
+    <div class="modal__wrapper">
       <div class="modal__content" @click.stop="">
         <div class="modal-header">
           <span class="button-close" @click="$emit('close')">x</span>
@@ -35,6 +35,12 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+<style>
+
+
+
+</style>
+
 <style scoped>
 /* // animation */
 
@@ -59,7 +65,7 @@ export default {
   bottom: 0;
   transition: opacity 0.3s ease;
   z-index: 1002;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .modal__content {

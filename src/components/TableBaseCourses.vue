@@ -24,7 +24,7 @@
             <div class="td">{{ td.id }}</div>
             <div class="td">{{ td.name }}</div>
             <div class="td">{{ td.start_norm_date }}</div>
-            <div class="td">{{ td.place }}</div>
+            <div class="td">{{ td.points }}</div>
             <div class="td">
               <div @click="goToEvent(td.id)" class="icon_svg_table icon_svg_table_edit">
                 <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
@@ -103,8 +103,8 @@ export default {
           text: 'Дата'
         },
         {
-          name: 'office',
-          text: 'Місце'
+          name: 'points',
+          text: 'Балів за курс'
         },
         {
           name: 'action',
@@ -166,7 +166,7 @@ export default {
     },
     async removeEvent (prodId) {
       await axios({
-        url: `https://asprof-test.azurewebsites.net/api/events/${prodId}/`,
+        url: `https://asprof-test.azurewebsites.net/api/courses/${prodId}/`,
         method: 'DELETE',
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
@@ -185,7 +185,7 @@ export default {
       this.loading = true
       // if (this.entries.length === 0) {
       await axios
-        .get(`https://asprof-test.azurewebsites.net/api/events/?ordering=-start_date&page_size=${this.currentEntries}&page=${this.openPage}`)
+        .get(`https://asprof-test.azurewebsites.net/api/courses/?ordering=-start_date&page_size=${this.currentEntries}&page=${this.openPage}`)
         .then(respons => {
           this.$store.dispatch('setMessage', respons.data.results)
           this.countEvent = respons.data.count

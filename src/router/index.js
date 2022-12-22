@@ -63,7 +63,12 @@ const routes = [
     meta: { layout: 'empty' },
     component: () => import(/* webpackChunkName: "about" */ '../views/register.vue')
   },
-
+  {
+    path: '/another_domen_auth/:auth_token',
+    name: 'another_domen_auth',
+    meta: { layout: 'empty' },
+    component: () => import(/* webpackChunkName: "about" */ '../views/another_domen_auth.vue')
+  },
   {
     path: '/lc-events',
     name: 'lc-events',
@@ -72,6 +77,24 @@ const routes = [
       requiresAuth: true
     },
     component: () => import(/* webpackChunkName: "about" */ '../lc/Events.vue')
+  },
+  {
+    path: '/lc-vebinar',
+    name: 'lc-vebinar',
+    meta: {
+      layout: 'main',
+      requiresAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../lc/Vebinar.vue')
+  },
+  {
+    path: '/lc-courses',
+    name: 'lc-courses',
+    meta: {
+      layout: 'main',
+      requiresAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../lc/Courses.vue')
   },
   {
     path: '/lc-mysertificate',
@@ -127,15 +150,15 @@ const routes = [
     },
     component: () => import(/* webpackChunkName: "about" */ '../lc/UpdateUser.vue')
   },
-  {
-    path: '/lc-courses/:Pid',
-    name: 'lc-courses',
-    meta: {
-      layout: 'main',
-      requiresAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '../lc/Courses.vue')
-  },
+  // {
+  //   path: '/lc-courses/:Pid',
+  //   name: 'lc-courses',
+  //   meta: {
+  //     layout: 'main',
+  //     requiresAuth: true
+  //   },
+  //   component: () => import(/* webpackChunkName: "about" */ '../lc/Courses.vue')
+  // },
   {
     path: '/lc-users',
     name: 'lc-users',

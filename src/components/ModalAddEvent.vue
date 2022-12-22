@@ -4,186 +4,173 @@
 
       <div class="popUp">
         <form @submit.prevent="onSubmit">
-          <fieldset>
-            <legend>Назва події *</legend>
-            <input type="text" class="profile_input" v-model="singleEvent.name">
-          </fieldset>
+          <div class="wrap_inputs">
+              <fieldset>
+                <legend>Назва події *</legend>
+                <input type="text" class="profile_input" v-model="singleEvent.name">
+              </fieldset>
 
-          <p class="dropzone_title">Описание события</p>
-          <editor
-            api-key="no-api-key4"
-            @init="handleInit"
-            @destroy="handleDestroy"
-            @change="handleChange"
-            @input="handleInput"
-            @error="handleError"
-            :config="config"
-            name="qwerty"
-            ref="ref"
-            v-model="singleEvent.description"
-          />
-          <fieldset>
-            <legend>Дати проведення події (Початок)</legend>
-            <input type="datetime-local" v-model="singleEvent.start_date" class="profile_input">
-          </fieldset>
+              <p class="dropzone_title">Описание события</p>
+              <editor
+                api-key="no-api-key4"
+                @init="handleInit"
+                @destroy="handleDestroy"
+                @change="handleChange"
+                @input="handleInput"
+                @error="handleError"
+                :config="config"
+                name="qwerty"
+                ref="ref"
+                v-model="singleEvent.description"
+              />
+              <fieldset>
+                <legend>Дати проведення події (Початок)</legend>
+                <input type="datetime-local" v-model="singleEvent.start_date" class="profile_input">
+              </fieldset>
 
-          <fieldset>
-            <legend>Дати проведення події (Кінець)</legend>
-            <input type="datetime-local" v-model="singleEvent.end_date" class="profile_input">
-          </fieldset>
+              <fieldset>
+                <legend>Дати проведення події (Кінець)</legend>
+                <input type="datetime-local" v-model="singleEvent.end_date" class="profile_input">
+              </fieldset>
 
-          <fieldset>
-            <legend>Дата закриття доступу до тестування</legend>
-            <input type="datetime-local" v-model="singleEvent.testing_end_date" class="profile_input">
-          </fieldset>
+              <fieldset>
+                <legend>Дата закриття доступу до тестування</legend>
+                <input type="datetime-local" v-model="singleEvent.testing_end_date" class="profile_input">
+              </fieldset>
 
-          <fieldset>
-            <legend>Кількість годин</legend>
-            <input type="text" v-model="singleEvent.number_of_hours" class="profile_input">
-          </fieldset>
+              <fieldset>
+                <legend>Кількість годин</legend>
+                <input type="text" v-model="singleEvent.number_of_hours" class="profile_input">
+              </fieldset>
 
-          <fieldset>
-            <legend>Місце проведення</legend>
-            <input type="text" v-model="singleEvent.place" class="profile_input">
-          </fieldset>
+              <fieldset>
+                <legend>Місце проведення</legend>
+                <input type="text" v-model="singleEvent.place" class="profile_input">
+              </fieldset>
 
-          <div class="draft">
-            <input type="checkbox" class="checkbox" id="checkbox" v-model="singleEvent.is_draft"/>
-            <label for="checkbox">Чернетка</label>
+              <div class="draft">
+                <input type="checkbox" class="checkbox" id="checkbox" v-model="singleEvent.is_draft"/>
+                <label for="checkbox">Чернетка</label>
+              </div>
+
+              <p class="dropzone_title">Зображення для сторінки події</p>
+              <div class="d-none">
+                <input class="form-control" ref="fileInput2" type="file" @input="pickFile2">
+              </div>
+              <div class="wrap_inp_fiel">
+                <div class="imagePreviewWrapper"
+                    :style="previewFile.val != null ? { 'background-image': `url(${previewFile.val})`, 'background-color': `#fff` } : ''"
+                    @click="selectFile">
+                </div>
+                <span>
+            Натисніть сюди для завантаження файлу
+            <svg class="MuiSvgIcon-root MuiDropzoneArea-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
+              d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
+          </span>
+              </div>
+
+              <p class="dropzone_title">Файл для події</p>
+              <div class="d-none">
+                <input accept="image/x-png,image/gif,image/jpeg" class="form-control" ref="fileInput" type="file"
+                      @input="pickFile">
+              </div>
+              <div class="wrap_inp_fiel">
+                <div class="imagePreviewWrapper"
+                    :style="previewImage.val != null ? { 'background-image': `url(${previewImage.val})`, 'background-color': `#fff` } : ''"
+                    @click="selectImage">
+                </div>
+                <span>
+            Натисніть сюди для завантаження файлу
+            <svg class="MuiSvgIcon-root MuiDropzoneArea-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
+              d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
+          </span>
+              </div>
+
+              <p class="dropzone_title">Основний текст події</p>
+              <editor
+                api-key="no-api-key5"
+                @init="handleInit"
+                @destroy="handleDestroy"
+                @change="handleChange"
+                @input="handleInput"
+                @error="handleError"
+                :config="config"
+                name="qwerty"
+                ref="ref"
+                v-model="singleEvent.text"
+              />
+
+              <div class="radio_block">
+                <input type="checkbox" class="custom-checkbox" id="happy" v-model="singleEvent.private">
+                <label for="happy">Закрита подія</label>
+              </div>
+
+              <p class="dropzone_title">Спеціалізації користувачів, які можуть брати участь у навчанні</p>
+              <div class="wrap_inp">
+                <fieldset>
+                  <select multiple
+                          v-model="singleEvent.specializations"
+                  >
+                    <option
+                      v-for="spec in specializationList"
+                      :value="spec.id"
+                      :key="spec.name"
+                    >
+                      {{ spec.name }}
+                    </option>
+                  </select>
+                </fieldset>
+              </div>
+
+              <fieldset>
+                <legend>First Youtube ID</legend>
+                <input type="text" v-model="singleEvent.youtube_id_1" class="profile_input">
+              </fieldset>
+              <fieldset>
+                <legend>Second Youtube ID</legend>
+                <input type="text" v-model="singleEvent.youtube_id_2" class="profile_input">
+              </fieldset>
+
+              <fieldset>
+                <legend>Процент правильних відповідей для проходження тесту</legend>
+                <input type="text" v-model="singleEvent.success_percent" class="profile_input">
+              </fieldset>
+
+              <fieldset>
+                <legend>Кількість спроб пройти тестування (0 - безліч)</legend>
+                <input type="text" v-model="singleEvent.max_tries" class="profile_input">
+              </fieldset>
+
+              <fieldset>
+                <legend>Балів за подію</legend>
+                <input type="text" v-model="singleEvent.points" class="profile_input">
+              </fieldset>
+
+              <fieldset>
+                <legend>Название сертификата</legend>
+                <input type="text" v-model="singleEvent.certificate_title" class="profile_input">
+              </fieldset>
+
+              <p class="dropzone_title">Мова</p>
+
+              <p class="dropzone_title">Шаблон інтерактивної виставки</p>
+              <div class="d-none">
+                <input accept="image/x-png,image/gif,image/jpeg" class="form-control" ref="fileInput3" type="file"
+                      @input="pickFile3">
+              </div>
+              <div class="wrap_inp_fiel">
+                <div class="imagePreviewWrapper"
+                    :style="previewIneractive.val != null ? { 'background-image': `url(${previewIneractive.val})`, 'background-color': `#fff` } : ''"
+                    @click="selectInteractive">
+                </div>
+                <span>
+                  Натисніть сюди для завантаження файлу
+                  <svg class="MuiSvgIcon-root MuiDropzoneArea-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
+                    d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
+                </span>
+              </div>
           </div>
 
-          <p class="dropzone_title">Зображення для сторінки події</p>
-          <div class="d-none">
-            <input class="form-control" ref="fileInput2" type="file" @input="pickFile2">
-          </div>
-          <div class="wrap_inp_fiel">
-            <div class="imagePreviewWrapper"
-                 :style="previewFile.val != null ? { 'background-image': `url(${previewFile.val})`, 'background-color': `#fff` } : ''"
-                 @click="selectFile">
-            </div>
-            <span>
-        Натисніть сюди для завантаження файлу
-        <svg class="MuiSvgIcon-root MuiDropzoneArea-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
-          d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
-      </span>
-          </div>
-
-          <p class="dropzone_title">Файл для події</p>
-          <div class="d-none">
-            <input accept="image/x-png,image/gif,image/jpeg" class="form-control" ref="fileInput" type="file"
-                   @input="pickFile">
-          </div>
-          <div class="wrap_inp_fiel">
-            <div class="imagePreviewWrapper"
-                 :style="previewImage.val != null ? { 'background-image': `url(${previewImage.val})`, 'background-color': `#fff` } : ''"
-                 @click="selectImage">
-            </div>
-            <span>
-        Натисніть сюди для завантаження файлу
-        <svg class="MuiSvgIcon-root MuiDropzoneArea-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
-          d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
-      </span>
-          </div>
-
-          <p class="dropzone_title">Основний текст події</p>
-          <editor
-            api-key="no-api-key5"
-            @init="handleInit"
-            @destroy="handleDestroy"
-            @change="handleChange"
-            @input="handleInput"
-            @error="handleError"
-            :config="config"
-            name="qwerty"
-            ref="ref"
-            v-model="singleEvent.text"
-          />
-
-          <div class="radio_block">
-            <input type="checkbox" class="custom-checkbox" id="happy" v-model="singleEvent.private">
-            <label for="happy">Закрита подія</label>
-          </div>
-
-          <p class="dropzone_title">Спеціалізації користувачів, які можуть брати участь у навчанні</p>
-          <div class="wrap_inp">
-            <fieldset>
-              <select multiple
-                      v-model="singleEvent.specializations"
-              >
-                <option
-                  v-for="spec in specializationList"
-                  :value="spec.id"
-                  :key="spec.name"
-                >
-                  {{ spec.name }}
-                </option>
-              </select>
-            </fieldset>
-          </div>
-
-          <fieldset>
-            <legend>First Youtube ID</legend>
-            <input type="text" v-model="singleEvent.youtube_id_1" class="profile_input">
-          </fieldset>
-          <fieldset>
-            <legend>Second Youtube ID</legend>
-            <input type="text" v-model="singleEvent.youtube_id_2" class="profile_input">
-          </fieldset>
-
-          <fieldset>
-            <legend>Процент правильних відповідей для проходження тесту</legend>
-            <input type="text" v-model="singleEvent.success_percent" class="profile_input">
-          </fieldset>
-
-          <fieldset>
-            <legend>Кількість спроб пройти тестування (0 - безліч)</legend>
-            <input type="text" v-model="singleEvent.max_tries" class="profile_input">
-          </fieldset>
-
-          <fieldset>
-            <legend>Балів за подію</legend>
-            <input type="text" v-model="singleEvent.points" class="profile_input">
-          </fieldset>
-
-          <fieldset>
-            <legend>Название сертификата</legend>
-            <input type="text" v-model="singleEvent.certificate_title" class="profile_input">
-          </fieldset>
-
-          <p class="dropzone_title">Мова</p>
-<!--          <div class="radio_block radio_block1_update_evenets">-->
-<!--            <div class="radio radio_item">-->
-<!--              <input class="custom-radio" type="radio" id="color-1" value='1'>-->
-<!--              <label for="color-1">Український</label>-->
-<!--            </div>-->
-
-<!--            <div class="radio radio_item">-->
-<!--              <input class="custom-radio" type="radio" id="color-2" value='2'>-->
-<!--              <label for="color-2">Русский</label>-->
-<!--            </div>-->
-
-<!--            <div class="radio radio_item">-->
-<!--              <input class="custom-radio" type="radio" id="color-3" value='3'>-->
-<!--              <label for="color-3">English</label>-->
-<!--            </div>-->
-<!--          </div>-->
-
-          <p class="dropzone_title">Шаблон інтерактивної виставки</p>
-          <div class="d-none">
-            <input accept="image/x-png,image/gif,image/jpeg" class="form-control" ref="fileInput3" type="file"
-                   @input="pickFile3">
-          </div>
-          <div class="wrap_inp_fiel">
-            <div class="imagePreviewWrapper"
-                 :style="previewIneractive.val != null ? { 'background-image': `url(${previewIneractive.val})`, 'background-color': `#fff` } : ''"
-                 @click="selectInteractive">
-            </div>
-            <span>
-              Натисніть сюди для завантаження файлу
-              <svg class="MuiSvgIcon-root MuiDropzoneArea-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
-                d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
-            </span>
-          </div>
           <div class="profile_success success_file">
             <button class="profile_btn" type="submit">Зберегти</button>
           </div>
@@ -497,7 +484,10 @@ export default {
 
 <style scoped src="@/assets/lc/css/style.min.css">
 </style>
-<style>
+<style lang="scss">
+
+
+
 .popUp .profile_btn {
   margin-top: 0;
 }
@@ -590,15 +580,58 @@ fieldset.errorInput {
   padding-top: 30px;
 }
 
+.modal__wrapper.modal_add_event .modal-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.modal__wrapper.modal_add_event .modal-header .button-close{
+    font-size: 0;
+    display: block;
+    top: 20px;
+    right: 20px;
+    height: 24px;
+    width: 24px;
+
+   &::before {
+      content: ""; 
+      position: absolute; 
+      width: 24px; 
+      height: 4px; 
+      background: #fff;
+      transform: rotate(45deg);
+   }
+
+   &::after {
+      content: ""; 
+      position: absolute; 
+      width: 24px; 
+      height: 4px; 
+      background: #fff;
+      transform: rotate(-45deg);
+   }
+}
+
 .modal__wrapper.modal_add_event .modal__content {
-  padding: 40px;
-
-  max-height: calc(90vh - 30px);
+  padding: 30px;
+  box-sizing: border-box;
+  height: 90vh;
 }
 
-.modal__wrapper.modal_add_event .modal__content .modal-body {
+.modal__wrapper.modal_add_event .modal__content .modal-body,
+.modal__wrapper.modal_add_event .modal__content .modal-body .popUp,
+.modal__wrapper.modal_add_event .modal__content .modal-body .popUp form {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.modal__wrapper.modal_add_event .modal__content .modal-body .wrap_inputs {
   overflow-y: auto;
-  /*height: 100%;*/
-  max-height: calc(90vh - 70px);
+  box-sizing: border-box;
+  height: 90%;
+  padding: 0 5px;
 }
+
 </style>

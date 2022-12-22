@@ -12,22 +12,19 @@
           <div class="box_mini box_mini-1">
             <div class="box_adress">
               <h5>Адреса:</h5>
-              <p>04053, м. Київ,</p>
-              <p>вул. Кудрявська</p>
-              <p>буд. 3/5, оф. 4</p>
+              <p>{{ infoContact.location }}</p>
             </div>
           </div>
           <div class="box_mini box_mini-2">
             <div class="box_mail">
               <h5>Email:</h5>
-              <a href="mailto:asprofosvit@gmail.com">asprofosvit@gmail.com</a>
+              <a :href="'mailto:'+infoContact.email">{{ infoContact.email }}</a>
             </div>
           </div>
           <div class="box_mini box_mini-3">
             <div class="box_tel">
               <h5>телефон</h5>
-              <a class="tel" href="tel:+380443604550">+38 (044) 360-45-50</a>
-              <a class="tel" href="tel:+380672337591">+38 (067) 233-75-91</a>
+              <a class="tel" :href="'tel:'+item" v-for="(item, idx) in infoContact.tel" :key="idx">{{ item }}</a>
             </div>
           </div>
         </div>
@@ -40,7 +37,7 @@
             </form>
             <p>або</p>
             <div class="box_messendger">
-              <a class="link_facebook" href="https://www.facebook.com/"
+              <a class="link_facebook" :href="infoContact.facebook_link"
                 >facebook</a
               >
             </div>
@@ -56,14 +53,55 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+
 export default {
-  name: "contact",
-  data() {
+  data () {
     return {
-      title: "Contact",
-    };
+      infoContact: {
+          title: '',
+          text: '',
+          tel: [],
+          email: '',
+          location: 'вул. Деміївська, 13, м. Київ',
+          socTitle: 'Зв’язатися через соціальні мережі:',
+          facebook_link: '',
+          viber_link: '',
+          telegram_link: ''
+      }
+    }
   },
-};
+  created () {
+    this.getNotify()
+  },
+  methods: {
+    async getNotify () {
+      await axios({
+        method: 'GET',
+        url: ('https://asprof-test.azurewebsites.net/api/content/hippocrates/contacts/'),
+      }).then(response => {
+        this.infoContact.title = response.data.title
+        this.infoContact.text = response.data.text
+        this.infoContact.email = response.data.email
+        this.infoContact.tel = response.data.phones.split('\r\n')
+        this.infoContact.facebook_link = response.data.facebook_link
+        this.infoContact.viber_link = response.data.viber_link
+        this.infoContact.telegram_link = response.data.telegram_link
+        // this.messages = res;
+      })
+        .catch(error => {
+          this.$store.dispatch('logout')
+          console.log(error)
+        })
+        .finally()
+    }
+  },
+  computed: {
+    tokkent() {
+      return this.$store.getters.getToken
+    }
+  }
+}
 </script>
 <style scoped src="@/assets/css/screen.css" >
 </style>

@@ -599,7 +599,8 @@ fieldset.errorInput {
 }
 
 .modal__wrapper.update_partner .modal__content {
-  max-height: calc(90vh - 30px);
+  max-height: 90vh;
+  box-sizing: border-box;
 }
 
 .modal__wrapper.update_partner .modal__content .modal-body .boxes2 {

@@ -4,7 +4,7 @@
   </div>
   <div v-if="myAcc" :class="[{'scroll-off' : modalValidate}]">
     <div class="lc_content" v-if="myAcc.role === 'admin' && !loading">
-      <TableBaseCourses/>
+      <TableBaseVebinars/>
 
       <div class="box-btn-plus">
         <button @click="modalValidate = !modalValidate" class="btn-plus" >
@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-import TableBaseCourses from '@/components/TableBaseCourses.vue'
+import TableBaseVebinars from '@/components/TableBaseVebinars.vue'
 import axios from 'axios'
 import preloader from '@/components/UI/Preloader.vue'
 import ModalAddEvent from '@/components/ModalAddEvent.vue'
@@ -29,7 +29,7 @@ export default {
     }
   },
   components: {
-    TableBaseCourses,
+    TableBaseVebinars,
     preloader,
     ModalAddEvent
   },

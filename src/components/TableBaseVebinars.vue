@@ -166,7 +166,7 @@ export default {
     },
     async removeEvent (prodId) {
       await axios({
-        url: `https://asprof-test.azurewebsites.net/api/events/${prodId}/`,
+        url: `https://asprof-test.azurewebsites.net/api/webinars/${prodId}/`,
         method: 'DELETE',
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
@@ -185,7 +185,7 @@ export default {
       this.loading = true
       // if (this.entries.length === 0) {
       await axios
-        .get(`https://asprof-test.azurewebsites.net/api/events/?ordering=-start_date&page_size=${this.currentEntries}&page=${this.openPage}`)
+        .get(`https://asprof-test.azurewebsites.net/api/webinars/?ordering=-start_date&page_size=${this.currentEntries}&page=${this.openPage}`)
         .then(respons => {
           this.$store.dispatch('setMessage', respons.data.results)
           this.countEvent = respons.data.count

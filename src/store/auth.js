@@ -20,8 +20,8 @@ export default {
             const user = resp.data.refresh
             const token = resp.data.access
 
-            console.log('auth token-access:' + token)
-            console.log('auth refresh: ' + user)
+            // console.log('auth token-access:' + token)
+            // console.log('auth refresh: ' + user)
 
             localStorage.setItem('token', token)
             localStorage.setItem('user', user)
@@ -74,16 +74,24 @@ export default {
         delete axios.defaults.headers.common['Authorization']
         resolve()
       })
-    }
+    },
+    add_tokken({commit}, payload) {
+      axios.defaults.headers.common['Authorization'] = payload
+      localStorage.setItem('token', payload)
+      commit('set_tokken', payload)
+    },
   },
   mutations: {
+    set_tokken(state, obj) {
+      state.token = obj
+    },
     auth_request(state) {
       state.status = 'loading'
     },
     auth_success(state, obj) {
       state.status = 'success'
-      console.log('auth_success token-access: ' + obj.token)
-      console.log('auth_success refresh: ' + obj.user)
+      // console.log('auth_success token-access: ' + obj.token)
+      // console.log('auth_success refresh: ' + obj.user)
       state.token = obj.token
       state.user = obj.user
     },
