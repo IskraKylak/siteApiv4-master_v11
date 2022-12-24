@@ -11,7 +11,7 @@
           +
         </button>
       </div>
-      <ModalAddEvent v-if="modalValidate" @close="closeModal()"/>
+      <ModalAddCourses v-if="modalValidate" @close="closeModal()"/>
     </div>
   </div>
 </template>
@@ -19,7 +19,7 @@
 import TableBaseCourses from '@/components/TableBaseCourses.vue'
 import axios from 'axios'
 import preloader from '@/components/UI/Preloader.vue'
-import ModalAddEvent from '@/components/ModalAddEvent.vue'
+import ModalAddCourses from '@/components/ModalAddCourses.vue'
 export default {
   data () {
     return {
@@ -31,7 +31,7 @@ export default {
   components: {
     TableBaseCourses,
     preloader,
-    ModalAddEvent
+    ModalAddCourses
   },
   created () {
     this.getNotify()

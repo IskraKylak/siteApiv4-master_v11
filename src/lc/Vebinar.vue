@@ -11,7 +11,7 @@
           +
         </button>
       </div>
-      <ModalAddEvent v-if="modalValidate" @close="closeModal()"/>
+      <ModalAddVebinar v-if="modalValidate" @close="closeModal()"/>
     </div>
   </div>
 </template>
@@ -19,7 +19,7 @@
 import TableBaseVebinars from '@/components/TableBaseVebinars.vue'
 import axios from 'axios'
 import preloader from '@/components/UI/Preloader.vue'
-import ModalAddEvent from '@/components/ModalAddEvent.vue'
+import ModalAddVebinar from '@/components/ModalAddVebinar.vue'
 export default {
   data () {
     return {
@@ -31,7 +31,7 @@ export default {
   components: {
     TableBaseVebinars,
     preloader,
-    ModalAddEvent
+    ModalAddVebinar
   },
   created () {
     this.getNotify()

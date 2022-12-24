@@ -160,7 +160,7 @@ export default {
   methods: {
     goToEvent (prodId) {
       this.$router.push({
-        name: 'lc-updateevents',
+        name: 'lc-updatecourse',
         params: { Pid: prodId }
       })
     },

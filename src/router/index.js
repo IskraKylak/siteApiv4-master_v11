@@ -142,6 +142,24 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../lc/UpdateEvents.vue')
   },
   {
+    path: '/lc-updatevebinar/:Pid',
+    name: 'lc-updatevebinar',
+    meta: {
+      layout: 'main',
+      requiresAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../lc/UpdateVebinar.vue')
+  },
+  {
+    path: '/lc-updatecourse/:Pid',
+    name: 'lc-updatecourse',
+    meta: {
+      layout: 'main',
+      requiresAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../lc/UpdateCourse.vue')
+  },
+  {
     path: '/lc-updateuser/:Pid',
     name: 'lc-updateuser',
     meta: {
