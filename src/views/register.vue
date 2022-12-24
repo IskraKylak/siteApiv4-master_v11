@@ -278,6 +278,9 @@ export default {
   },
   created () {
     this.speciality = this.$store.getters.getSpecialization
+    if(this.$store.getters.getToken !== '') {
+      this.$router.push('/lc-profile')
+    }
   },
   validations () {
     return {

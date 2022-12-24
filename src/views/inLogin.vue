@@ -63,9 +63,17 @@ export default {
       },
     }
   },
+  computed: {
+    tokkent() {
+      return this.$store.getters.getToken
+    }
+  },
   mounted () {
     if (messages[this.$route.query.message]) {
       this.$message(messages[this.$route.query.message])
+    }
+    if(this.$store.getters.getToken !== '') {
+      this.$router.push('/lc-profile')
     }
   },
   methods: {
