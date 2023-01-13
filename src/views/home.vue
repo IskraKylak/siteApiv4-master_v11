@@ -1,9 +1,9 @@
 <template>
-  <div class="" v-if="info">
+  <div>
     <div class="wrap_preloader" v-if="loading">
       <preloader :width="90" :height="90"></preloader>
     </div>
-    <div>
+    <div v-if="info">
       <section class="section-1">
         <div class="box_slider slider-1">
           <div class="item" v-for="(baner, idx) in baners" :key="idx">
@@ -269,7 +269,7 @@ export default {
     return {
       info: null,
       banner: null,
-      loading: false
+      loading: true
     }
   },
   created () {
@@ -277,7 +277,7 @@ export default {
   },
   methods: {
     async getNotify () {
-      this.loading = true
+      // this.loading = true
       await axios
         .get('https://asprof-test.azurewebsites.net/api/content/asprofosvit/main/?format=json')
         .then(respons => {
@@ -298,8 +298,11 @@ export default {
         .catch(error => {
           console.log(error)
         })
-        .finally(() => (this.loading = false))
-      this.banner = this.$store.getters.getBanner
+        .finally(() => {
+          this.banner = this.$store.getters.getBanner
+          this.loading = false
+        })
+      
     }
   },
   computed: {

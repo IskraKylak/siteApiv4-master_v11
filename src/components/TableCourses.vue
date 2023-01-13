@@ -10,32 +10,32 @@
     <div class="wrap_table">
       <div class="wrap_my_table table_curses2">
         <table class="my_table">
-        <thead class="thead">
-          <tr>
-            <th v-for="th in columns" :key="th">
-              <div>
-                <span @click.prevent="sortByColumn(th.name)">{{ th.text }}</span>
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody class="tbody">
-          <tr v-for="td in filteredEntries" :key="td">
-            <td>{{ td.id }}</td>
-            <td>{{ td.email }}</td>
-            <td>{{ td.full_name }}</td>
-            <td>{{ td.phone }}</td>
-            <td>{{ td.work_phone }}</td>
-            <td>{{ td.region }}</td>
-            <td>{{ td.town }}</td>
-            <td>{{ td.job_place }}</td>
-            <td>{{ td.job_name }}</td>
-            <td>{{ td.specialization_name }}</td>
-            <td>{{ td.tests_count }}</td>
-            <td>{{ td.certificates_count }}</td>
-          </tr>
-        </tbody>
-      </table>
+          <thead class="thead">
+            <tr>
+              <th v-for="th in columns" :key="th">
+                <div>
+                  <span @click.prevent="sortByColumn(th.name)">{{ th.text }}</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="tbody">
+            <tr v-for="td in filteredEntries" :key="td">
+              <td>{{ td.id }}</td>
+              <td>{{ td.email }}</td>
+              <td>{{ td.full_name }}</td>
+              <td>{{ td.phone }}</td>
+              <td>{{ td.work_phone }}</td>
+              <td>{{ td.region }}</td>
+              <td>{{ td.town }}</td>
+              <td>{{ td.job_place }}</td>
+              <td>{{ td.job_name }}</td>
+              <td>{{ td.specialization_name }}</td>
+              <td>{{ td.tests_count }}</td>
+              <td>{{ td.certificates_count }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div class="table_foot">
         <div class="table_length">

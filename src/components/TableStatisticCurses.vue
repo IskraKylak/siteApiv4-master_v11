@@ -261,12 +261,6 @@ export default {
 
 <style lang="scss">
 
-.wrap_my_table {
-  width: 100%;
-  overflow-X: auto;
-  overflow-y:visible;
-}
-
 .my_table {
   min-width: 1600px;
 

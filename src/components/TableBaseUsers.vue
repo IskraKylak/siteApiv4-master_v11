@@ -12,38 +12,45 @@
              @keyup="searchEvent">
     </div>
     <div class="wrap_table">
-      <div class="table table_user">
-        <div class="thead">
-          <div class="tr">
-            <div class="th" v-for="th in columns" :key="th">
-              <div>
-                <span @click.prevent="sortByColumn(th.name)">{{ th.text }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="tbody">
-          <div class="tr" v-for="td in filteredEntries" :key="td">
-            <div class="td">{{ td.id }}</div>
-            <div class="td">{{ td.full_name }}</div>
-            <div class="td">{{ td.job_name }}</div>
-            <div class="td">{{ td.start_activity_date }}</div>
-            <div class="td">{{ td.phone }}</div>
-            <div class="td">{{ td.email }}</div>
-            <div class="td">
-              <div @click="goToEvent(td.id)" class="icon_svg_table icon_svg_table_edit">
-                <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
-                </svg>
-              </div>
-              <span class="icon_svg_table icon_svg_table_remove">
-            <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
-              d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
-          </span>
-            </div>
-          </div>
-        </div>
+      <div class="wrap_my_table">
+        <table class="table table_user">
+          <thead class="thead">
+            <tr class="tr">
+              <th class="th" v-for="th in columns" :key="th">
+                <div>
+                  <span @click.prevent="sortByColumn(th.name)">{{ th.text }}</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="tbody">
+            <tr class="tr" v-for="td in filteredEntries" :key="td">
+              <td class="td">{{ td.id }}</td>
+              <td class="td">{{ td.full_name }}</td>
+              <td class="td">{{ td.job_name }}</td>
+              <td class="td">{{ td.start_activity_date }}</td>
+              <td class="td">{{ td.phone }}</td>
+              <td class="td">{{ td.email }}</td>
+              <td class="td">
+                <div class="wrap_td_icons">
+                  <div @click="goToEvent(td.id)" class="icon_svg_table icon_svg_table_edit">
+                    <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
+                    </svg>
+                  </div>
+                  <span class="icon_svg_table icon_svg_table_remove">
+                    <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
+                      d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
+                  </span>
+                  <span class="icon_svg_table icon_svg_table_remove">
+                      <div class="svg_import MuiSvgIcon-root"></div>
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div class="table_foot">
         <div class="table_length">

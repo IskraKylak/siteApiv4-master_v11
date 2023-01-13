@@ -59,8 +59,8 @@ export default {
         })
         .finally(() => (this.loading = false))
       this.myAcc = this.$store.getters.getMyAcc
-      console.log('this.myAcc')
-      console.log(this.myAcc)
+      // console.log('this.myAcc')
+      // console.log(this.myAcc)
     }
   }
 }

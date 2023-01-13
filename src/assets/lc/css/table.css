@@ -6,6 +6,13 @@
     font-style: normal;
 }
 
+.svg_import {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg version='1.0' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1250.000000 1280.000000' preserveAspectRatio='xMidYMid meet'%3e%3cmetadata%3e Created by potrace 1.15, written by Peter Selinger 2001-2017 %3c/metadata%3e%3cg transform='translate(0.000000,1280.000000) scale(0.100000,-0.100000)' fill='%231faeea' stroke='none'%3e%3cpath d='M0 6400 l0 -6400 6250 0 6250 0 -1 5368 0 5367 -1047 1032 -1047 1033 -5202 0 -5203 0 0 -6400z m9390 3555 l0 -1935 -3140 0 -3140 0 0 1935 0 1935 3140 0 3140 0 0 -1935z m1370 -6450 l0 -2455 -4510 0 -4510 0 0 2455 0 2455 4510 0 4510 0 0 -2455z'/%3e%3cpath d='M7210 9955 l0 -1205 695 0 695 0 0 1205 0 1205 -695 0 -695 0 0 -1205z'/%3e%3cpath d='M2650 4845 l0 -295 3600 0 3600 0 0 295 0 295 -3600 0 -3600 0 0 -295z'/%3e%3cpath d='M2652 3518 l3 -293 3595 0 3595 0 3 293 2 292 -3600 0 -3600 0 2 -292z'/%3e%3cpath d='M2650 2110 l0 -290 3600 0 3600 0 0 290 0 290 -3600 0 -3600 0 0 -290z'/%3e%3c/g%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px;
+}
+
 .main-lc {
     font-family: "Helvetica";
     font-weight: normal;
@@ -14,10 +21,6 @@
 
 .main-lc .main {
     color: rgba(0, 0, 0, 0.87);
-}
-
-.wrap_table_component {
-
 }
 
 .wrap_table {
@@ -32,8 +35,19 @@
 
 .table {
     overflow: auto;
+    min-width: 800px;
 }
 
+.wrap_td_icons {
+    display: flex;
+    grid-gap: 10px;
+}
+
+.wrap_my_table {
+    width: 100%;
+    overflow-X: auto;
+    overflow-y:visible;
+}
 
 .table .thead .tr,
 .table .tbody .tr {
@@ -41,9 +55,29 @@
     width: 100%;
 }
 
+.table {
+    width: 100%;
+}
+
+.table .thead .tr {
+    text-align: left;
+}
+
+.table .thead .tr .th {
+    padding: 10px;
+    border-bottom: 1px solid rgba(224, 224, 224, 1);
+}
+
+.table .tbody .tr .td {
+    padding: 10px;
+    border-bottom: 1px solid rgba(224, 224, 224, 1);
+    height: auto;
+}
+
+/*
 .table .thead,
 .table .tbody {
-    min-width: 1225px;
+    min-width: 400px;
     max-width: 100%;
 }
 
@@ -58,7 +92,6 @@
     max-width: 100%;
     border-bottom: 1px solid rgba(224, 224, 224, 1);
     display: grid;
-    /*grid-template-columns: 100px 500px 200px 300px 120px;*/
 }
 
 .table_curses .thead .tr,
@@ -71,7 +104,7 @@
 .table_vebinar .tbody .tr {
     grid-template-columns: 100px minmax(300px, calc(30% - 80px)) minmax(150px, calc(12% - 20px)) minmax(150px, calc(12% - 20px)) minmax(150px, calc(12% - 20px)) minmax(150px, calc(12% - 20px)) minmax(150px, calc(12% - 20px)) minmax(150px, calc(10% - 20px)) 100px;
 }
-
+ 
 .table_event .thead .tr,
 .table_event .tbody .tr {
     grid-template-columns: 100px minmax(500px, calc(50% - 100px)) minmax(200px, calc(25% - 50px)) minmax(300px, calc(25% - 50px)) 100px;
@@ -91,13 +124,13 @@
 
 .table .thead .tr .th:first-child,
 .table .tbody .tr .td:first-child {
-    padding-left: 40px;
+    padding-left: 20px;
 }
-
+*/
 .table .tbody .tr .td .icon_svg_table svg {
     width: 24px;
     max-height: 24px;
-}
+} 
 
 .main .lc_content {
     padding: 24px;
