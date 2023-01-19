@@ -187,13 +187,31 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../lc/Users.vue')
   },
   {
-    path: '/lc-updateevents/:Pid/test',
-    name: 'lc-test',
+    path: '/lc-updateevents/:Pid/testEvent',
+    name: 'lc-testEvent',
     meta: {
       layout: 'main',
       requiresAuth: true
     },
-    component: () => import(/* webpackChunkName: "about" */ '../lc/Test.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../lc/TestEvent.vue')
+  },
+  {
+    path: '/lc-updateevents/:Pid/testWebinar',
+    name: 'lc-testWebinar',
+    meta: {
+      layout: 'main',
+      requiresAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../lc/TestWebinar.vue')
+  },
+  {
+    path: '/lc-updateevents/:Pid/testCourse',
+    name: 'lc-testCourse',
+    meta: {
+      layout: 'main',
+      requiresAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../lc/TestCourse.vue')
   },
   {
     path: '/:catchAll(.*)',

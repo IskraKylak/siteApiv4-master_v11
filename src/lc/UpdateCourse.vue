@@ -359,7 +359,7 @@
     </form>
     <!--    -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
     <div class="update_block">
-      <button @click.prevent="goToTest(singleEvent.id)" class="back_btn">Редагування тесту до події</button>
+      <button @click.prevent="goToTest(singleEvent.id)" class="back_btn">Редагування тесту до курсу</button>
       <button class="back_btn">Редагувати опитування</button>
     </div>
     <modalValidate class="update_partner" v-if="modalValidate" :isPartner="isPartner" :idItem="idItem" :idEvent="idEvent" @close="closeModal()"/>
@@ -477,7 +477,7 @@ export default {
     async goToTest (prodId) {
       if (this.singleEvent.test == null) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/events/${prodId}/test/`,
+          url: `https://asprof-test.azurewebsites.net/api/courses/${prodId}/test/`,
           method: 'POST',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
@@ -493,7 +493,7 @@ export default {
           .finally(() => (this.loading = false))
       }
       this.$router.push({
-        name: 'lc-test',
+        name: 'lc-testCourse',
         params: { Pid: prodId }
       })
     },

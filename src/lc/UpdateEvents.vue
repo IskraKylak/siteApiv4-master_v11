@@ -494,7 +494,7 @@ export default {
           .finally(() => (this.loading = false))
       }
       this.$router.push({
-        name: 'lc-test',
+        name: 'lc-testEvent',
         params: { Pid: prodId }
       })
     },

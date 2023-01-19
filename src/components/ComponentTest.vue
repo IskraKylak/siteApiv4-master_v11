@@ -121,11 +121,17 @@
 import axios from 'axios'
 
 export default {
-  // components: {
-  //   question
-  // },
+  props: ['content'],
   data () {
     return {
+        test: {
+            name: '',
+            result: '',
+            questionsList: '',
+            questionsId: '',
+            questionsAnsverList: '',
+            questionsAnsverId: '',
+        },
       proId: this.$route.params.Pid,
       questions: []
     }
@@ -143,9 +149,14 @@ export default {
             title: quest.answers_set[i].title,
             is_correct: quest.answers_set[i].is_correct
           }
+
+ 
+          let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${quest.id}/answers/${quest.answers_set[i].id}/`
+
+
           await axios({
             method: 'PUT',
-            url: (`https://asprof-test.azurewebsites.net/api/events/${this.proId}/test/questions/${quest.id}/answers/${quest.answers_set[i].id}/`),
+            url: (api),
             data: elem,
             headers: {
               Authorization: 'Bearer ' + this.$store.getters.getToken
@@ -175,9 +186,12 @@ export default {
         multiple_answers: this.questions[idx].multiple_answers,
       }
       // console.log(elem)
+
+      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${this.questions[idx].id}/`
+
       await axios({
         method: 'PUT',
-        url: (`https://asprof-test.azurewebsites.net/api/events/${this.proId}/test/questions/${this.questions[idx].id}/`),
+        url: (api),
         data: elem,
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
@@ -198,9 +212,13 @@ export default {
     },
     // удаление вопросов/ответов
     async removeAnsver (idx, idxA) {
+
+      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${idx}/answers/${idxA}/`
+
+
       await axios({
         method: 'DELETE',
-        url: (`https://asprof-test.azurewebsites.net/api/events/${this.proId}/test/questions/${idx}/answers/${idxA}/`),
+        url: (api),
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
         }
@@ -216,9 +234,12 @@ export default {
         .finally(() => (this.loading = false))
     },
     async removeQuestion (idx) {
+
+      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${idx}/`
+
       await axios({
         method: 'DELETE',
-        url: (`https://asprof-test.azurewebsites.net/api/events/${this.proId}/test/questions/${idx}/`),
+        url: (api),
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
         }
@@ -236,10 +257,13 @@ export default {
     // ---------------------------
     async getNotify () {
       // this.loading = true
+
+      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/`
+
       this.myAcc = this.$store.getters.getMyAcc
       await axios({
         method: 'GET',
-        url: (`https://asprof-test.azurewebsites.net/api/events/${this.proId}/test/questions/`),
+        url: (api),
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
         }
@@ -287,9 +311,12 @@ export default {
             title: this.questions[idx].answers_set[i].title,
             is_correct: this.questions[idx].answers_set[i].is_correct
           }
+
+          let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${this.questions[idx].id}/answers/${this.questions[idx].answers_set[i].id}/`
+                
           await axios({
             method: 'PUT',
-            url: (`https://asprof-test.azurewebsites.net/api/events/${this.proId}/test/questions/${this.questions[idx].id}/answers/${this.questions[idx].answers_set[i].id}/`),
+            url: (api),
             data: elem2,
             headers: {
               Authorization: 'Bearer ' + this.$store.getters.getToken
@@ -307,8 +334,13 @@ export default {
         title: '',
         is_correct: false
       }
+
+
+      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${this.questions[idx].id}/answers/`
+
+
       await axios({
-        url: `https://asprof-test.azurewebsites.net/api/events/${this.proId}/test/questions/${this.questions[idx].id}/answers/`,
+        url: api,
         method: 'POST',
         data: elem,
         headers: {
@@ -330,10 +362,17 @@ export default {
         multiple_answers: true
         // answers_set: []
       }
+      let api = ''
+      if(this.content === 'courses') {
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/`
+      } else {
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/`
+      }
+      
 
       // console.log(elem)
       await axios({
-        url: `https://asprof-test.azurewebsites.net/api/events/${this.proId}/test/questions/`,
+        url: api,
         method: 'POST',
         data: elem,
         headers: {
