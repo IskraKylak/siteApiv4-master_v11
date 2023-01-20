@@ -45,7 +45,7 @@
       </div>
     </form>
     <div class="update_block">
-      <button @click.prevent="goToTest(singleEvent.id)" class="back_btn">Редагування тесту до курсу</button>
+      <button @click.prevent="goToTest(singleEvent.id)" class="back_btn">Редагування тесту до уроку</button>
       <!-- <button class="back_btn">Редагувати опитування</button> -->
     </div>
     <modalValidate class="update_partner" v-if="modalValidate" :isPartner="isPartner" :idItem="idItem" :idEvent="idEvent" @close="closeModal()"/>
