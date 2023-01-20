@@ -163,196 +163,39 @@
         <input type="text" v-model="singleEvent.points" class="profile_input">
       </fieldset>
 
-      <!-- <fieldset>
-        <legend>Название сертификата</legend>
-        <input type="text" v-model="singleEvent.certificate_title" class="profile_input">
-      </fieldset> -->
-
-      <!-- <p class="dropzone_title">Мова</p>
-      <div class="radio_block radio_block1_update_evenets">
-        <div class="radio radio_item">
-          <input class="custom-radio" type="radio" id="color-1">
-          <label for="color-1">Українська</label>
+      <div class="regulations-content">
+        <legend>Уроки</legend>
+        <table class="table">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Назва</th>
+            <th>Порядок</th>
+            <th>Дії</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(item, idx) in singleEvent.lessons_set" :key="idx">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.order_number }}</td>
+            <td>
+              <div class="events_item-block">
+                <div class="events_item" @click="clickModal(item.id)">
+                  <i class="fas fa-pencil-alt"></i>
+                </div>
+                <div class="events_item" @click="removeLessons(item.id)">
+                  <i class="fas fa-trash-restore-alt"></i>
+                </div>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div @click="modalValidate = !modalValidate"  class="back_btn t">
+          Додати новий урок
         </div>
-
-        <div class="radio radio_item">
-          <input class="custom-radio" type="radio" id="color-2">
-          <label for="color-2">Русский</label>
-        </div>
-
-        <div class="radio radio_item">
-          <input class="custom-radio" type="radio" id="color-3">
-          <label for="color-3">English</label>
-        </div>
-      </div> -->
-
-      <!-- <p class="dropzone_title">Шаблон інтерактивної виставки</p>
-      <div class="d-none">
-        <input accept="image/x-png,image/gif,image/jpeg" class="form-control" ref="fileInput3" type="file"
-               @input="pickFile3">
       </div>
-      <div class="wrap_inp_fiel">
-        <div class="imagePreviewWrapper"
-             :style="previewIneractive.val != null ? { 'background-image': `url(${previewIneractive.val})`, 'background-color': `#fff` } : ''"
-             @click="selectInteractive">
-        </div>
-        <span>
-        Натисніть сюди для завантаження файлу
-        <svg class="MuiSvgIcon-root MuiDropzoneArea-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
-          d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
-      </span>
-      </div> -->
-
-      <!--    <p class="dropzone_title">Подія</p>-->
-      <!--    <div class="radio_block radio_block1_update_evenets">-->
-      <!--      <div class="radio radio_item">-->
-      <!--        <input class="custom-radio" type="radio" id="nofree" name="color" value="indigo">-->
-      <!--        <label for="nofree">Платное</label>-->
-      <!--      </div>-->
-
-      <!--      <div class="radio radio_item">-->
-      <!--        <input class="custom-radio" type="radio" id="free" name="color" value="red">-->
-      <!--        <label for="free">Бесплатное</label>-->
-      <!--      </div>-->
-      <!--    </div>-->
-      <!--    <fieldset>-->
-      <!--      <legend>Вартість події *</legend>-->
-      <!--      <input type="text" class="profile_input" required>-->
-      <!--    </fieldset>-->
-
-      <!--    <fieldset>-->
-      <!--      <legend>Балів за подію</legend>-->
-      <!--      <input type="text" class="profile_input">-->
-      <!--    </fieldset>-->
-
-      <!--    <fieldset>-->
-      <!--      <legend>Максимальна кількість глядачів</legend>-->
-      <!--      <input type="number" class="profile_input">-->
-      <!--    </fieldset>-->
-      <!--    &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-      <!-- <h1 class="title_update_table_events">Список партнеров</h1>
-      <div class="content-regulations">
-        <div class="tabs">
-          <label
-            :for="item.for"
-            v-for="item in tabs"
-            :key="item.for"
-            ref='tabs'
-            class="tab-title"
-            :class="item.isOpen ? 'open' : ''"
-            @click="openTab(item)"
-          >
-            {{ item.text }}
-          </label>
-        </div>
-        <div class="tabs-content">
-          <div class="wrap-regulations-content">
-            <input type="radio" name="tab-group" class="tab" id="tab1" checked="">
-            <div class="regulations-content">
-              <table class="table">
-                <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Назва</th>
-                  <th>Порядок</th>
-                  <th>Дії</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(item, idx) in singleEvent.main_partners_set" :key="item.id">
-                  <td>{{ item.id }}</td>
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.order_number }}</td>
-                  <td>
-                    <div class="events_item-block">
-                      <div class="events_item" @click="removePartner('mainPartner', item.id)">
-                        <i class="fas fa-trash-restore-alt"></i>
-                      </div>
-                      <div class="events_item" @click="clickModal('mainPartner', idx, singleEvent.id)">
-                        <i class="fas fa-pencil-alt"></i>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-              <div @click="modalValidate = !modalValidate; isPartner = 'mainPartner'; idEvent = singleEvent.id;" class="back_btn t">Добавить нового
-                партнера
-              </div>
-            </div>
-          </div>
-          <div class="wrap-regulations-content">
-            <input type="radio" name="tab-group" class="tab" id="tab2">
-            <div class="regulations-content">
-              <table class="table">
-                <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Назва</th>
-                  <th>Порядок</th>
-                  <th>Дії</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(item, idx) in singleEvent.partners_set" :key="item.id">
-                  <td>{{ item.id }}</td>
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.order_number }}</td>
-                  <td>
-                    <div class="events_item-block">
-                      <div class="events_item" @click="removePartner('partner', item.id)">
-                        <i class="fas fa-trash-restore-alt"></i>
-                      </div>
-                      <div class="events_item" @click="clickModal('partner', idx, singleEvent.id)">
-                        <i class="fas fa-pencil-alt"></i>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-              <div @click="modalValidate = !modalValidate; isPartner = 'partner'; idEvent = singleEvent.id; " class="back_btn t">Добавить нового
-                партнера
-              </div>
-            </div>
-          </div>
-          <div class="wrap-regulations-content">
-            <input type="radio" name="tab-group" class="tab" id="tab3">
-            <div class="regulations-content">
-              <table class="table">
-                <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Назва</th>
-                  <th>Порядок</th>
-                  <th>Дії</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(item, idx) in singleEvent.media_partners_set" :key="idx">
-                  <td>{{ item.id }}</td>
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.order_number }}</td>
-                  <td>
-                    <div class="events_item-block">
-                      <div class="events_item" @click="removePartner('mediaPartner', item.id)">
-                        <i class="fas fa-trash-restore-alt"></i>
-                      </div>
-                      <div class="events_item" @click="clickModal('mediaPartner', idx, singleEvent.id)">
-                        <i class="fas fa-pencil-alt"></i>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-              <div @click="modalValidate = !modalValidate; isPartner = 'mediaPartner'; idEvent = singleEvent.id;" class="back_btn t">Добавить
-                нового партнера
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> -->
       <div class="profile_success success_file">
         <button class="profile_btn" type="submit">Зберегти</button>
       </div>
@@ -360,9 +203,9 @@
     <!--    -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
     <div class="update_block">
       <button @click.prevent="goToTest(singleEvent.id)" class="back_btn">Редагування тесту до курсу</button>
-      <button class="back_btn">Редагувати опитування</button>
+      <!-- <button class="back_btn">Редагувати опитування</button> -->
     </div>
-    <modalValidate class="update_partner" v-if="modalValidate" :isPartner="isPartner" :idItem="idItem" :idEvent="idEvent" @close="closeModal()"/>
+    <ModalAddLesson class="update_partner" :content="singleEvent.id" v-if="modalValidate" @close="closeModal()"/>
   </div>
 </template>
 <style scoped src="@/assets/lc/css/style.css">
@@ -371,7 +214,7 @@
 
 import Editor from '@tinymce/tinymce-vue'
 import axios from 'axios'
-import modalValidate from '@/components/ModalValidate.vue'
+import ModalAddLesson from '@/components/ModalAddLesson.vue'
 import preloader from '@/components/UI/Preloader.vue'
 const config = {
   height: 500,
@@ -442,24 +285,7 @@ export default {
         val: null,
         click: false
       },
-      proId: this.$route.params.Pid,
-      tabs: [
-        {
-          for: 'tab1',
-          text: 'Головні партнери',
-          isOpen: true
-        },
-        {
-          for: 'tab2',
-          text: 'Партнери',
-          isOpen: false
-        },
-        {
-          for: 'tab3',
-          text: 'Медіа партнери',
-          isOpen: false
-        }
-      ],
+      proId: this.$route.params.Pid2,
       modalValidate: false,
       isPartner: '',
       idItem: null
@@ -467,7 +293,7 @@ export default {
   },
   components: {
     editor: Editor,
-    modalValidate,
+    ModalAddLesson,
     preloader
   },
   created () {
@@ -505,29 +331,13 @@ export default {
         description: this.singleEvent.description,
         start_date: this.singleEvent.start_date,
         end_date: this.singleEvent.end_date,
-        // testing_end_date: this.singleEvent.testing_end_date,
         number_of_hours: this.singleEvent.number_of_hours,
-        // place: this.singleEvent.place,
         is_draft: this.singleEvent.is_draft,
-        // image: this.singleEvent.image,
-        // event_documents: this.singleEvent.id,
         text: this.singleEvent.text,
-        // private: this.singleEvent.private,
         specializations: this.singleEvent.specializations,
-        // youtube_id: this.singleEvent.youtube_id,
-        // youtube_id_2: this.singleEvent.youtube_id_2,
         success_percent: this.singleEvent.success_percent,
         max_tries: this.singleEvent.max_tries,
-        // registered: this.singleEvent.registered,
         certificate_title: this.singleEvent.certificate_title,
-        // language: this.singleEvent.language,
-        // need_pay: this.singleEvent.need_pay,
-        // price: this.singleEvent.price,
-        // is_free: this.singleEvent.is_free
-        // partners_banner: this.singleEvent.id,
-        // media_partners_set: this.singleEvent.id,
-        // main_partners_set: this.singleEvent.id,
-        // partners_set: this.singleEvent.id
       }
       await axios({
         url: `https://asprof-test.azurewebsites.net/api/courses/${this.proId}/`,
@@ -610,73 +420,33 @@ export default {
           .finally(() => (this.loading = false))
       }
     },
-    async removePartner (tab, id) {
-      if (tab === 'mainPartner') {
-        await axios({
-          url: `https://asprof-test.azurewebsites.net/api/courses/${this.singleEvent.id}/main_partners/${id}/`,
+    async removeLessons (id) {
+      await axios({
+          url: `https://asprof-test.azurewebsites.net/api/courses/${this.singleEvent.id}/lessons/${id}/`,
           method: 'DELETE',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
           }
         }).then(respons => {
           // console.log(respons)
-          this.$message('Партнера видалено!')
+          this.$message('Урок видалено!')
         })
-          .catch(error => {
-            console.log(error)
-            this.$message('Помилка')
-          })
-          .finally(() => (this.loading = false))
-      } else if (tab === 'partner') {
-        await axios({
-          url: `https://asprof-test.azurewebsites.net/api/courses/${this.singleEvent.id}/partners/${id}/`,
-          method: 'DELETE',
-          headers: {
-            Authorization: 'Bearer ' + this.$store.getters.getToken
-          }
-        }).then(respons => {
-          // console.log(respons)
-          this.$message('Партнера видалено!')
+        .catch(error => {
+          console.log(error)
+          this.$message('Помилка')
         })
-          .catch(error => {
-            console.log(error)
-            this.$message('Помилка')
-          })
-          .finally(() => (this.loading = false))
-      } else if (tab === 'mediaPartner') {
-        await axios({
-          url: `https://asprof-test.azurewebsites.net/api/courses/${this.singleEvent.id}/media_partners/${id}/`,
-          method: 'DELETE',
-          headers: {
-            Authorization: 'Bearer ' + this.$store.getters.getToken
-          }
-        }).then(respons => {
-          // console.log(respons)
-          this.$message('Партнера видалено!')
-        })
-          .catch(error => {
-            console.log(error)
-            this.$message('Помилка')
-          })
-          .finally(() => (this.loading = false))
-      }
+        .finally(() => (this.loading = false))
       this.getNotify()
     },
     // eslint-disable-next-line camelcase
-    clickModal (tab, id, id_event) {
-      // console.log('clickModal: ' + id)
-      // console.log('clickModal tab: ' + tab)
-      // console.log('clickModal id_event: ' + id_event)
-      this.modalValidate = !this.modalValidate
-      this.isPartner = tab
-      this.idItem = id
-      // eslint-disable-next-line camelcase
-      this.idEvent = id_event
+    clickModal (id) {
+        this.$router.push({
+        name: 'lc-updateLesson',
+        params: { Pid3: id }
+      })
     },
     closeModal () {
       this.modalValidate = false
-      // this.singleEvent = this.$store.getters.getSingleEvent
-      this.idItem = null
       this.getNotify()
     },
     async getNotify () {

@@ -171,7 +171,7 @@ export default {
     goToEvent (prodId) {
       this.$router.push({
         name: 'lc-updatecourse',
-        params: { Pid: prodId }
+        params: { Pid2: prodId }
       })
     },
     async removeEvent (prodId) {

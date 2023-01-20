@@ -5,17 +5,6 @@
       <a href="https://asprof-test.azurewebsites.net/api/statistics/events/summary/excel/" class="import_btn">ЕКСПОРТ В EXCEL</a>
     </div>
     <TableStatisticCurses />
-<!--    <div class="import-excel" style="margin-top: 40px">-->
-<!--      <h2 class="main_title">Статистика по вебінарам</h2>-->
-<!--      <button class="import_btn">ЕКСПОРТ В EXCEL</button>-->
-<!--    </div>-->
-<!--    <TableVebinar />-->
-<!--    <div class="table_static_wrapper">-->
-<!--      <div class="import-excel">-->
-<!--        <h2 class="main_title">Статистика по подіях</h2>-->
-<!--        <button class="import_btn">ЕКСПОРТ В EXCEL</button>-->
-<!--      </div>-->
-<!--    </div>-->
   </div>
 </template>
 <script>
