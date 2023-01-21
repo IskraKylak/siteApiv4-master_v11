@@ -1,5 +1,10 @@
 <template>
-  <ComponentTest :content="'events'" />
+<div class="containerTest">
+    <div class="profile_success">
+      <router-link :to="'/lc-updateevents/'+ this.$route.params.Pid" class="back_btn">Назад</router-link>
+      <ComponentTest :content="`events/${this.$route.params.Pid}`" :course="false" />
+    </div>
+  </div>
 </template>
 <script>
 import ComponentTest from '@/components/ComponentTest.vue'
@@ -11,4 +16,15 @@ export default {
 }
 </script>
 
+<style lang="scss">
+  .containerTest {
+    padding: 40px;
+  }
 
+  .back_btn {
+    display: flex;
+    width: max-content;
+    margin-bottom: 20px;
+  }
+
+</style>

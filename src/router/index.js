@@ -169,6 +169,15 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../lc/UpdateLesson.vue')
   },
   {
+    path: '/lc-updatecourse/:Pid2/lesson/:Pid3/testLesson',
+    name: 'lc-testLesson',
+    meta: {
+      layout: 'main',
+      requiresAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../lc/TestLesson.vue')
+  },
+  {
     path: '/lc-updateuser/:Pid',
     name: 'lc-updateuser',
     meta: {

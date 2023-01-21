@@ -1,118 +1,114 @@
 <template>
-  <div class="container">
-    <!--    {{ questions }}     -->
-    <div class="profile_success">
-      <router-link :to="'/lc-updateevents/'+ proId" class="back_btn">Назад</router-link>
-      <h1 class="title_event">Редагування тесту до події</h1>
-      <div class="list_question">
-        <div class="item_question" v-for="(quest, idx) in questions" :key="idx">
-          <p>Питання "{{ idx + 1 }}"</p>
-          <div class="wrap_input_q">
-            <button class="remove_btn" v-on:click="removeQuestion(quest.id)">
+  <div>
+    <h1 class="title_event">Редагування тесту до події</h1>
+    <div class="list_question">
+      <div class="item_question" v-for="(quest, idx) in questions" :key="idx">
+        <p>Питання "{{ idx + 1 }}"</p>
+        <div class="wrap_input_q">
+          <button class="remove_btn" v-on:click="removeQuestion(quest.id)">
+            <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path>
+            </svg>
+          </button>
+          <div class="wrap_input">
+            <label :for="'input' + (idx + 1)">Назва питання</label>
+            <input :id="'input' + (idx + 1)" type="text" v-model="quest.title" v-on:keyup="addSaveQuestion(idx)">
+          </div>
+        </div>
+        <p>Тип питання "{{ idx + 1 }}"</p>
+        <div class="wrap_type_question">
+          <div class="wrap_radio">
+            <input type="radio" :id="'radio'+ (idx + 1)" v-on:click="vubor(quest, false)" :name="'radio'+ (idx + 1)"
+                    :checked="!quest.multiple_answers">
+            <label :for="'radio'+ (idx + 1)" class="jss54 jss56">
               <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path>
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
               </svg>
-            </button>
-            <div class="wrap_input">
-              <label :for="'input' + (idx + 1)">Назва питання</label>
-              <input :id="'input' + (idx + 1)" type="text" v-model="quest.title" v-on:keyup="addSaveQuestion(idx)">
-            </div>
+              <svg class="MuiSvgIcon-root jss55" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"></path>
+              </svg>
+            </label>
+            <label :for="'radio'+ (idx + 1)" class="radioName">Одиничний вибір</label>
           </div>
-          <p>Тип питання "{{ idx + 1 }}"</p>
-          <div class="wrap_type_question">
-            <div class="wrap_radio">
-              <input type="radio" :id="'radio'+ (idx + 1)" v-on:click="vubor(quest, false)" :name="'radio'+ (idx + 1)"
-                     :checked="!quest.multiple_answers">
-              <label :for="'radio'+ (idx + 1)" class="jss54 jss56">
-                <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
-                </svg>
-                <svg class="MuiSvgIcon-root jss55" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"></path>
-                </svg>
-              </label>
-              <label :for="'radio'+ (idx + 1)" class="radioName">Одиничний вибір</label>
-            </div>
-            <div class="wrap_radio">
-              <input type="radio" :id="'radio1'+ (idx + 1)" v-on:click="vubor(quest, true)" :name="'radio'+ (idx + 1)"
-                     :checked="quest.multiple_answers">
-              <label :for="'radio1'+ (idx + 1)" class="jss54 jss56">
-                <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
-                </svg>
-                <svg class="MuiSvgIcon-root jss55" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"></path>
-                </svg>
-              </label>
-              <label :for="'radio1'+ (idx + 1)" class="radioName">Множинний вибір</label>
-            </div>
+          <div class="wrap_radio">
+            <input type="radio" :id="'radio1'+ (idx + 1)" v-on:click="vubor(quest, true)" :name="'radio'+ (idx + 1)"
+                    :checked="quest.multiple_answers">
+            <label :for="'radio1'+ (idx + 1)" class="jss54 jss56">
+              <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
+              </svg>
+              <svg class="MuiSvgIcon-root jss55" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"></path>
+              </svg>
+            </label>
+            <label :for="'radio1'+ (idx + 1)" class="radioName">Множинний вибір</label>
           </div>
-          <!--          update          -->
-          <button class="btn_update" v-if="quest.update" v-on:click="updateQuestion(idx)">
+        </div>
+        <!--          update          -->
+        <button class="btn_update" v-if="quest.update" v-on:click="updateQuestion(idx)">
+          <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"></path>
+          </svg>
+        </button>
+        <p>Відповіді до питання "{{ idx + 1 }}"</p>
+        <!--          цыкл ответов           -->
+        <div class="wrap_answer" v-for="(ansver, idx_2) in quest.answers_set" :key="idx_2">
+          <!--            Radio           -->
+          <div class="wrap_radio" v-if="quest.multiple_answers === false">
+            <input type="radio" :id="(idx + 1) + 'radio'+ (idx_2 + 1)" :name="'name' + idx"
+                    v-on:click="is_correct(idx ,idx_2, quest.answers_set)" :checked="ansver.is_correct" >
+            <label :for="(idx + 1) + 'radio'+ (idx_2 + 1)" class="jss54 jss56">
+              <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
+              </svg>
+              <svg class="MuiSvgIcon-root jss55" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"></path>
+              </svg>
+            </label>
+          </div>
+          <!--         Checkbox           -->
+          <label v-if="quest.multiple_answers === true" class="wrap_check_radio"
+                  :for="(idx + 1) + 'check'+ (idx_2 + 1)">
+            <input type="checkbox" v-model="ansver.is_correct"
+                    v-on:click="quest.updateAnsver = true; ansver.update = true" :id="(idx + 1) + 'check'+ (idx_2 + 1)"
+                    :name="'name' + idx">
+            <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+            </svg>
+          </label>
+
+          <div class="wrap_input">
+            <input type="text" v-model="ansver.title" v-on:keyup="quest.updateAnsver = true; ansver.update = true">
+          </div>
+          <button class="remove_btn" v-on:click="removeAnsver(quest.id, ansver.id)">
+            <svg focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="wrap_add_answer">
+          <div @click.prevent="addAnsver(idx)" class="btn_add_answer">
+            Додати відповідь
+          </div>
+          <button class="btn_update" v-if="quest.updateAnsver" v-on:click="putAnsver(quest)">
             <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
               <path
                 d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"></path>
             </svg>
           </button>
-          <p>Відповіді до питання "{{ idx + 1 }}"</p>
-          <!--          цыкл ответов           -->
-          <div class="wrap_answer" v-for="(ansver, idx_2) in quest.answers_set" :key="idx_2">
-            <!--            Radio           -->
-            <div class="wrap_radio" v-if="quest.multiple_answers === false">
-              <input type="radio" :id="(idx + 1) + 'radio'+ (idx_2 + 1)" :name="'name' + idx"
-                     v-on:click="is_correct(idx ,idx_2, quest.answers_set)" :checked="ansver.is_correct" >
-              <label :for="(idx + 1) + 'radio'+ (idx_2 + 1)" class="jss54 jss56">
-                <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
-                </svg>
-                <svg class="MuiSvgIcon-root jss55" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"></path>
-                </svg>
-              </label>
-            </div>
-            <!--         Checkbox           -->
-            <label v-if="quest.multiple_answers === true" class="wrap_check_radio"
-                   :for="(idx + 1) + 'check'+ (idx_2 + 1)">
-              <input type="checkbox" v-model="ansver.is_correct"
-                     v-on:click="quest.updateAnsver = true; ansver.update = true" :id="(idx + 1) + 'check'+ (idx_2 + 1)"
-                     :name="'name' + idx">
-              <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-              </svg>
-            </label>
-
-            <div class="wrap_input">
-              <input type="text" v-model="ansver.title" v-on:keyup="quest.updateAnsver = true; ansver.update = true">
-            </div>
-            <button class="remove_btn" v-on:click="removeAnsver(quest.id, ansver.id)">
-              <svg focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="wrap_add_answer">
-            <div @click.prevent="addAnsver(idx)" class="btn_add_answer">
-              Додати відповідь
-            </div>
-            <button class="btn_update" v-if="quest.updateAnsver" v-on:click="putAnsver(quest)">
-              <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"></path>
-              </svg>
-            </button>
-          </div>
-
         </div>
+
       </div>
-      <button @click.prevent="addQuest()" class="profile_btn">Додати питання</button>
     </div>
+    <button @click.prevent="addQuest()" class="profile_btn">Додати питання</button>
   </div>
 </template>
 <script>
@@ -121,7 +117,7 @@
 import axios from 'axios'
 
 export default {
-  props: ['content'],
+  props: ['content', 'course'],
   data () {
     return {
         test: {
@@ -151,7 +147,7 @@ export default {
           }
 
  
-          let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${quest.id}/answers/${quest.answers_set[i].id}/`
+          let api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/${quest.id}/answers/${quest.answers_set[i].id}/`
 
 
           await axios({
@@ -187,10 +183,10 @@ export default {
       }
       // console.log(elem)
       let api = ""
-      if(this.content === 'courses') {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/testing/questions/${this.questions[idx].id}/`
+      if(this.course) {
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/testing/questions/${this.questions[idx].id}/`
       } else {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${this.questions[idx].id}/`
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/${this.questions[idx].id}/`
       }
 
       await axios({
@@ -217,7 +213,7 @@ export default {
     // удаление вопросов/ответов
     async removeAnsver (idx, idxA) {
 
-      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${idx}/answers/${idxA}/`
+      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/${idx}/answers/${idxA}/`
 
 
       await axios({
@@ -240,10 +236,10 @@ export default {
     async removeQuestion (idx) {
 
       let api = ""
-      if(this.content === 'courses') {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/testing/questions/${idx}/`
+      if(this.course) {
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/testing/questions/${idx}/`
       } else {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${idx}/`
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/${idx}/`
       }
 
       await axios({
@@ -268,10 +264,10 @@ export default {
       // this.loading = true
 
       let api = ""
-      if(this.content === 'courses') {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/testing/questions/`
+      if(this.course) {
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/testing/questions/`
       } else {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/`
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/`
       }
 
       
@@ -328,7 +324,7 @@ export default {
             is_correct: this.questions[idx].answers_set[i].is_correct
           }
 
-          let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${this.questions[idx].id}/answers/${this.questions[idx].answers_set[i].id}/`
+          let api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/${this.questions[idx].id}/answers/${this.questions[idx].answers_set[i].id}/`
                 
           await axios({
             method: 'PUT',
@@ -352,7 +348,7 @@ export default {
       }
 
 
-      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${this.questions[idx].id}/answers/`
+      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/${this.questions[idx].id}/answers/`
 
 
       await axios({
@@ -379,10 +375,10 @@ export default {
         // answers_set: []
       }
       let api = ''
-      if(this.content === 'courses') {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/testing/questions/`
+      if(this.course) {
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/testing/questions/`
       } else {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/`
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/`
       }
       
 

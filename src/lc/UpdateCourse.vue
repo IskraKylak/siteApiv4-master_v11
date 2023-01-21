@@ -148,6 +148,12 @@
         <input type="text" v-model="singleEvent.youtube_id_2" class="profile_input">
       </fieldset> -->
 
+      <div class="draft">
+        <input type="checkbox" class="checkbox" id="checkbox2" v-model="singleEvent.has_test"/>
+        <label for="checkbox2">Додати тест</label>
+      </div>
+      <div v-if="singleEvent.has_test" @click.prevent="goToTest(singleEvent.id)" class="back_btn">Редагування тесту до курсу</div>
+
       <fieldset>
         <legend>Процент правильних відповідей для проходження тесту</legend>
         <input type="text" v-model="singleEvent.success_percent" class="profile_input">
@@ -202,7 +208,6 @@
     </form>
     <!--    -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
     <div class="update_block">
-      <button @click.prevent="goToTest(singleEvent.id)" class="back_btn">Редагування тесту до курсу</button>
       <!-- <button class="back_btn">Редагувати опитування</button> -->
     </div>
     <ModalAddLesson class="update_partner" :content="singleEvent.id" v-if="modalValidate" @close="closeModal()"/>
@@ -301,7 +306,7 @@ export default {
   },
   methods: {
     async goToTest (prodId) {
-      if (this.singleEvent.has_test == null) {
+      if (!this.singleEvent.course_test) {
         await axios({
           url: `https://asprof-test.azurewebsites.net/api/courses/${prodId}/test`,
           method: 'POST',
@@ -338,6 +343,7 @@ export default {
         success_percent: this.singleEvent.success_percent,
         max_tries: this.singleEvent.max_tries,
         certificate_title: this.singleEvent.certificate_title,
+        has_test: this.singleEvent.has_test
       }
       await axios({
         url: `https://asprof-test.azurewebsites.net/api/courses/${this.proId}/`,
@@ -587,8 +593,9 @@ legend span {
   font-size: 15px;
 }
 
-.back_btn.t {
+.back_btn {
   width: max-content;
+  cursor: pointer;
 }
 
 fieldset {
@@ -717,6 +724,7 @@ a {
   display: flex;
   width: 100%;
   justify-content: center;
+  cursor: pointer;
 }
 
 .tabs {
