@@ -186,8 +186,12 @@ export default {
         multiple_answers: this.questions[idx].multiple_answers,
       }
       // console.log(elem)
-
-      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${this.questions[idx].id}/`
+      let api = ""
+      if(this.content === 'courses') {
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/testing/questions/${this.questions[idx].id}/`
+      } else {
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${this.questions[idx].id}/`
+      }
 
       await axios({
         method: 'PUT',
@@ -235,7 +239,12 @@ export default {
     },
     async removeQuestion (idx) {
 
-      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${idx}/`
+      let api = ""
+      if(this.content === 'courses') {
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/testing/questions/${idx}/`
+      } else {
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/${idx}/`
+      }
 
       await axios({
         method: 'DELETE',
@@ -258,7 +267,14 @@ export default {
     async getNotify () {
       // this.loading = true
 
-      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/`
+      let api = ""
+      if(this.content === 'courses') {
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/testing/questions/`
+      } else {
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/`
+      }
+
+      
 
       this.myAcc = this.$store.getters.getMyAcc
       await axios({
@@ -364,7 +380,7 @@ export default {
       }
       let api = ''
       if(this.content === 'courses') {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/`
+        api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/testing/questions/`
       } else {
         api = `https://asprof-test.azurewebsites.net/api/${this.content}/${this.proId}/test/questions/`
       }

@@ -301,9 +301,9 @@ export default {
   },
   methods: {
     async goToTest (prodId) {
-      if (this.singleEvent.test == null) {
+      if (this.singleEvent.has_test == null) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/courses/${prodId}/test/`,
+          url: `https://asprof-test.azurewebsites.net/api/courses/${prodId}/test`,
           method: 'POST',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken

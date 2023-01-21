@@ -205,7 +205,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../lc/TestEvent.vue')
   },
   {
-    path: '/lc-updateevents/:Pid/testWebinar',
+    path: '/lc-updatevebinar/:Pid/testWebinar',
     name: 'lc-testWebinar',
     meta: {
       layout: 'main',
@@ -214,7 +214,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../lc/TestWebinar.vue')
   },
   {
-    path: '/lc-updateevents/:Pid/testCourse',
+    path: '/lc-updatecourse/:Pid/testCourse',
     name: 'lc-testCourse',
     meta: {
       layout: 'main',
