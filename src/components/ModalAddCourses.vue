@@ -38,10 +38,10 @@
                 <input type="datetime-local" v-model="singleEvent.testing_end_date" class="profile_input">
               </fieldset> -->
 
-              <fieldset>
+              <!-- <fieldset>
                 <legend>Кількість годин</legend>
                 <input type="text" v-model="singleEvent.number_of_hours" class="profile_input">
-              </fieldset>
+              </fieldset> -->
 
               <!-- <fieldset>
                 <legend>Місце проведення</legend>
@@ -131,7 +131,7 @@
                 <input type="text" v-model="singleEvent.youtube_id_2" class="profile_input">
               </fieldset> -->
 
-              <fieldset>
+              <!-- <fieldset>
                 <legend>Процент правильних відповідей для проходження тесту</legend>
                 <input type="text" v-model="singleEvent.success_percent" class="profile_input">
               </fieldset>
@@ -139,12 +139,12 @@
               <fieldset>
                 <legend>Кількість спроб пройти тестування (0 - безліч)</legend>
                 <input type="text" v-model="singleEvent.max_tries" class="profile_input">
-              </fieldset>
+              </fieldset>-->
 
               <fieldset>
                 <legend>Балів за курс</legend>
                 <input type="text" v-model="singleEvent.points" class="profile_input">
-              </fieldset>
+              </fieldset> 
 
               <!-- <fieldset>
                 <legend>Название сертификата</legend>

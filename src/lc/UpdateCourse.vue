@@ -152,7 +152,6 @@
         <input type="checkbox" class="checkbox" id="checkbox2" v-model="singleEvent.has_test"/>
         <label for="checkbox2">Додати тест</label>
       </div>
-      <div v-if="singleEvent.has_test" @click.prevent="goToTest(singleEvent.id)" class="back_btn">Редагування тесту до курсу</div>
 
       <fieldset>
         <legend>Процент правильних відповідей для проходження тесту</legend>
@@ -208,6 +207,7 @@
     </form>
     <!--    -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
     <div class="update_block">
+      <div @click.prevent="goToTest(singleEvent.id)" class="back_btn">Редагування тесту до курсу</div>
       <!-- <button class="back_btn">Редагувати опитування</button> -->
     </div>
     <ModalAddLesson class="update_partner" :content="singleEvent.id" v-if="modalValidate" @close="closeModal()"/>
@@ -306,10 +306,11 @@ export default {
   },
   methods: {
     async goToTest (prodId) {
-      if (!this.singleEvent.course_test) {
+      console.log(this.$store.getters.getToken)
+      if (this.singleEvent.course_test === null) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/courses/${prodId}/test`,
-          method: 'POST',
+          url: `https://asprof-test.azurewebsites.net/api/courses/${this.singleEvent.id}/testing/`,
+          method: 'get',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
           }

@@ -122,24 +122,23 @@ export default {
   },
   methods: {
     async goToTest (prodId) {
-      // if (!this.singleEvent.has_test) {
-      //   await axios({
-      //     url: `https://asprof-test.azurewebsites.net/api/courses/${this.singleEvent.course}/lessons/${this.singleEvent.id}`,
-      //     data: tmp,
-      //     method: 'POST',
-      //     headers: {
-      //       Authorization: 'Bearer ' + this.$store.getters.getToken
-      //     }
-      //   }).then(respons => {
-      //     this.$message('Тест створено')
-      //     // this.messages = res;
-      //   })
-      //     .catch(error => {
-      //       console.log(error)
-      //       this.$message('Помилка створення тесту')
-      //     })
-      //     .finally(() => (this.loading = false))
-      // }
+      if (this.singleEvent.lesson_test === null) {
+        await axios({
+          url: `https://asprof-test.azurewebsites.net/api/courses/${this.singleEvent.course}/lessons/${this.singleEvent.id}/test`,
+          method: 'get',
+          headers: {
+            Authorization: 'Bearer ' + this.$store.getters.getToken
+          }
+        }).then(respons => {
+          this.$message('Тест створено')
+          // this.messages = res;
+        })
+          .catch(error => {
+            console.log(error)
+            this.$message('Помилка створення тесту')
+          })
+          .finally(() => (this.loading = false))
+      }
       this.$router.push({
         name: 'lc-testLesson',
       })
