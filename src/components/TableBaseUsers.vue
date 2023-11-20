@@ -51,29 +51,29 @@
       </div>
       <div class="table_foot">
         <div class="table_length">
-          Total Rows: {{ entries.length }}
+          Total Rows: {{ countEvent }}
         </div>
         <div class="table_visible_page">
-          <div>
+          <!-- <div>
             <span>Rows per page:</span>
             <select v-model="currentEntries" class="select" @change="paginateEntries">
               <option v-for="se in showEntries" :key="se" :value="se">{{ se }}</option>
             </select>
-          </div>
+          </div> -->
           <div>
-            <div class="start:flex-items">{{ showInfo.from }} - {{ showInfo.to }} of {{ showInfo.of }} entries</div>
+            <div class="start:flex-items">open {{ openPage}} - {{ allPages }} pages</div>
           </div>
           <div class="pagination_arr">
-            <span :class="['nav-item', { 'disabled': currentPage === 1 }]">
+            <span :class="['nav-item', { 'disabled': openPage === 1 }]">
               <a href="#" class="nav-link"
-                 @click.prevent="(currentPage < 1) ? currentPage = 1 : currentPage -= 1, paginateEntries()">
+                 @click.prevent="prevPage()">
                 <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
                   d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"></path></svg>
               </a>
             </span>
-            <span :class="['nav-item', { 'disabled': currentPage === allPages }]">
+            <span :class="['nav-item', { 'disabled': openPage === allPages }]">
               <a href="#" class="nav-link"
-                 @click.prevent="(currentPage > allPages) ? currentPage = allPages : currentPage += 1, paginateEntries()">
+                 @click.prevent="nextPage()">
                 <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
                   d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path></svg>
               </a>
@@ -83,31 +83,7 @@
       </div>
     </div>
   </div>
-  <!--      <div class="between:flex y:margin-3">-->
 
-  <!--        <div class="end:flex center:items">-->
-  <!--          <ul class="pagination:nav">-->
-  <!--            <li :class="['nav-item', { 'disabled': currentPage === 1 }]">-->
-  <!--              <a href="#" class="nav-link" @click.prevent="currentPage = 1, paginateEntries()">First</a>-->
-  <!--            </li>-->
-  <!--            <li :class="['nav-item', { 'disabled': currentPage === 1 }]">-->
-  <!--              <a href="#" class="nav-link"-->
-  <!--                 @click.prevent="(currentPage < 1) ? currentPage = 1 : currentPage -= 1, paginateEntries()">Prev</a>-->
-  <!--            </li>-->
-  <!--            <li v-for="pagi in showPagination" :key="pagi"-->
-  <!--                :class="['nav-item', {'ellipsis': pagi === '...', 'active': pagi === currentPage}]">-->
-  <!--              <a href="#" class="nav-link" @click.prevent="paginateEvent(pagi)">{{ pagi }}</a>-->
-  <!--            </li>-->
-  <!--            <li :class="['nav-item', { 'disabled': currentPage === allPages }]">-->
-  <!--              <a href="#" class="nav-link"-->
-  <!--                 @click.prevent="(currentPage > allPages) ? currentPage = allPages : currentPage += 1, paginateEntries()">Next</a>-->
-  <!--            </li>-->
-  <!--            <li :class="['nav-item', { 'disabled': currentPage === allPages }]">-->
-  <!--              <a href="#" class="nav-link" @click.prevent="currentPage = allPages, paginateEntries()">Last</a>-->
-  <!--            </li>-->
-  <!--          </ul>-->
-  <!--        </div>-->
-  <!--      </div>-->
 </template>
 <script>
 import { $array } from 'alga-js'
@@ -121,6 +97,7 @@ export default {
   },
   data () {
     return {
+      sort: '-start_date',
       loading: false,
       columns: [
         {
@@ -128,19 +105,19 @@ export default {
           text: 'ID'
         },
         {
-          name: 'name',
+          name: 'last_name',
           text: 'ПІБ'
         },
         {
-          name: 'specialty',
+          name: 'job_name',
           text: 'Спеціальність'
         },
         {
-          name: 'date',
+          name: 'start_activity_date',
           text: 'Дата Реєстрації'
         },
         {
-          name: 'tel',
+          name: 'phone',
           text: 'Номер телефона'
         },
         {
@@ -153,16 +130,18 @@ export default {
         }
       ],
       entries: [],
-      showEntries: [5, 10, 25, 50, 100],
-      currentEntries: 10,
+      // showEntries: [5, 10, 25, 50, 100],
+      currentEntries: 100,
       filteredEntries: [],
       currentPage: 1,
       allPages: 1,
       searchInput: '',
       searchEntries: [],
+      countEvent: 0,
+      openPage: 1,
       col: {
         id: '',
-        name: '',
+        last_name: '',
         specialty: '',
         date: '',
         tel: '',
@@ -181,13 +160,8 @@ export default {
     }
   },
   computed: {
-    // info () {
-    //   return this.$store.getters.getEventsApi
-    // },
     showInfo () {
       const getCurrentEntries = (this.searchEntries.length <= 0) ? this.entries : this.searchEntries
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      // this.allPages = $array.pages(this.entries, this.currentEntries)
       return $array.show(getCurrentEntries, this.currentPage, this.currentEntries)
     },
     showPagination () {
@@ -196,7 +170,6 @@ export default {
   },
   created () {
     this.getNotify()
-    // console.log(this.$store.getters.getEventsApi)
   },
   methods: {
     goToEvent (prodId) {
@@ -209,44 +182,34 @@ export default {
       this.loading = true
       await axios({
         method: 'GET',
-        url: ('https://asprof-test.azurewebsites.net/api/users/'),
+        url: (`https://asprof-test.azurewebsites.net/api/users/?format=json&ordering=${this.sort}&page=${this.openPage}`),
         headers: {
           'Authorization': 'Bearer ' + this.$store.getters.getToken
         }
       }).then(respons => {
-        let res = respons.data
+        let res = respons.data.results
         this.$store.dispatch('setUsers', res)
+        this.countEvent = respons.data.count
         // this.messages = res;
       })
-        .catch(error => {
-          console.log(error)
-        })
-        .finally(() => (this.loading = false))
-      this.entries = this.$store.getters.getUsers
-      // this.paginateData(this.entries)
-      this.filteredEntries = $array.paginate(this.entries, this.currentPage, this.currentEntries)
-      this.allPages = $array.pages(this.entries, this.currentEntries)
+      .catch(error => {
+        console.log(error)
+      })
+      .finally(() => {
+        this.entries = this.$store.getters.getUsers
+        this.filteredEntries = $array.paginate(this.entries, this.currentPage, this.currentEntries)
+        this.allPages = 0
+        for(let i = 0; i < this.countEvent; i+=this.currentEntries) {
+            this.allPages +=1
+        }
+        this.loading = false
+      })
     },
     paginateEntries () {
-      if (this.searchInput.length >= 3) {
-        this.searchEntries = $array.search(this.entries, this.searchInput)
-        this.paginateData(this.searchEntries)
-        // this.filteredEntries = $array.paginate(this.searchEntries, this.currentPage, this.currentEntries)
-        // this.allPages = $array.pages(this.searchEntries, this.currentEntries)
+      if(this.isSearch) {
+        this.search(this.openPage, this.searchInput)
       } else {
-        this.searchEntries = []
-        // this.filteredEntries = $array.paginate(this.entries, this.currentPage, this.currentEntries)
-        // this.allPages = $array.pages(this.entries, this.currentEntries)
-        this.searchEntries = []
-        this.paginateData(this.entries)
-        this.col = {
-          name: '',
-          position: '',
-          office: '',
-          extension: '',
-          startdate: '',
-          salary: ''
-        }
+        this.getNotify()
       }
     },
     paginateData (data) {
@@ -258,33 +221,79 @@ export default {
       this.paginateEntries()
     },
     searchEvent () {
-      this.currentPage = 1
-      this.paginateEntries()
     },
     getCurrentEntries () {
       return (this.searchEntries.length <= 0) ? this.entries : this.searchEntries
     },
+    async search (page, value) {
+      await axios({
+        method: 'GET',
+        url: (`https://asprof-test.azurewebsites.net/api/users/?page=${page}&last_name=${value}`),
+        headers: {
+          'Authorization': 'Bearer ' + this.$store.getters.getToken
+        }
+      })
+        .then(respons => {
+          this.$store.dispatch('setMessage', respons.data.results)
+          this.countEvent = respons.data.count
+        })
+        .catch(error => {
+          console.log(error)
+        })
+        .finally(() => {
+          this.entries = this.$store.getters.getMessage
+          this.entries.forEach(elem => elem.start_norm_date = new Date(elem.start_date).toLocaleDateString())
+          this.filteredEntries = $array.paginate(this.entries, this.currentPage, this.currentEntries)
+          this.allPages = 0
+          for(let i = 0; i < this.countEvent; i+=this.currentEntries) {
+              this.allPages +=1
+          }
+        })
+    },
     sortByColumn (column) {
-      this.col = {
-        name: '',
-        position: '',
-        office: '',
-        extension: '',
-        startdate: '',
-        salary: ''
+      if(this.sort == column)
+        this.sort = '-' + this.sort
+      else
+        this.sort = column
+      this.getNotify()
+    },
+    nextPage() {
+      if(this.openPage < this.allPages) {
+        this.openPage+=1
+        if(this.isSearch) {
+          this.search(this.openPage, this.searchInput)
+        } else {
+          this.getNotify()
+        }
+        
       }
-      let sortedEntries = this.getCurrentEntries()
-      const sortedColumn = this.sortcol[column]
-      if (sortedColumn === '') {
-        this.sortcol[column] = 'asc'
-        sortedEntries = $array.sorted(this.getCurrentEntries(), column, 'asc')
-      } else if (sortedColumn === 'asc') {
-        this.sortcol[column] = 'desc'
-        sortedEntries = $array.sorted(this.getCurrentEntries(), column, 'desc')
-      } else if (sortedColumn === 'desc') {
-        this.sortcol[column] = ''
+     
+    },
+    prevPage() {
+      if(this.openPage > 1) {
+        this.openPage-=1
+        if(this.isSearch) {
+          this.search(this.openPage, this.searchInput)
+        } else {
+          this.getNotify()
+        }
       }
-      this.paginateData(sortedEntries)
+      
+    }    
+  },
+  watch: {
+    // whenever question changes, this function will run
+    // whenever question changes, this function will run
+    searchInput(newSearch, oldSearch) {
+      if (newSearch.length > 0 ) {
+        this.isSearch = true
+        this.search(1, newSearch)
+      } else {
+        this.isSearch = false
+        this.getNotify()
+      }
+      
+      // console.log(this.filteredEntries)
     }
   }
 }

@@ -97,6 +97,15 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../lc/Courses.vue')
   },
   {
+    path: '/lc-specializations',
+    name: 'lc-specializations',
+    meta: {
+      layout: 'main',
+      requiresAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../lc/Specializations.vue')
+  },
+  {
     path: '/lc-mysertificate',
     name: 'lc-mysertificate',
     meta: {
@@ -149,6 +158,15 @@ const routes = [
       requiresAuth: true
     },
     component: () => import(/* webpackChunkName: "about" */ '../lc/UpdateVebinar.vue')
+  },
+  {
+    path: '/lc-updatespecializations/:Pid2',
+    name: 'lc-updatespecializations',
+    meta: {
+      layout: 'main',
+      requiresAuth: true
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../lc/UpdateSpecializations.vue')
   },
   {
     path: '/lc-updatecourse/:Pid2',

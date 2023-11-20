@@ -56,7 +56,7 @@
           </svg>
         </button>
         <p>Відповіді до питання "{{ idx + 1 }}"</p>
-        <!--          цыкл ответов           -->
+        <!--          цикл ответов           -->
         <div class="wrap_answer" v-for="(ansver, idx_2) in quest.answers_set" :key="idx_2">
           <!--            Radio           -->
           <div class="wrap_radio" v-if="quest.multiple_answers === false">

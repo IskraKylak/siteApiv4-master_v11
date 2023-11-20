@@ -28,7 +28,7 @@
 
 
           <fieldset>
-            <legend>Порядковый номер урока</legend>
+            <legend>Порядковий номер урока</legend>
             <input type="text" v-model="singleEvent.order_number" class="profile_input">
           </fieldset>
           <button class="profile_btn">Додати</button>

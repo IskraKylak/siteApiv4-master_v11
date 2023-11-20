@@ -143,18 +143,28 @@
               <input type="date" :v-model="user.date" class="profile_input">
             </fieldset>
           </div>
-          <div class="wrap_inp">
+          <div class="wrap_inp" :class="{ errorInput: v$.user.job_place.$error }">
+            <fieldset :class="{ errorInput: v$.user.job_place.$error }">
+              <legend>Місце роботи  <span title="обов'язкове">*</span></legend>
+              <input
+                type="text" class="profile_input"
+                v-model="user.job_place"
+                :class="{ error: v$.user.job_place }"
+                @change="v$.user.job_place.$touch()"
+              />
+
+            </fieldset>
+            <p class="errorText" v-if="v$.user.job_place.required.$invalid">
+              Filed is required
+            </p>
+          </div>
+          <!-- <div class="wrap_inp">
             <fieldset>
               <legend>Місце роботи <span title="обов'язкове">*</span></legend>
               <input type="text" v-model="user.job_place" class="profile_input">
             </fieldset>
-          </div>
-          <!--          <div class="wrap_inp">-->
-          <!--            <fieldset>-->
-          <!--              <legend>Спеціальність *</legend>-->
-          <!--              <input type="text" v-model="specialization" class="profile_input">-->
-          <!--            </fieldset>-->
-          <!--          </div>-->
+            
+          </div> -->
           <div
             class="wrap_inp"
             :class="{ errorInput: v$.user.specialization.$error }"
@@ -283,6 +293,9 @@ export default {
         },
         job_name: {
           required
+        },
+        job_place: {
+          required
         }
       }
     }
@@ -292,7 +305,7 @@ export default {
   },
   methods: {
     async onSubmit () {
-      this.loading = true
+      
       this.v$.user.first_name.$touch()
       this.v$.user.last_name.$touch()
       this.v$.user.patronymic.$touch()
@@ -302,6 +315,7 @@ export default {
       this.v$.user.email.$touch()
       this.v$.user.specialization.$touch()
       this.v$.user.job_name.$touch()
+      this.v$.user.job_place.$touch()
       if (
         !this.v$.user.first_name.$invalid &&
         !this.v$.user.last_name.$invalid &&
@@ -311,26 +325,28 @@ export default {
         !this.v$.user.phone.$invalid &&
         !this.v$.user.email.$invalid &&
         !this.v$.user.specialization.$invalid &&
-        !this.v$.user.job_name.$invalid) {
-        await axios({
-          url: 'https://asprof-test.azurewebsites.net/api/me/',
-          data: this.user,
-          method: 'PATCH',
-          headers: {
-            Authorization: 'Bearer ' + this.$store.getters.getToken
-          }
-        }).then(respons => {
-          const res = respons.data
-          this.$store.dispatch('setMyAcc', res)
-          this.$message('Дані успішно змінені')
-          // this.messages = res;
-        })
-          .catch(error => {
-            console.log(error)
-            this.$message('Помилка')
+        !this.v$.user.job_name.$invalid && 
+        !this.v$.user.job_place.$invalid) {
+          this.loading = true
+          await axios({
+            url: 'https://asprof-test.azurewebsites.net/api/me/',
+            data: this.user,
+            method: 'PATCH',
+            headers: {
+              Authorization: 'Bearer ' + this.$store.getters.getToken
+            }
+          }).then(respons => {
+            const res = respons.data
+            this.$store.dispatch('setMyAcc', res)
+            this.$message('Дані успішно змінені')
+            // this.messages = res;
           })
-          .finally(() => (this.loading = false))
-      }
+            .catch(error => {
+              console.log(error)
+              this.$message('Помилка')
+            })
+            .finally(() => (this.loading = false))
+      } 
     },
     async getNotify () {
       this.loading = true

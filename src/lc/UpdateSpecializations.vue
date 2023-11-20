@@ -5,50 +5,52 @@
   <div class="container" v-if="myAcc.role === 'admin' && !loading">
 <!--    {{ singleEvent }}-->
     <div class="profile_success">
-      <router-link :to="`/lc-updatecourse/${singleEvent.course}`" class="back_btn">Назад</router-link>
+      <router-link to="/lc-specializations" class="back_btn">Назад</router-link>
     </div>
-    <h1 class="title_event">Редагування курсу</h1>
+    <h1 class="title_event">Редагування спеціализації</h1>
     <form @submit.prevent="onSubmit">
       <fieldset>
-        <legend>Назва уроку <span title="обов'язкове">*</span></legend>
+        <legend>Назва спеціаліста <span title="обов'язкове">*</span></legend>
         <input type="text" class="profile_input" v-model="singleEvent.name">
       </fieldset>
-
-      <legend class="dropzone_title">Текст уроку <span title="обов'язкове">*</span></legend>
-          <editor
-            api-key="no-api-key"
-            @init="handleInit"
-            @destroy="handleDestroy"
-            @change="handleChange"
-            @input="handleInput"
-            @error="handleError"
-            :config="config"
-            name="qwerty"
-            ref="ref"
-            v-model="singleEvent.text"
-          />
-
-
       <fieldset>
-        <legend>Порядковий номер урока</legend>
-        <input type="text" v-model="singleEvent.order_number" class="profile_input">
+        <legend>Назва спеціализації <span title="обов'язкове">*</span></legend>
+        <input type="text" class="profile_input" v-model="singleEvent.second_name">
       </fieldset>
 
-
+      <p class="dropzone_title">Зображення для сторінки спеціализації</p>
+      <div class="d-none">
+        <input class="form-control" ref="fileInput2" type="file" @input="pickFile2">
+      </div>
+      <div class="wrap_inp_fiel">
+        <div class="imagePreviewWrapper"
+             :style="previewFile.val != null ? { 'background-image': `url(${previewFile.val})`, 'background-color': `#fff` } : ''"
+             @click="selectFile">
+        </div>
+        <span>
+        Натисніть сюди для завантаження файлу
+        <svg class="MuiSvgIcon-root MuiDropzoneArea-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
+          d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
+        </span>
+      </div>
 
       <div class="draft">
-        <input type="checkbox" class="checkbox" id="checkbox" v-model="singleEvent.has_test"/>
-        <label for="checkbox">Додати тест</label>
+        <input type="checkbox" class="checkbox" id="checkbox" v-model="singleEvent.main"/>
+        <label for="checkbox">Main</label>
       </div>
+      <div class="draft">
+        <input type="checkbox" class="checkbox" id="checkbox2" v-model="singleEvent.main_on_categories_page"/>
+        <label for="checkbox2">Main on categories page</label>
+      </div>
+
+      <fieldset>
+        <legend>Sort id <span title="обов'язкове">*</span></legend>
+        <input type="text" class="profile_input" v-model="singleEvent.sort_id">
+      </fieldset>
       <div class="profile_success success_file">
         <button class="profile_btn" type="submit">Зберегти</button>
       </div>
-    </form>
-    <div class="update_block">
-      <button @click.prevent="goToTest(singleEvent.id)" class="back_btn">Редагування тесту до уроку</button>
-      <!-- <button class="back_btn">Редагувати опитування</button> -->
-    </div>
-    <modalValidate class="update_partner" v-if="modalValidate" :isPartner="isPartner" :idItem="idItem" :idEvent="idEvent" @close="closeModal()"/>
+    </form>  
   </div>
 </template>
 <style scoped src="@/assets/lc/css/style.css">
@@ -57,7 +59,7 @@
 
 import Editor from '@tinymce/tinymce-vue'
 import axios from 'axios'
-import modalValidate from '@/components/ModalValidate.vue'
+import ModalAddLesson from '@/components/ModalAddLesson.vue'
 import preloader from '@/components/UI/Preloader.vue'
 const config = {
   height: 500,
@@ -93,8 +95,11 @@ export default {
       singleEvent: {
         id: '',
         name: '',
-        text: '',
-        order_number: ''
+        second_name: '',
+        main: '',
+        main_on_categories_page: '',
+        sort_id: '',
+        photo: ''
       },
       previewImage: {
         val: null,
@@ -108,56 +113,34 @@ export default {
         val: null,
         click: false
       },
-      proId1: this.$route.params.Pid2,
-      proId2: this.$route.params.Pid3,
+      photo: '',
+      proId: this.$route.params.Pid2,
+      modalValidate: false,
+      isPartner: '',
+      idItem: null
     }
   },
   components: {
     editor: Editor,
-    modalValidate,
+    ModalAddLesson,
     preloader
   },
   created () {
     this.getNotify()
   },
   methods: {
-    async goToTest (prodId) {
-      if (this.singleEvent.lesson_test === null) {
-        await axios({
-          url: `https://asprof-test.azurewebsites.net/api/courses/${this.singleEvent.course}/lessons/${this.singleEvent.id}/test`,
-          method: 'get',
-          headers: {
-            Authorization: 'Bearer ' + this.$store.getters.getToken
-          }
-        }).then(respons => {
-          this.$message('Тест створено')
-          // this.messages = res;
-        })
-          .catch(error => {
-            console.log(error)
-            this.$message('Помилка створення тесту')
-          })
-          .finally(() => (this.loading = false))
-      }
-      this.$router.push({
-        name: 'lc-testLesson',
-      })
-    },
     async onSubmit () {
       this.loading = true
       var tmp = {
         // id: this.singleEvent.id,
-        author: null,
         name: this.singleEvent.name,
-        text: this.singleEvent.text,
-        order_number: this.singleEvent.order_number,
-        has_test: this.singleEvent.has_test,
-        test_time: 0,
-        lesson_test: null
-
+        second_name: this.singleEvent.second_name,
+        main: this.singleEvent.main,
+        main_on_categories_page: this.singleEvent.main_on_categories_page,
+        sort_id: this.singleEvent.sort_id,
       }
       await axios({
-        url: `https://asprof-test.azurewebsites.net/api/courses/${this.singleEvent.course}/lessons/${this.proId2}/`,
+        url: `https://asprof-test.azurewebsites.net/api/specializations/${this.proId}/`,
         data: tmp,
         method: 'PATCH',
         headers: {
@@ -174,7 +157,26 @@ export default {
           this.$message('Помилка')
         })
         .finally(() => (this.loading = false))
-
+      if (this.previewFile.click) {
+        await axios({
+          url: `https://asprof-test.azurewebsites.net/api/specializations/${this.proId}/`,
+          data: this.singleEvent.photo,
+          method: 'PATCH',
+          headers: {
+            Authorization: 'Bearer ' + this.$store.getters.getToken
+          }
+        }).then(respons => {
+          const res = respons.data
+          this.$store.dispatch('setSingleEvent', res)
+          this.$message('Картинка змінена!')
+          // this.messages = res;
+        })
+          .catch(error => {
+            console.log(error)
+            this.$message('Помилка')
+          })
+          .finally(() => (this.loading = false))
+      }
     },
     async getNotify () {
       await axios({
@@ -197,21 +199,94 @@ export default {
       this.loading = true
       await axios({
         method: 'GET',
-        url: (`https://asprof-test.azurewebsites.net/api/courses/${this.proId1}/lessons/${this.proId2}`),
+        url: (`https://asprof-test.azurewebsites.net/api/specializations/${this.proId}`),
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
         }
       })
         .then(respons => {
-          // console.log(respons.data)
           this.$store.dispatch('setSingleEvent', respons.data)
-          // console.log(typeof this.$store.getters.getSingleEvent.id)
         })
         .catch(error => {
           console.log(error)
         })
         .finally(() => (this.loading = false))
       this.singleEvent = this.$store.getters.getSingleEvent
+      this.previewFile.val = this.singleEvent.photo
+    },
+    // image upload and preview methods
+    selectImage () {
+      this.$refs.fileInput.click()
+    },
+    selectFile () {
+      this.$refs.fileInput2.click()
+    },
+    selectInteractive () {
+      this.$refs.fileInput3.click()
+    },
+    pickFile () {
+      const input = this.$refs.fileInput
+      const file = input.files
+      if (file && file[0]) {
+        const reader = new FileReader()
+        reader.onload = e => {
+          this.singleEvent.event_documents = new FormData() // creates a new FormData object
+          this.singleEvent.event_documents.append('event_documents', this.$refs.fileInput.files[0])
+          this.previewImage.click = true
+          this.previewImage.val = e.target.result
+        }
+        reader.readAsDataURL(file[0])
+        this.$emit('input', file[0])
+      }
+    },
+    pickFile2 () {
+      const input = this.$refs.fileInput2
+      const file = input.files
+      if (file && file[0]) {
+        const reader = new FileReader()
+        reader.onload = e => {
+          this.singleEvent.photo = new FormData() // creates a new FormData object
+          this.singleEvent.photo.append('photo', this.$refs.fileInput2.files[0])
+          this.previewFile.click = true
+          this.previewFile.val = e.target.result
+        }
+        reader.readAsDataURL(file[0])
+        this.$emit('input', file[0])
+      }
+    },
+    pickFile3 () {
+      const input = this.$refs.fileInput3
+      const file = input.files
+      if (file && file[0]) {
+        const reader = new FileReader()
+        reader.onload = e => {
+          this.singleEvent.partners_banner = new FormData() // creates a new FormData object
+          this.singleEvent.partners_banner.append('partners_banner', this.$refs.fileInput3.files[0])
+          this.previewIneractive.click = true
+          this.previewIneractive.val = e.target.result
+        }
+        reader.readAsDataURL(file[0])
+        this.$emit('input', file[0])
+      }
+    },
+    handleInit (editor) {
+      // console.log('Initialized')
+    },
+
+    handleDestroy (editor) {
+      // console.log('Destroyed')
+    },
+
+    handleChange (value) {
+      // console.log('Changed')
+    },
+
+    handleInput (value) {
+      // console.log('Input')
+    },
+
+    handleError (err) {
+      // console.log('An error occurred')
     }
   }
 }
@@ -225,8 +300,9 @@ legend span {
   font-size: 15px;
 }
 
-.back_btn.t {
+.back_btn {
   width: max-content;
+  cursor: pointer;
 }
 
 fieldset {
@@ -355,6 +431,7 @@ a {
   display: flex;
   width: 100%;
   justify-content: center;
+  cursor: pointer;
 }
 
 .tabs {

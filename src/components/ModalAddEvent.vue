@@ -10,7 +10,7 @@
                 <input type="text" class="profile_input" v-model="singleEvent.name">
               </fieldset>
 
-              <p class="dropzone_title">Описание события</p>
+              <p class="dropzone_title">Опис події</p>
               <editor
                 api-key="no-api-key4"
                 @init="handleInit"

@@ -3,12 +3,12 @@
     <preloader :width="90" :height="90"></preloader>
   </div>
   <div v-if="!loading" class="wrap_table_component">
-    <div class="import-excel">
+    <!-- <div class="import-excel">
       <div @click="downloadAllEcel()" class="import_btn">ЕКСПОРТ В EXCEL</div>
-    </div>
-    <div class="wrap_search">
+    </div> -->
+    <!-- <div class="wrap_search">
       <input type="search" class="input px:width-25" placeholder="Пошук" v-model="searchInput">
-    </div>
+    </div> -->
 
     <div class="wrap_table">
       <div class="wrap_my_table">
@@ -16,16 +16,16 @@
           <thead class="thead">
             <tr class="tr">
               <th class="th" v-for="th in columns" :key="th">
-                  <span @click.prevent="sortByColumn(th.name)">{{ th.text }}</span>
+                <div>
+                  <span>{{ th.text }}</span>
+                </div>
               </th>
             </tr>
           </thead>
           <tbody class="tbody">
-            <tr class="tr" v-for="td in filteredEntries" :key="td.id">
+            <tr class="tr" v-for="td in entries" :key="td">
               <td class="td">{{ td.id }}</td>
               <td class="td">{{ td.name }}</td>
-              <td class="td">{{ td.start_norm_date }}</td>
-              <td class="td">{{ td.place }}</td>
               <td class="td">
                 <div class="wrap_td_icons">
                   <div @click="goToEvent(td.id)" class="icon_svg_table icon_svg_table_edit" title="Редагувати">
@@ -38,9 +38,9 @@
                     <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
                       d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
                   </span>
-                  <div @click="downloadEcel(td)" title="Експорт в Excel" class="icon_svg_table icon_svg_table_remove">
-                      <div class="svg_import MuiSvgIcon-root"></div>
-                  </div>
+                  <!-- <div @click="downloadEcel(td)" class="icon_svg_table icon_svg_table_remove" title="Експорт в Excel">
+                    <div class="svg_import MuiSvgIcon-root"></div>
+                  </div> -->
                 </div>
               </td>
             </tr>
@@ -48,7 +48,7 @@
         </table>
       </div>
       <div class="table_foot">
-        <div class="table_length">
+        <!-- <div class="table_length">
           Total Rows: {{ countEvent }}
         </div>
         <div class="table_visible_page">
@@ -77,13 +77,13 @@
               </a>
             </span>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
 </template>
 <script>
-import { $array } from 'alga-js'
+// import { $array } from 'alga-js'
 import preloader from '@/components/UI/Preloader.vue'
 import axios from 'axios'
 import { mapActions } from 'vuex'
@@ -105,14 +105,6 @@ export default {
         {
           name: 'name',
           text: 'Назва'
-        },
-        {
-          name: 'start_date',
-          text: 'Дата'
-        },
-        {
-          name: 'office',
-          text: 'Місце'
         },
         {
           name: 'action',
@@ -150,76 +142,76 @@ export default {
   //   await this.getNotify()
   // },
   computed: {
-    info () {
-      return this.$store.getters.getEventsApi
-    },
-    showInfo () {
-      const getCurrentEntries = (this.searchEntries.length <= 0) ? this.entries : this.searchEntries
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      // this.allPages = $array.pages(this.entries, this.currentEntries)
-      return $array.show(getCurrentEntries, this.currentPage, this.currentEntries)
-    },
-    showPagination () {
-      return $array.pagination(this.allPages, this.currentPage, 3)
-    }
+    // info () {
+    //   return this.$store.getters.getEventsApi
+    // },
+    // showInfo () {
+    //   const getCurrentEntries = (this.searchEntries.length <= 0) ? this.entries : this.searchEntries
+    //   // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+    //   // this.allPages = $array.pages(this.entries, this.currentEntries)
+    //   return $array.show(getCurrentEntries, this.currentPage, this.currentEntries)
+    // },
+    // showPagination () {
+    //   return $array.pagination(this.allPages, this.currentPage, 3)
+    // }
   },
   created () {
     this.getNotify()
   },
   methods: {
-    downloadAllEcel() {
-      axios({
-        url: `https://asprof-test.azurewebsites.net/api/statistics/events/summary/excel/`,
-        method: 'get',
-        responseType : 'blob',
-        headers: {
-          Authorization: 'Bearer ' + this.$store.getters.getToken
-        }
-      }).then(res => {
-          const url = window.URL.createObjectURL(new Blob([res.data]));
-          const a = document.createElement("a");
-          a.href = url;
-          const filename = `file.xlsx`;
-          a.setAttribute('download', filename);
-          // document.body.appendChild(link);
-          a.click();
-          a.remove();
-      }).catch(error => {
-        this.$message('Помилка')
-        console.log(error)
-      })
-    },
-    downloadEcel(item) {
-      axios({
-        url: `https://asprof-test.azurewebsites.net/api/statistics/events/summary/${item.id}/excel/`,
-        method: 'get',
-        responseType : 'blob',
-        headers: {
-          Authorization: 'Bearer ' + this.$store.getters.getToken
-        }
-      }).then(res => {
-          const url = window.URL.createObjectURL(new Blob([res.data]));
-          const a = document.createElement("a");
-          a.href = url;
-          const filename = `file.xlsx`;
-          a.setAttribute('download', filename);
-          // document.body.appendChild(link);
-          a.click();
-          a.remove();
-      }).catch(error => {
-        this.$message('Помилка')
-        console.log(error)
-      })
-    },
+    // downloadAllEcel() {
+    //   axios({
+    //     url: `https://asprof-test.azurewebsites.net/api/statistics/courses/summary/excel/`,
+    //     method: 'get',
+    //     responseType : 'blob',
+    //     headers: {
+    //       Authorization: 'Bearer ' + this.$store.getters.getToken
+    //     }
+    //   }).then(res => {
+    //       const url = window.URL.createObjectURL(new Blob([res.data]));
+    //       const a = document.createElement("a");
+    //       a.href = url;
+    //       const filename = `file.xlsx`;
+    //       a.setAttribute('download', filename);
+    //       // document.body.appendChild(link);
+    //       a.click();
+    //       a.remove();
+    //   }).catch(error => {
+    //     this.$message('Помилка')
+    //     console.log(error)
+    //   })
+    // },
+    // downloadEcel(item) {
+    //   axios({
+    //     url: `https://asprof-test.azurewebsites.net/api/statistics/courses/summary/${item.id}/excel/`,
+    //     method: 'get',
+    //     responseType : 'blob',
+    //     headers: {
+    //       Authorization: 'Bearer ' + this.$store.getters.getToken
+    //     }
+    //   }).then(res => {
+    //       const url = window.URL.createObjectURL(new Blob([res.data]));
+    //       const a = document.createElement("a");
+    //       a.href = url;
+    //       const filename = `file.xlsx`;
+    //       a.setAttribute('download', filename);
+    //       // document.body.appendChild(link);
+    //       a.click();
+    //       a.remove();
+    //   }).catch(error => {
+    //     this.$message('Помилка')
+    //     console.log(error)
+    //   })
+    // },
     goToEvent (prodId) {
       this.$router.push({
-        name: 'lc-updateevents',
-        params: { Pid: prodId }
+        name: 'lc-updatespecializations',
+        params: { Pid2: prodId }
       })
     },
     async removeEvent (prodId) {
       await axios({
-        url: `https://asprof-test.azurewebsites.net/api/events/${prodId}/`,
+        url: `https://asprof-test.azurewebsites.net/api/specializations/${prodId}/`,
         method: 'DELETE',
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
@@ -239,52 +231,10 @@ export default {
       this.isSearch = false
       // if (this.entries.length === 0) {
       await axios
-        .get(`https://asprof-test.azurewebsites.net/api/events/?ordering=${this.sort}&page_size=${this.currentEntries}&page=${this.openPage}`)
+        .get(`https://asprof-test.azurewebsites.net/api/specializations/`)
         .then(respons => {
-          this.$store.dispatch('setMessage', respons.data.results)
-          this.countEvent = respons.data.count
-          // this.messages = res;
-          // console.log("res event " + res)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-        .finally(() => (this.loading = false))
-      // }
-      this.entries = this.$store.getters.getMessage
-      this.entries.forEach(elem => elem.start_norm_date = new Date(elem.start_date).toLocaleDateString())
-      // this.paginateData(this.entries)
-      this.filteredEntries = $array.paginate(this.entries, this.currentPage, this.currentEntries)
-      this.allPages = 0
-      for(let i = 0; i < this.countEvent; i+=this.currentEntries) {
-          this.allPages +=1
-      }
-    },
-    searchEvent () {
-    },
-    getCurrentEntries () {
-      return (this.searchEntries.length <= 0) ? this.entries : this.searchEntries
-    },
-    sortByColumn (column) {
-      if(this.sort == column)
-        this.sort = '-' + this.sort
-      else
-        this.sort = column
-      this.getNotify()
-    },
-    async search (page, value) {
-      // this.filteredEntries = []
-      // this.currentPage = 1
-      // this.allPages = 0
-      // this.countEvent = 0
-      // this.openPage = 1
-      // this.filteredEntries = []
-      // console.log(page, value)
-      axios
-        .get(`https://asprof-test.azurewebsites.net/api/events/?page=${page}&page_size=${this.currentEntries}&name__icontains=${value}`)
-        .then(respons => {
-          this.$store.dispatch('setMessage', respons.data.results)
-          this.countEvent = respons.data.count
+          this.$store.dispatch('setMessage', respons.data)
+          // this.countEvent = respons.data.count
           // this.messages = res;
           // console.log("res event " + res)
         })
@@ -292,67 +242,102 @@ export default {
           console.log(error)
         })
         .finally(() => {
+          this.loading = false
           this.entries = this.$store.getters.getMessage
-          this.entries.forEach(elem => elem.start_norm_date = new Date(elem.start_date).toLocaleDateString())
-          // this.paginateData(this.entries)
-          this.filteredEntries = $array.paginate(this.entries, this.currentPage, this.currentEntries)
-          this.allPages = 0
-          for(let i = 0; i < this.countEvent; i+=this.currentEntries) {
-              this.allPages +=1
-          }
         })
+      // }
+      
+      // this.entries.forEach(elem => elem.start_norm_date = new Date(elem.start_date).toLocaleDateString())
+      // this.paginateData(this.entries)
+      // this.filteredEntries = $array.paginate(this.entries, this.currentPage, this.currentEntries)
+      // this.allPages = 0
+      // for(let i = 0; i < this.countEvent; i+=this.currentEntries) {
+      //     this.allPages +=1
+      // }
     },
-    nextPage() {
-      if(this.openPage < this.allPages) {
-        this.openPage+=1
-        if(this.isSearch) {
-          this.search(this.openPage, this.searchInput)
-        } else {
-          this.getNotify()
-        }
+    // searchEvent () {
+    // },
+    // getCurrentEntries () {
+    //   return (this.searchEntries.length <= 0) ? this.entries : this.searchEntries
+    // },
+    // sortByColumn (column) {
+    //   if(this.sort == column)
+    //     this.sort = '-' + this.sort
+    //   else
+    //     this.sort = column
+    //   this.getNotify()
+    // },
+    // async search (page, value) {
+    //   axios
+    //     .get(`https://asprof-test.azurewebsites.net/api/courses/?page=${page}&page_size=${this.currentEntries}&name__icontains=${value}`)
+    //     .then(respons => {
+    //       this.$store.dispatch('setMessage', respons.data.results)
+    //       this.countEvent = respons.data.count
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    //     .finally(() => {
+    //       this.entries = this.$store.getters.getMessage
+    //       this.entries.forEach(elem => elem.start_norm_date = new Date(elem.start_date).toLocaleDateString())
+    //       this.filteredEntries = $array.paginate(this.entries, this.currentPage, this.currentEntries)
+    //       this.allPages = 0
+    //       for(let i = 0; i < this.countEvent; i+=this.currentEntries) {
+    //           this.allPages +=1
+    //       }
+    //     })
+    // },
+    // nextPage() {
+    //   if(this.openPage < this.allPages) {
+    //     this.openPage+=1
+    //     if(this.isSearch) {
+    //       this.search(this.openPage, this.searchInput)
+    //     } else {
+    //       this.getNotify()
+    //     }
         
-      }
+    //   }
      
-    },
-    prevPage() {
-      if(this.openPage > 1) {
-        this.openPage-=1
-        if(this.isSearch) {
-          this.search(this.openPage, this.searchInput)
-        } else {
-          this.getNotify()
-        }
-      }
+    // },
+    // prevPage() {
+    //   if(this.openPage > 1) {
+    //     this.openPage-=1
+    //     if(this.isSearch) {
+    //       this.search(this.openPage, this.searchInput)
+    //     } else {
+    //       this.getNotify()
+    //     }
+    //   }
       
-    },
-    paginateEntries () {
-        if(this.isSearch) {
-          this.search(this.openPage, this.searchInput)
-        } else {
-          this.getNotify()
-        }
-    },
+    // },
+    // paginateEntries () {
+    //     if(this.isSearch) {
+    //       this.search(this.openPage, this.searchInput)
+    //     } else {
+    //       this.getNotify()
+    //     }
+    // }
   },
-  watch: {
-     // whenever question changes, this function will run
-    searchInput(newSearch, oldSearch) {
-      if (newSearch.length > 0 ) {
-        this.isSearch = true
-        this.search(1, newSearch)
-      } else {
-        this.isSearch = false
-        this.getNotify()
-      }
+  // watch: {
+  //   searchInput(newSearch, oldSearch) {
+  //     if (newSearch.length > 0 ) {
+  //       this.isSearch = true
+  //       this.search(1, newSearch)
+  //     } else {
+  //       this.isSearch = false
+  //       this.getNotify()
+  //     }
       
-      // console.log(this.filteredEntries)
-    }
-  }
+  //     // console.log(this.filteredEntries)
+  //   }
+  // }
 }
 </script>
 <style scoped src="@/assets/lc/css/table.css">
 </style>
 
 <style>
+
 .import-excel {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -387,5 +372,4 @@ export default {
 .icon_svg_table_edit {
   cursor: pointer;
 }
-
 </style>

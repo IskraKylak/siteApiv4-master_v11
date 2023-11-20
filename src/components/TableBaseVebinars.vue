@@ -4,7 +4,7 @@
   </div>
   <div v-if="!loading" class="wrap_table_component">
     <div class="import-excel">
-      <a href="https://asprof-test.azurewebsites.net/api/statistics/webinars/summary/excel/" class="import_btn">ЕКСПОРТ В EXCEL</a>
+      <div @click="downloadAllEcel()" class="import_btn">ЕКСПОРТ В EXCEL</div>
     </div>
     <div class="wrap_search">
       <input type="search" class="input px:width-25" placeholder="Пошук" v-model="searchInput">
@@ -40,9 +40,9 @@
                     <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
                       d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
                   </span>
-                  <a :href="`https://asprof-test.azurewebsites.net/api/statistics/webinars/summary/${td.id}/excel/`" class="icon_svg_table icon_svg_table_remove" title="Експорт в Excel">
+                  <div @click="downloadEcel(td)" class="icon_svg_table icon_svg_table_remove" title="Експорт в Excel">
                     <div class="svg_import MuiSvgIcon-root"></div>
-                  </a>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -97,6 +97,7 @@ export default {
   },
   data () {
     return {
+      sort: '-start_date',
       loading: false,
       columns: [
         {
@@ -108,7 +109,7 @@ export default {
           text: 'Назва'
         },
         {
-          name: 'date',
+          name: 'start_date',
           text: 'Дата'
         },
         {
@@ -168,35 +169,62 @@ export default {
     this.getNotify()
   },
   methods: {
+    downloadAllEcel() {
+      axios({
+        url: `https://asprof-test.azurewebsites.net/api/statistics/webinars/summary/excel/`,
+        method: 'get',
+        responseType : 'blob',
+        headers: {
+          Authorization: 'Bearer ' + this.$store.getters.getToken
+        }
+      }).then(res => {
+          const url = window.URL.createObjectURL(new Blob([res.data]));
+          const a = document.createElement("a");
+          a.href = url;
+          const filename = `file.xlsx`;
+          a.setAttribute('download', filename);
+          // document.body.appendChild(link);
+          a.click();
+          a.remove();
+      }).catch(error => {
+        this.$message('Помилка')
+        console.log(error)
+      })
+    },
+    downloadEcel(item) {
+      axios({
+        url: `https://asprof-test.azurewebsites.net/api/statistics/webinars/summary/${item.id}/excel/`,
+        method: 'get',
+        responseType : 'blob',
+        headers: {
+          Authorization: 'Bearer ' + this.$store.getters.getToken
+        }
+      }).then(res => {
+          const url = window.URL.createObjectURL(new Blob([res.data]));
+          const a = document.createElement("a");
+          a.href = url;
+          const filename = `file.xlsx`;
+          a.setAttribute('download', filename);
+          // document.body.appendChild(link);
+          a.click();
+          a.remove();
+      }).catch(error => {
+        this.$message('Помилка')
+        console.log(error)
+      })
+    },
     goToEvent (prodId) {
       this.$router.push({
         name: 'lc-updatevebinar',
         params: { Pid: prodId }
       })
     },
-    async removeEvent (prodId) {
-      await axios({
-        url: `https://asprof-test.azurewebsites.net/api/webinars/${prodId}/`,
-        method: 'DELETE',
-        headers: {
-          Authorization: 'Bearer ' + this.$store.getters.getToken
-        }
-      }).then(respons => {
-        this.$message('Дані видалено!')
-        this.getNotify()
-        // this.messages = res;
-      })
-        .catch(error => {
-          console.log(error)
-          this.$message('Помилка')
-        })
-    },
     async getNotify () {
       this.loading = true
       this.isSearch = false
       // if (this.entries.length === 0) {
       await axios
-        .get(`https://asprof-test.azurewebsites.net/api/webinars/?ordering=-start_date&page_size=${this.currentEntries}&page=${this.openPage}`)
+        .get(`https://asprof-test.azurewebsites.net/api/webinars/?ordering=${this.sort}&page_size=${this.currentEntries}&page=${this.openPage}`)
         .then(respons => {
           this.$store.dispatch('setMessage', respons.data.results)
           this.countEvent = respons.data.count
@@ -218,32 +246,34 @@ export default {
           this.loading = false
         })
     },
+    async removeEvent (prodId) {
+      await axios({
+        url: `https://asprof-test.azurewebsites.net/api/webinars/${prodId}/`,
+        method: 'DELETE',
+        headers: {
+          Authorization: 'Bearer ' + this.$store.getters.getToken
+        }
+      }).then(respons => {
+        this.$message('Дані видалено!')
+        this.getNotify()
+        // this.messages = res;
+      })
+        .catch(error => {
+          console.log(error)
+          this.$message('Помилка')
+        })
+    },
     searchEvent () {
     },
     getCurrentEntries () {
       return (this.searchEntries.length <= 0) ? this.entries : this.searchEntries
     },
     sortByColumn (column) {
-      this.col = {
-        name: '',
-        position: '',
-        office: '',
-        extension: '',
-        startdate: '',
-        salary: ''
-      }
-      let sortedEntries = this.getCurrentEntries()
-      const sortedColumn = this.sortcol[column]
-      if (sortedColumn === '') {
-        this.sortcol[column] = 'asc'
-        sortedEntries = $array.sorted(this.getCurrentEntries(), column, 'asc')
-      } else if (sortedColumn === 'asc') {
-        this.sortcol[column] = 'desc'
-        sortedEntries = $array.sorted(this.getCurrentEntries(), column, 'desc')
-      } else if (sortedColumn === 'desc') {
-        this.sortcol[column] = ''
-      }
-      this.paginateData(sortedEntries)
+      if(this.sort == column)
+        this.sort = '-' + this.sort
+      else
+        this.sort = column
+      this.getNotify()
     },
     async search (page, value) {
       axios
@@ -341,6 +371,7 @@ export default {
   line-height: 1.75;
   text-decoration: none;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .import_btn:hover {

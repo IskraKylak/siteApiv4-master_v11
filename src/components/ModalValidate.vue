@@ -25,7 +25,7 @@
           </div>
           <div class="wrap_inp" :class="{ errorInput: v$.singPartnerModal.link.$error }">
             <fieldset>
-              <legend>Посылання на партнера *</legend>
+              <legend>Посилання на партнера *</legend>
               <input
                 type="text"
                 class="profile_input"

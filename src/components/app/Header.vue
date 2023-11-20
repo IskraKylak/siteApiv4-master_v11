@@ -27,7 +27,7 @@
             >facebook</a
             >
           </div>
-          <div class="box_lang">
+          <!-- <div class="box_lang">
             <ul>
               <li>
                 <a href="#" class="lang-ua active">ua</a>
@@ -36,7 +36,7 @@
                 <a href="#" class="lang-en">en</a>
               </li>
             </ul>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="box_bottom" :class="openMenu ? 'open' : ''">
@@ -114,7 +114,7 @@
                 to="/experts"
                 v-on:click="openMenu = !openMenu"
               >
-                Експерты
+                Експерти
               </router-link>
             </li>
             <li>

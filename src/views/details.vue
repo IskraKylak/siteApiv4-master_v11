@@ -560,7 +560,7 @@ export default {
           }
         })
           .then(respons => {
-            this.$message('Вы зареєстровані!')
+            this.$message('Ви зареєстровані!')
             this.getNotify()
           })
           .catch(error => {

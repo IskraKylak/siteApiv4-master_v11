@@ -61,6 +61,16 @@
         </div>
         <div class="text_sidebar">Курси</div>
       </router-link>
+      <router-link to="/lc-specializations" @click="goToPage('Спеціалізації')" :class="[isExactActive && 'active']"
+                   class="sidebar-center_item sidebar_text">
+        <div class="icon_sidebar">
+          <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"></path>
+          </svg>
+        </div>
+        <div class="text_sidebar">Спеціалізації</div>
+      </router-link>
       <router-link to="/lc-users" @click="goToPage('Користувачі')" :class="[isExactActive && 'active']"
                    class="sidebar-center_item sidebar_text">
         <div class="icon_sidebar">
@@ -94,7 +104,8 @@ export default {
   },
   data () {
     return {
-      myAcc: []
+      myAcc: [],
+      isExactActive: false
     }
   },
   created () {

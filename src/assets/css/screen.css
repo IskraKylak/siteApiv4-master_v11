@@ -369,7 +369,7 @@ body {
   background-repeat: no-repeat;
   background-position: left center;
   background-size: cover;
-  margin-right: 65px;
+  /* margin-right: 65px; */
 }
 /* line 535, ../sass/screen.scss */
 .main_page header .container .box_top .box_callback .box_messendger .link_facebook:hover {
