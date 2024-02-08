@@ -76,9 +76,12 @@ export default {
   },
   methods: {
     async getNotify () {
+      let lang = "uk"
+      if(this.$i18n.locale != 'ua')
+          lang = this.$i18n.locale
       await axios({
         method: 'GET',
-        url: ('https://asprof-test.azurewebsites.net/api/content/hippocrates/contacts/'),
+        url: (`https://asprof-test.azurewebsites.net/${lang}/api/content/hippocrates/contacts/`),
       }).then(response => {
         this.infoContact.title = response.data.title
         this.infoContact.text = response.data.text
@@ -91,7 +94,6 @@ export default {
       })
         .catch(error => {
           this.$store.dispatch('logout')
-          console.log(error)
         })
         .finally()
     }

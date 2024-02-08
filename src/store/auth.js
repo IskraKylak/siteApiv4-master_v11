@@ -10,18 +10,14 @@ export default {
     login({commit}, user) {
       return new Promise((resolve, reject) => {
         commit('auth_request')
-        console.log(user)
         axios({
-          url: 'https://asprof-test.azurewebsites.net/api/auth/token/',
+          url: `https://asprof-test.azurewebsites.net/${user.lang}/api/auth/token/`,
           data: user,
           method: 'POST'
         })
           .then(resp => {
             const user = resp.data.refresh
             const token = resp.data.access
-
-            // console.log('auth token-access:' + token)
-            // console.log('auth refresh: ' + user)
 
             localStorage.setItem('token', token)
             localStorage.setItem('user', user)
@@ -43,7 +39,7 @@ export default {
       return new Promise((resolve, reject) => {
         commit('auth_request')
         axios({
-          url: 'https://asprof-test.azurewebsites.net/api/users/register/',
+          url: `https://asprof-test.azurewebsites.net/${user.lang}/api/users/register/`,
           data: user,
           method: 'POST'
         })
@@ -90,8 +86,6 @@ export default {
     },
     auth_success(state, obj) {
       state.status = 'success'
-      // console.log('auth_success token-access: ' + obj.token)
-      // console.log('auth_success refresh: ' + obj.user)
       state.token = obj.token
       state.user = obj.user
     },

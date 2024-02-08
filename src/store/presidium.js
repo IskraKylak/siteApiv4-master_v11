@@ -42,7 +42,6 @@ export default {
 //         commit('SET_INFO3', info3.data);
 //         return info3;
 //       }).catch((error) => {
-//         console.log(error)
 //       });
 //     }
 //   },

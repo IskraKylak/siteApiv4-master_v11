@@ -26,14 +26,13 @@ export default {
     async getNotify () {
       await axios({
         method: 'GET',
-        url: (`https://asprof-test.azurewebsites.net/api/specializations/`),
+        url: (`https://asprof-test.azurewebsites.net/uk/api/specializations/`),
       }).then(respons => {
         let res = respons.data
         this.$store.dispatch('setSpecialization', res)
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
     }

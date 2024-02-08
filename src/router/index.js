@@ -4,61 +4,61 @@ import store from '@/store/index.js'
 
 const routes = [
   {
-    path: '/',
+    path: '/:lang/',
     name: 'home',
     meta: { layout: 'empty' },
     component: () => import(/* webpackChunkName: "about" */ '../views/home.vue')
   },
   {
-    path: '/bmo',
+    path: '/:lang/bmo',
     name: 'bmo',
     meta: { layout: 'empty' },
     component: () => import(/* webpackChunkName: "about" */ '../views/bmo.vue')
   },
   {
-    path: '/calendarevent/',
+    path: '/:lang/calendarevent/',
     name: 'calendarevent',
     meta: { layout: 'empty' },
     component: () => import(/* webpackChunkName: "about" */ '../views/calendarevent.vue')
   },
   {
-    path: '/contact',
+    path: '/:lang/contact',
     name: 'contact',
     meta: { layout: 'empty' },
     component: () => import(/* webpackChunkName: "about" */ '../views/contact.vue')
   },
   {
-    path: '/details/:Pid',
+    path: '/:lang/details/:Pid',
     name: 'details',
     meta: { layout: 'empty' },
     component: () => import(/* webpackChunkName: "about" */ '../views/details.vue')
   },
   {
-    path: '/presidium',
+    path: '/:lang/presidium',
     name: 'presidium',
     meta: { layout: 'empty' },
     component: () => import(/* webpackChunkName: "about" */ '../views/presidium.vue')
   },
   {
-    path: '/experts',
+    path: '/:lang/experts',
     name: 'experts',
     meta: { layout: 'empty' },
     component: () => import(/* webpackChunkName: "about" */ '../views/experts.vue')
   },
   {
-    path: '/details/:Pid/test',
+    path: '/:lang/details/:Pid/test',
     name: 'testVebinar',
     meta: { layout: 'empty' },
     component: () => import(/* webpackChunkName: "about" */ '../views/testVebinar.vue')
   },
   {
-    path: '/in-login',
+    path: '/:lang/in-login',
     name: 'inLogin',
     meta: { layout: 'empty' },
     component: () => import(/* webpackChunkName: "about" */ '../views/inLogin.vue')
   },
   {
-    path: '/register',
+    path: '/:lang/register',
     name: 'register',
     meta: { layout: 'empty' },
     component: () => import(/* webpackChunkName: "about" */ '../views/register.vue')
@@ -267,7 +267,7 @@ router.beforeEach((to, from, next) => {
       next()
       return
     }
-    next('/login')
+    next('/:lang/login')
   } else {
     next()
   }

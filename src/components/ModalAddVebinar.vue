@@ -12,15 +12,15 @@
 
               <p class="dropzone_title">Опис вебінара</p>
               <editor
-                api-key="no-api-key4"
-                @init="handleInit"
-                @destroy="handleDestroy"
-                @change="handleChange"
-                @input="handleInput"
-                @error="handleError"
-                :config="config"
-                name="qwerty"
-                ref="ref"
+                api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+                :init="{
+                  height: 500,
+                  plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount'
+                  ],
+                }"
                 v-model="singleEvent.description"
               />
               <fieldset>
@@ -88,15 +88,15 @@
 
               <p class="dropzone_title">Основний текст вебінара</p>
               <editor
-                api-key="no-api-key5"
-                @init="handleInit"
-                @destroy="handleDestroy"
-                @change="handleChange"
-                @input="handleInput"
-                @error="handleError"
-                :config="config"
-                name="qwerty"
-                ref="ref"
+                api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+                :init="{
+                  height: 500,
+                  plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount'
+                  ],
+                }"
                 v-model="singleEvent.text"
               />
 
@@ -365,7 +365,6 @@ export default {
             // this.messages = res;
           })
             .catch(error => {
-              console.log(error)
               this.$message('Помилка')
             })
             .finally(() => (this.loading = false))
@@ -385,7 +384,6 @@ export default {
             // this.messages = res;
           })
             .catch(error => {
-              console.log(error)
               this.$message('Помилка')
             })
             .finally(() => (this.loading = false))
@@ -405,7 +403,6 @@ export default {
             // this.messages = res;
           })
             .catch(error => {
-              console.log(error)
               this.$message('Помилка')
             })
             .finally(() => (this.loading = false))
@@ -414,7 +411,6 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
         .finally(() => (this.loading = false))

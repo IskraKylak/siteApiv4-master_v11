@@ -285,6 +285,8 @@ body {
   -webkit-justify-content: space-between;
   -ms-justify-content: space-between;
   justify-content: space-between;
+  position: relative;
+  z-index: 100;
 }
 /* line 472, ../sass/screen.scss */
 .main_page header .container .box_top .logo {
@@ -348,6 +350,7 @@ body {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
+  grid-gap: 20px;
 }
 /* line 521, ../sass/screen.scss */
 .main_page header .container .box_top .box_callback .box_messendger {
@@ -356,7 +359,7 @@ body {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
-  margin-top: 7px;
+  /* margin-top: 7px; */
 }
 /* line 524, ../sass/screen.scss */
 .main_page header .container .box_top .box_callback .box_messendger .link_facebook {
@@ -535,7 +538,7 @@ body {
 }
 /* line 670, ../sass/screen.scss */
 .main_page header .container .box_enter {
-  margin: 7px 30px 0 0;
+  /* margin: 7px 30px 0 0; */
 }
 /* line 672, ../sass/screen.scss */
 .main_page header .container .box_enter a {
@@ -4384,7 +4387,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-  padding: 200px 20px 172px;
+  /* padding: 200px 20px 172px; */
   position: relative;
 }
 /* line 3743, ../sass/screen.scss */
@@ -4517,7 +4520,8 @@ body {
 /* line 3823, ../sass/screen.scss */
 .event .event_section-3 .box_content .box_right,
 .event .event_section-5 .box_content .box_right {
-  width: 57%;
+  /* width: 57%; */
+  width: 100%;
   padding-top: 20px;
 }
 /* line 3826, ../sass/screen.scss */
@@ -5494,7 +5498,7 @@ body {
   }
   /* line 4653, ../sass/screen.scss */
   .event .event_section-2 {
-    padding: 150px 20px 130px;
+    /* padding: 150px 20px 130px; */
   }
   /* line 4655, ../sass/screen.scss */
   .event .event_section-2 .box_content {
@@ -5823,7 +5827,7 @@ body {
   }
   /* line 4894, ../sass/screen.scss */
   .event .event_section-2 {
-    padding: 100px 20px;
+    /* padding: 100px 20px; */
   }
   /* line 4898, ../sass/screen.scss */
   .event .event_section-2 .box_content .box_left .title_event {

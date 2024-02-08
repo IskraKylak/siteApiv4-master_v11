@@ -2,13 +2,16 @@
   <div class="wrap_preloader lc" v-if="loading">
     <preloader :width="90" :height="90"></preloader>
   </div>
-  <div class="container" v-if="myAcc.role === 'admin' && !loading">
+  <div class="container">
 <!--    {{ singleEvent }}-->
     <div class="profile_success">
       <router-link to="/lc-events" class="back_btn">Назад</router-link>
     </div>
-    <h1 class="title_event">Редагування події</h1>
-    <form @submit.prevent="onSubmit">
+    <div class="wrap_title">
+      <h1 class="title_event">Редагування події</h1>
+      <swicherLang @changeLang="changeLang" />
+    </div>
+    <form v-if="myAcc.role === 'admin' && !loading" @submit.prevent="onSubmit">
       <fieldset>
         <legend>Назва події <span title="обов'язкове">*</span></legend>
         <input type="text" class="profile_input" v-model="singleEvent.name">
@@ -16,15 +19,15 @@
 
       <legend class="dropzone_title">Опис події <span title="обов'язкове">*</span></legend>
           <editor
-            api-key="no-api-key"
-            @init="handleInit"
-            @destroy="handleDestroy"
-            @change="handleChange"
-            @input="handleInput"
-            @error="handleError"
-            :config="config"
-            name="qwerty"
-            ref="ref"
+            api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+            :init="{
+              height: 500,
+              plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+              ],
+            }"
             v-model="singleEvent.description"
           />
       <fieldset>
@@ -104,18 +107,33 @@
       </div>
 
       <legend class="dropzone_title">Основний текст події <span title="обов'язкове">*</span></legend>
-          <editor
-            api-key="no-api-key2"
-            @init="handleInit"
-            @destroy="handleDestroy"
-            @change="handleChange"
-            @input="handleInput"
-            @error="handleError"
-            :config="config"
-            name="qwerty"
-            ref="ref"
-            v-model="singleEvent.text"
-          />
+      <editor
+        api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+        :init="{
+          height: 500,
+          plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code help wordcount'
+          ],
+        }"
+        v-model="singleEvent.text"
+      />
+
+      <br>
+      <legend class="dropzone_title">Рекламный текст події <span title="обов'язкове">*</span></legend>
+      <editor
+        api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+        :init="{
+          height: 300,
+          plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code help wordcount'
+          ],
+        }"
+        v-model="singleEvent.ad_text"
+      />
 
       <div class="radio_block">
         <input type="checkbox" class="custom-checkbox" id="happy" v-model="singleEvent.private">
@@ -373,6 +391,7 @@ import Editor from '@tinymce/tinymce-vue'
 import axios from 'axios'
 import modalValidate from '@/components/ModalValidate.vue'
 import preloader from '@/components/UI/Preloader.vue'
+import swicherLang from '@/components/swicherLang'
 const config = {
   height: 500,
   inline: false,
@@ -400,6 +419,7 @@ const config = {
 export default {
   data () {
     return {
+      activeLang: "uk",
       loading: false,
       idEvent: null,
       myAcc: '',
@@ -425,7 +445,8 @@ export default {
         max_tries: '',
         registered: false,
         certificate_title: '',
-        language: '',
+        // language: '',
+        ad_text: '',
         partners_banner: null,
         media_partners_set: [],
         main_partners_set: [],
@@ -469,16 +490,21 @@ export default {
   components: {
     editor: Editor,
     modalValidate,
-    preloader
+    preloader,
+    swicherLang
   },
   created () {
     this.getNotify()
   },
   methods: {
+    changeLang(data) {
+      this.activeLang = data
+      this.getNotify()
+    },
     async goToTest (prodId) {
       if (this.singleEvent.test == null) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/events/${prodId}/test/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/events/${prodId}/test/`,
           method: 'POST',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
@@ -488,7 +514,7 @@ export default {
           // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
+
             this.$message('Помилка створення тесту')
           })
           .finally(() => (this.loading = false))
@@ -513,6 +539,7 @@ export default {
         // image: this.singleEvent.image,
         // event_documents: this.singleEvent.id,
         text: this.singleEvent.text,
+        ad_text: this.singleEvent.ad_text,
         private: this.singleEvent.private,
         specializations: this.singleEvent.specializations,
         youtube_id_1: this.singleEvent.youtube_id_1,
@@ -521,7 +548,7 @@ export default {
         max_tries: this.singleEvent.max_tries,
         registered: this.singleEvent.registered,
         certificate_title: this.singleEvent.certificate_title,
-        language: this.singleEvent.language,
+        // language: this.singleEvent.language,
         need_pay: this.singleEvent.need_pay,
         price: this.singleEvent.price,
         is_free: this.singleEvent.is_free
@@ -531,7 +558,7 @@ export default {
         // partners_set: this.singleEvent.id
       }
       await axios({
-        url: `https://asprof-test.azurewebsites.net/api/events/${this.proId}/`,
+        url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/events/${this.proId}/`,
         data: tmp,
         method: 'PATCH',
         headers: {
@@ -544,13 +571,13 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
+
           this.$message('Помилка')
         })
         .finally(() => (this.loading = false))
       if (this.previewFile.click) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/events/${this.proId}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/events/${this.proId}/`,
           data: this.singleEvent.image,
           method: 'PATCH',
           headers: {
@@ -563,7 +590,6 @@ export default {
           // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
@@ -571,7 +597,7 @@ export default {
 
       if (this.previewImage.click) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/events/${this.proId}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/events/${this.proId}/`,
           data: this.singleEvent.event_documents,
           method: 'PATCH',
           headers: {
@@ -584,7 +610,6 @@ export default {
           // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
@@ -592,7 +617,7 @@ export default {
 
       if (this.previewIneractive.click) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/events/${this.proId}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/events/${this.proId}/`,
           data: this.singleEvent.partners_banner,
           method: 'PATCH',
           headers: {
@@ -602,10 +627,8 @@ export default {
           const res = respons.data
           this.$store.dispatch('setSingleEvent', res)
           this.$message('Картинка змінена!')
-          // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
@@ -614,49 +637,43 @@ export default {
     async removePartner (tab, id) {
       if (tab === 'mainPartner') {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/events/${this.singleEvent.id}/main_partners/${id}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/events/${this.singleEvent.id}/main_partners/${id}/`,
           method: 'DELETE',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
           }
         }).then(respons => {
-          // console.log(respons)
           this.$message('Партнера видалено!')
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
       } else if (tab === 'partner') {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/events/${this.singleEvent.id}/partners/${id}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/events/${this.singleEvent.id}/partners/${id}/`,
           method: 'DELETE',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
           }
         }).then(respons => {
-          // console.log(respons)
           this.$message('Партнера видалено!')
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
       } else if (tab === 'mediaPartner') {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/events/${this.singleEvent.id}/media_partners/${id}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/events/${this.singleEvent.id}/media_partners/${id}/`,
           method: 'DELETE',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
           }
         }).then(respons => {
-          // console.log(respons)
           this.$message('Партнера видалено!')
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
@@ -665,9 +682,6 @@ export default {
     },
     // eslint-disable-next-line camelcase
     clickModal (tab, id, id_event) {
-      // console.log('clickModal: ' + id)
-      // console.log('clickModal tab: ' + tab)
-      // console.log('clickModal id_event: ' + id_event)
       this.modalValidate = !this.modalValidate
       this.isPartner = tab
       this.idItem = id
@@ -683,7 +697,7 @@ export default {
     async getNotify () {
       await axios({
         method: 'GET',
-        url: ('https://asprof-test.azurewebsites.net/api/me/'),
+        url: (`https://asprof-test.azurewebsites.net/${this.activeLang}/api/me/`),
         headers: {
           'Authorization': 'Bearer ' + this.$store.getters.getToken
         }
@@ -691,30 +705,19 @@ export default {
         let res = respons.data
         this.$store.dispatch('setMyAcc', res)
         this.myAcc = this.$store.getters.getMyAcc
-        // this.messages = res;
-      })
-        .catch(error => {
-          console.log(error)
-        })
-        .finally(() => (this.loading = false))
+      }).finally(() => (this.loading = false))
 
       this.loading = true
       await axios({
         method: 'GET',
-        url: (`https://asprof-test.azurewebsites.net/api/events/${this.proId}`),
+        url: (`https://asprof-test.azurewebsites.net/${this.activeLang}/api/events/${this.proId}`),
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
         }
-      })
-        .then(respons => {
-          // console.log(respons.data)
-          this.$store.dispatch('setSingleEvent', respons.data)
-          // console.log(typeof this.$store.getters.getSingleEvent.id)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-        .finally(() => (this.loading = false))
+      }).then(respons => {
+        this.$store.dispatch('setSingleEvent', respons.data)
+      }).finally(() => (this.loading = false))
+      
       this.singleEvent = this.$store.getters.getSingleEvent
       // this.singleEvent.start_date = (this.singleEvent.start_date).split('T')[0]
       // this.singleEvent.end_date = (this.singleEvent.end_date).split('T')[0]
@@ -787,31 +790,19 @@ export default {
         this.$emit('input', file[0])
       }
     },
-    handleInit (editor) {
-      // console.log('Initialized')
-    },
-
-    handleDestroy (editor) {
-      // console.log('Destroyed')
-    },
-
-    handleChange (value) {
-      // console.log('Changed')
-    },
-
-    handleInput (value) {
-      // console.log('Input')
-    },
-
-    handleError (err) {
-      // console.log('An error occurred')
-    }
   }
 }
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+.wrap_title {
+  display: flex;
+  align-items: center;
+  grid-gap: 20px;
+  margin-bottom: 20px;
+}
 
 legend span {
   color: red;

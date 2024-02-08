@@ -157,18 +157,14 @@ export default {
     startModal () {
       this.tmpSingleEvent = JSON.parse(JSON.stringify(this.$store.getters.getSingleEvent))
       if (this.idItem != null) {
-        console.log('idItem ' + this.idItem)
-        console.log('tmpSingleEvent ')
         this.title = 'Змінити партнера'
         if (this.isPartner === 'mainPartner') {
           this.singPartnerModal = this.tmpSingleEvent.main_partners_set[this.idItem]
           this.previewPartner.val = this.singPartnerModal.image
         } else if (this.isPartner === 'partner') {
-          console.log(this.tmpSingleEvent.partners_set[this.idItem])
           this.singPartnerModal = this.tmpSingleEvent.partners_set[this.idItem]
           this.previewPartner.val = this.singPartnerModal.image
         } else if (this.isPartner === 'mediaPartner') {
-          console.log(this.tmpSingleEvent.media_partners_set[this.idItem])
           this.singPartnerModal = this.tmpSingleEvent.media_partners_set[this.idItem]
           this.previewPartner.val = this.singPartnerModal.image
         }
@@ -193,7 +189,7 @@ export default {
         if (this.isPartner === 'mainPartner') {
           if (this.idItem != null) {
             await axios({
-              url: (`https://asprof-test.azurewebsites.net/api/events/${this.idEvent}/main_partners/${this.singPartnerModal.id}/`),
+              url: (`https://asprof-test.azurewebsites.net/uk/api/events/${this.idEvent}/main_partners/${this.singPartnerModal.id}/`),
               data: {
                 id: this.singPartnerModal.id,
                 name: this.singPartnerModal.name,
@@ -206,17 +202,15 @@ export default {
               }
             })
               .then(respons => {
-                console.log(respons.data)
                 this.$message('Партнера змінено!')
                 this.$emit('close')
               })
               .catch(error => {
                 // alert(error)
-                console.log(error)
               })
             if (this.previewPartner.click) {
               await axios({
-                url: `https://asprof-test.azurewebsites.net/api/events/${this.idEvent}/main_partners/${this.singPartnerModal.id}/`,
+                url: `https://asprof-test.azurewebsites.net/uk/api/events/${this.idEvent}/main_partners/${this.singPartnerModal.id}/`,
                 data: this.singPartnerModal.image,
                 method: 'PATCH',
                 headers: {
@@ -229,7 +223,6 @@ export default {
                 // this.messages = res;
               })
                 .catch(error => {
-                  console.log(error)
                   this.$message('Помилка')
                   this.previewPartner.click = false
                 })
@@ -243,9 +236,8 @@ export default {
               link: this.singPartnerModal.link,
               order_number: this.singPartnerModal.order_number
             }
-            // console.log('tmp.id: ' + tmp.id)
             await axios({
-              url: (`https://asprof-test.azurewebsites.net/api/events/${this.idEvent}/main_partners/`),
+              url: (`https://asprof-test.azurewebsites.net/uk/api/events/${this.idEvent}/main_partners/`),
               data: tmp,
               method: 'POST',
               headers: {
@@ -253,14 +245,11 @@ export default {
               }
             })
               .then(respons => {
-                console.log(respons.data)
                 this.$message('Партнера додано!')
                 tmp.id = respons.data.id
                 if (this.previewPartner.click) {
-                  // console.log('this.singPartnerModal.image: ' + this.singPartnerModal.image)
-                  // console.log('tmp.id: ' + tmp.id)
                   axios({
-                    url: `https://asprof-test.azurewebsites.net/api/events/${this.idEvent}/main_partners/${tmp.id}/`,
+                    url: `https://asprof-test.azurewebsites.net/uk/api/events/${this.idEvent}/main_partners/${tmp.id}/`,
                     data: this.singPartnerModal.image,
                     method: 'PATCH',
                     headers: {
@@ -275,7 +264,6 @@ export default {
                     // this.messages = res;
                   })
                     .catch(error => {
-                      console.log(error)
                       this.$message('Помилка! Картинка не додана!')
                       this.previewPartner.click = false
                     })
@@ -284,15 +272,13 @@ export default {
                 this.$emit('close')
               })
               .catch(error => {
-                // alert(error)
-                console.log(error)
                 this.$message('Помилка! Партнера не додано! Такий порядковий номер вже є!')
               })
           }
         } else if (this.isPartner === 'partner') {
           if (this.idItem != null) {
             await axios({
-              url: (`https://asprof-test.azurewebsites.net/api/events/${this.idEvent}/partners/${this.singPartnerModal.id}/`),
+              url: (`https://asprof-test.azurewebsites.net/uk/api/events/${this.idEvent}/partners/${this.singPartnerModal.id}/`),
               data: {
                 id: this.singPartnerModal.id,
                 name: this.singPartnerModal.name,
@@ -305,17 +291,14 @@ export default {
               }
             })
               .then(respons => {
-                console.log(respons.data)
                 this.$message('Партнера змінено!')
                 this.$emit('close')
               })
               .catch(error => {
-                // alert(error)
-                console.log(error)
               })
             if (this.previewPartner.click) {
               await axios({
-                url: `https://asprof-test.azurewebsites.net/api/events/${this.idEvent}/partners/${this.singPartnerModal.id}/`,
+                url: `https://asprof-test.azurewebsites.net/uk/api/events/${this.idEvent}/partners/${this.singPartnerModal.id}/`,
                 data: this.singPartnerModal.image,
                 method: 'PATCH',
                 headers: {
@@ -328,7 +311,6 @@ export default {
                 // this.messages = res;
               })
                 .catch(error => {
-                  console.log(error)
                   this.$message('Помилка')
                   this.previewPartner.click = false
                 })
@@ -342,9 +324,8 @@ export default {
               link: this.singPartnerModal.link,
               order_number: this.singPartnerModal.order_number
             }
-            // console.log('tmp.id: ' + tmp.id)
             await axios({
-              url: (`https://asprof-test.azurewebsites.net/api/events/${this.idEvent}/partners/`),
+              url: (`https://asprof-test.azurewebsites.net/uk/api/events/${this.idEvent}/partners/`),
               data: tmp,
               method: 'POST',
               headers: {
@@ -352,14 +333,11 @@ export default {
               }
             })
               .then(respons => {
-                console.log(respons.data)
                 this.$message('Партнера додано!')
                 tmp.id = respons.data.id
                 if (this.previewPartner.click) {
-                  // console.log('this.singPartnerModal.image: ' + this.singPartnerModal.image)
-                  // console.log('tmp.id: ' + tmp.id)
                   axios({
-                    url: `https://asprof-test.azurewebsites.net/api/events/${this.idEvent}/partners/${tmp.id}/`,
+                    url: `https://asprof-test.azurewebsites.net/uk/api/events/${this.idEvent}/partners/${tmp.id}/`,
                     data: this.singPartnerModal.image,
                     method: 'PATCH',
                     headers: {
@@ -374,7 +352,6 @@ export default {
                     // this.messages = res;
                   })
                     .catch(error => {
-                      console.log(error)
                       this.$message('Помилка! Картинка не додана!')
                       this.previewPartner.click = false
                     })
@@ -382,15 +359,13 @@ export default {
                 }
               })
               .catch(error => {
-                // alert(error)
-                console.log(error)
                 this.$message('Помилка! Партнера не додано! Такий порядковий номер вже є')
               })
           }
         } else if (this.isPartner === 'mediaPartner') {
           if (this.idItem != null) {
             await axios({
-              url: (`https://asprof-test.azurewebsites.net/api/events/${this.idEvent}/media_partners/${this.singPartnerModal.id}/`),
+              url: (`https://asprof-test.azurewebsites.net/uk/api/events/${this.idEvent}/media_partners/${this.singPartnerModal.id}/`),
               data: {
                 id: this.singPartnerModal.id,
                 name: this.singPartnerModal.name,
@@ -403,17 +378,14 @@ export default {
               }
             })
               .then(respons => {
-                console.log(respons.data)
                 this.$message('Партнера змінено!')
                 this.$emit('close')
               })
               .catch(error => {
-                // alert(error)
-                console.log(error)
               })
             if (this.previewPartner.click) {
               await axios({
-                url: `https://asprof-test.azurewebsites.net/api/events/${this.idEvent}/media_partners/${this.singPartnerModal.id}/`,
+                url: `https://asprof-test.azurewebsites.net/uk/api/events/${this.idEvent}/media_partners/${this.singPartnerModal.id}/`,
                 data: this.singPartnerModal.image,
                 method: 'PATCH',
                 headers: {
@@ -426,7 +398,6 @@ export default {
                 // this.messages = res;
               })
                 .catch(error => {
-                  console.log(error)
                   this.$message('Помилка')
                   this.previewPartner.click = false
                 })
@@ -440,9 +411,8 @@ export default {
               link: this.singPartnerModal.link,
               order_number: this.singPartnerModal.order_number
             }
-            // console.log('tmp.id: ' + tmp.id)
             await axios({
-              url: (`https://asprof-test.azurewebsites.net/api/events/${this.idEvent}/media_partners/`),
+              url: (`https://asprof-test.azurewebsites.net/uk/api/events/${this.idEvent}/media_partners/`),
               data: tmp,
               method: 'POST',
               headers: {
@@ -450,14 +420,11 @@ export default {
               }
             })
               .then(respons => {
-                console.log(respons.data)
                 this.$message('Партнера додано!')
                 tmp.id = respons.data.id
                 if (this.previewPartner.click) {
-                  // console.log('this.singPartnerModal.image: ' + this.singPartnerModal.image)
-                  // console.log('tmp.id: ' + tmp.id)
                   axios({
-                    url: `https://asprof-test.azurewebsites.net/api/events/${this.idEvent}/media_partners/${tmp.id}/`,
+                    url: `https://asprof-test.azurewebsites.net/uk/api/events/${this.idEvent}/media_partners/${tmp.id}/`,
                     data: this.singPartnerModal.image,
                     method: 'PATCH',
                     headers: {
@@ -469,10 +436,8 @@ export default {
                     this.previewPartner.click = false
                     this.previewPartner.val = null
                     this.$emit('close')
-                    // this.messages = res;
                   })
                     .catch(error => {
-                      console.log(error)
                       this.$message('Помилка! Картинка не додана!')
                       this.previewPartner.click = false
                     })
@@ -480,8 +445,6 @@ export default {
                 }
               })
               .catch(error => {
-                // alert(error)
-                console.log(error)
                 this.$message('Помилка! Партнера не додано! Такий порядковий номер вже є')
               })
           }

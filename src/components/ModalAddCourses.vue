@@ -1,7 +1,6 @@
 <template>
   <modal class="modal_add_event" title="Modal with form + validate" @close="$emit('close')">
     <template v-slot:body>
-
       <div class="popUp">
         <form @submit.prevent="onSubmit">
           <div class="wrap_inputs">
@@ -12,15 +11,15 @@
 
               <p class="dropzone_title">Опис курсу</p>
               <editor
-                api-key="no-api-key4"
-                @init="handleInit"
-                @destroy="handleDestroy"
-                @change="handleChange"
-                @input="handleInput"
-                @error="handleError"
-                :config="config"
-                name="qwerty"
-                ref="ref"
+                api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+                :init="{
+                  height: 500,
+                  plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount'
+                  ],
+                }"
                 v-model="singleEvent.description"
               />
               <fieldset>
@@ -88,15 +87,15 @@
 
               <p class="dropzone_title">Основний текст курсу</p>
               <editor
-                api-key="no-api-key5"
-                @init="handleInit"
-                @destroy="handleDestroy"
-                @change="handleChange"
-                @input="handleInput"
-                @error="handleError"
-                :config="config"
-                name="qwerty"
-                ref="ref"
+                api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+                :init="{
+                  height: 500,
+                  plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount'
+                  ],
+                }"
                 v-model="singleEvent.text"
               />
 
@@ -221,6 +220,29 @@ export default {
   },
   data () {
     return {
+      config: {
+        height: 500,
+        inline: false,
+        theme: 'modern',
+        fontsize_formats: '8px 10px 12px 14px 16px 18px 20px 22px 24px 26px 28px 30px 34px 38px 42px 48px 54px 60px',
+        plugins: 'textcolor print preview fullpage powerpaste searchreplace autolink directionality advcode visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount tinymcespellchecker a11ychecker imagetools mediaembed  linkchecker contextmenu colorpicker textpattern help',
+        toolbar1: 'forecolor backcolor formatselect fontsizeselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
+        image_advtab: true,
+        templates: [
+          {
+            title: 'Test template 1',
+            content: 'Test 1'
+          },
+          {
+            title: 'Test template 2',
+            content: 'Test 2'
+          }
+        ],
+        content_css: [
+          '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+          '//www.tinymce.com/css/codepen.min.css'
+        ]
+      },
       specializationList: [],
       singleEvent: {
         id: '',
@@ -339,9 +361,8 @@ export default {
       // }
       tmp.is_draft = this.singleEvent.is_draft
       // tmp.private = this.singleEvent.private
-      console.log(tmp)
       await axios({
-        url: 'https://asprof-test.azurewebsites.net/api/courses/',
+        url: 'https://asprof-test.azurewebsites.net/uk/api/courses/',
         data: tmp,
         method: 'POST',
         headers: {
@@ -354,7 +375,7 @@ export default {
         tmp.id = respons.data.id
         if (this.previewFile.click) {
           axios({
-            url: `https://asprof-test.azurewebsites.net/api/courses/${tmp.id}/`,
+            url: `https://asprof-test.azurewebsites.net/uk/api/courses/${tmp.id}/`,
             data: this.singleEvent.image,
             method: 'PATCH',
             headers: {
@@ -367,14 +388,13 @@ export default {
             // this.messages = res;
           })
             .catch(error => {
-              console.log(error)
               this.$message('Помилка')
             })
             .finally(() => (this.loading = false))
         }
         if (this.previewImage.click) {
           axios({
-            url: `https://asprof-test.azurewebsites.net/api/courses/${tmp.id}/`,
+            url: `https://asprof-test.azurewebsites.net/uk/api/courses/${tmp.id}/`,
             data: this.singleEvent.event_documents,
             method: 'PATCH',
             headers: {
@@ -387,14 +407,13 @@ export default {
             // this.messages = res;
           })
             .catch(error => {
-              console.log(error)
               this.$message('Помилка')
             })
             .finally(() => (this.loading = false))
         }
         if (this.previewIneractive.click) {
           axios({
-            url: `https://asprof-test.azurewebsites.net/api/courses/${tmp.id}/`,
+            url: `https://asprof-test.azurewebsites.net/uk/api/courses/${tmp.id}/`,
             data: this.singleEvent.partners_banner,
             method: 'PATCH',
             headers: {
@@ -407,7 +426,6 @@ export default {
             // this.messages = res;
           })
             .catch(error => {
-              console.log(error)
               this.$message('Помилка')
             })
             .finally(() => (this.loading = false))
@@ -416,7 +434,6 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
         .finally(() => (this.loading = false))

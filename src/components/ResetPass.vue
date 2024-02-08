@@ -109,7 +109,6 @@ export default {
   },
   methods: {
     async onSubmit2 () {
-      console.log(this.passwords)
       this.v1$.passwords.current_password.$touch()
       this.v1$.passwords.new_password.$touch()
       this.v1$.passwords.confirm_password.$touch()
@@ -117,7 +116,7 @@ export default {
         !this.v1$.passwords.new_password.$invalid ||
         !this.v1$.passwords.confirm_password.$invalid) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/auth/reset_password/`,
+          url: `https://asprof-test.azurewebsites.net/uk/api/auth/reset_password/`,
           data: this.passwords,
           method: 'POST',
           headers: {
@@ -126,9 +125,7 @@ export default {
         }).then(respons => {
           const res = respons.data
           this.$message("Пароль змінений")
-          console.log(res)
         }).catch(error => {
-          console.log(error)
           this.$message("Помилка: Неправильно введено пароль!")
         }).finally(() => (this.loading = false))
       } else {

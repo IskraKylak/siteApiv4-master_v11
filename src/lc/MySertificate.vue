@@ -106,7 +106,7 @@ export default {
     async getNotify () {
       await axios({
         method: 'GET',
-        url: ('https://asprof-test.azurewebsites.net/api/statistics/certificates/'),
+        url: ('https://asprof-test.azurewebsites.net/uk/api/statistics/certificates/'),
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
         }
@@ -114,7 +114,6 @@ export default {
         this.$store.dispatch('setCertificates', respons.data)
       })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
       this.certificates = this.$store.getters.getCertificate

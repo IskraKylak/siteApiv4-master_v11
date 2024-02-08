@@ -23,7 +23,7 @@
                   />
                   <div class="box_date">
                     <p class="date_number">{{ item.day }}</p>
-                    <p class="date_month">{{ item.mounth }}</p>
+                    <p class="date_month">{{ mounth[new Date(item.start_date).getMonth()] }}</p>
                   </div>
                 </div>
                 <div class="box_text">
@@ -46,7 +46,7 @@
 
         <div class="box_right">
           <div id="datepicker">
-            <Calendar @dataSelect='dataSelect'/>
+            <Calendar @dataSelect='dataSelect' :content="this.allEvents" />
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
               <h3>Найближча подія</h3>
               <div class="box_bottom">
                 <div class="box_date">
-                  <p>{{ nearestItem.day }} {{ nearestItem.mounth }} {{ nearestItem.yaer }}</p>
+                  <p>{{ nearestItem.day }} {{ nearestMouth }} {{ nearestItem.yaer }}</p>
                 </div>
                 <div class="box_location">
                   <p>{{ nearestItem.place }}, Україна</p>
@@ -104,7 +104,7 @@
               />
               <div class="box_date">
                 <p class="date_number">{{ item.day }}</p>
-                <p class="date_month">{{ item.mounth }}</p>
+                <p class="date_month">{{ mounth[new Date(item.start_date).getMonth()] }}</p>
               </div>
             </div>
             <div class="box_text">
@@ -125,7 +125,8 @@
       </div>
     </div>
     <div class="box_pagination container">
-      <ul class="pagination">
+      <Pagination v-if="pagination.count > 1" :content="pagination" @openPage="openPage" />
+      <!-- <ul class="pagination">
         <li><a href="#" class="prev" @click.prevent="prevPage"></a></li>
         <li v-for="(tmpPag, idx) in pagination"
             :key="idx">
@@ -140,7 +141,7 @@
         <li>
           <a href="#" class="next" @click.prevent="nextPage"></a>
         </li>
-      </ul>
+      </ul> -->
     </div>
   </div>
 </template>
@@ -151,12 +152,14 @@ import Calendar from '@/components/Calendar'
 import axios from 'axios'
 import { $array } from 'alga-js'
 import preloader from '@/components/UI/Preloader.vue'
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'calendarevent',
   components: {
     Calendar,
     preloader,
+    Pagination
   },
   data () {
     return {
@@ -164,6 +167,13 @@ export default {
         current: 1,
         length: 3,
       },
+      pagination: {
+        elementPage: 3,
+        count: 0,
+        next: null,
+        prev: null
+      },
+      allEvents: [],
       pag: [],
       active: 1,
       data: '',
@@ -171,9 +181,9 @@ export default {
       countItem: 0,
       loading: false,
       masCalendarView: [],
-      nearestItem: {},
-      mounth: [
-        'Cічня', 'Лютого', 'Березня', 'Квітня', 'Травня', 'Червня', 'Липня', 'Серпня', 'Вересня', 'Жовтня', 'Листопада', 'Грудня']
+      // nearestItem: {}
+      // mounth: [
+      //   'Cічня', 'Лютого', 'Березня', 'Квітня', 'Травня', 'Червня', 'Липня', 'Серпня', 'Вересня', 'Жовтня', 'Листопада', 'Грудня']
     }
   },
   created () {
@@ -181,12 +191,14 @@ export default {
   },
   methods: {
     dataSelect (data) {
+      const events = this.allEvents
       this.masCalendarView = []
-      for (let i = 0; i < this.info1.length; i++) {
-        let normData = new Date(this.info1[i].start_date)
+      for (let i = 0; i < events.length; i++) {
+        let normData = new Date(events[i].start_date)
         normData = normData.getDate() + "-" + (normData.getMonth() + 1) + "-" + normData.getFullYear()
         if(normData === data) {
-          this.masCalendarView.push(this.info1[i])
+          events[i].day = new Date(events[i].start_date).getDate()
+          this.masCalendarView.push(events[i])
         }
       }
     },
@@ -198,110 +210,152 @@ export default {
     },
     async getNotify () {
       this.loading = true
+      let lang = "uk"
+      if(this.$i18n.locale != 'ua')
+        lang = this.$i18n.locale
       await axios
-        .get('https://asprof-test.azurewebsites.net/api/events/?ordering=-start_date&page_size=3')
+        .get(`https://asprof-test.azurewebsites.net/${lang}/api/events/?ordering=-start_date&page_size=3`)
         .then(respons => {
           let res = respons.data.results
           this.countItem = respons.data.count
+
+
+          this.pagination.count = respons.data.count
+          let urlParams = ''
+          if(respons.data.previous) {
+              urlParams = new URLSearchParams(respons.data.previous);
+              if(parseInt(urlParams.get('page')))
+                  this.pagination.prev = parseInt(urlParams.get('page'));
+              else 
+                  this.pagination.prev = 1
+          } else {
+              this.pagination.prev = null
+          }
+          if(respons.data.next) {
+              urlParams = new URLSearchParams(respons.data.next);
+              this.pagination.next = parseInt(urlParams.get('page'));
+          } else {
+              this.pagination.next = null
+          } 
+
           this.$store.dispatch('setClEvent', res)
           // this.messages = res;
-          // console.log(res)
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
 
+      await axios
+        .get('https://asprof-test.azurewebsites.net/uk/api/events/?ordering=-start_date&page_size=100')
+        .then(respons => {
+          let res = respons.data.results
+          this.$store.dispatch('setAllEvents', res)
+        })
+
+      this.allEvents = this.$store.getters.getAllEvents
       this.info1 = this.$store.getters.getClEvent
 
       for(let i = 0; i < this.info1.length; i++) {
-        this.info1[i].mounth = this.mounth [new Date(this.info1[i].start_date).getMonth()]
         this.info1[i].day = new Date(this.info1[i].start_date).getDate()
       }
 
-      this.nearestItem = this.$store.getters.getClEvent[0]
-      this.nearestItem.mounth = this.mounth [new Date(this.nearestItem.start_date).getMonth()]
-      this.nearestItem.day = new Date(this.nearestItem.start_date).getDate()
+      // this.nearestItem = this.$store.getters.getClEvent[0]
+      // this.nearestItem.mounth = this.mounth [new Date(this.nearestItem.start_date).getMonth()]
+      // this.nearestItem.day = new Date(this.nearestItem.start_date).getDate()
       this.pag = Math.ceil(this.info1.length / this.page.length)
     },
-     async openPage(idx) {
-        this.active =  idx
+     async openPage(data) {
+        this.active =  data
+        let lang = "uk"
+        if(this.$i18n.locale != 'ua')
+          lang = this.$i18n.locale
         await axios
-        .get(`https://asprof-test.azurewebsites.net/api/events/?ordering=-start_date&page_size=3&page=${idx}`)
+        .get(`https://asprof-test.azurewebsites.net/${lang}/api/events/?ordering=-start_date&page_size=3&page=${data}`)
         .then(respons => {
           let res = respons.data.results
-          this.countItem = respons.data.count
-          this.$store.dispatch('setClEvent', res)
-          // this.messages = res;
-          // console.log(res)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-        .finally(() => (this.loading = false))
-        this.info1 = this.$store.getters.getClEvent
-        for(let i = 0; i < this.info1.length; i++) {
-          this.info1[i].mounth = this.mounth [new Date(this.info1[i].start_date).getMonth()]
-          this.info1[i].day = new Date(this.info1[i].start_date).getDate()
-        }
-    },
-    async prevPage () {
-      if(this.active > 1) {
-        this.active -= 1
-        await axios
-        .get(`https://asprof-test.azurewebsites.net/api/events/?ordering=-start_date&page_size=3&page=${this.active}`)
-        .then(respons => {
-          let res = respons.data.results
-          this.countItem = respons.data.count
-          this.$store.dispatch('setClEvent', res)
-          // this.messages = res;
-          // console.log(res)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-        .finally(() => (this.loading = false))
-        this.info1 = this.$store.getters.getClEvent
 
-        for(let i = 0; i < this.info1.length; i++) {
-          this.info1[i].mounth = this.mounth [new Date(this.info1[i].start_date).getMonth()]
-          this.info1[i].day = new Date(this.info1[i].start_date).getDate()
-        }
-      }
-    },
-    async nextPage () {
-      if(this.active < this.pagination) {
-        this.active += 1
-        await axios
-        .get(`https://asprof-test.azurewebsites.net/api/events/?ordering=-start_date&page_size=3&page=${this.active}`)
-        .then(respons => {
-          let res = respons.data.results
+          let urlParams = ''
+          if(respons.data.previous) {
+              urlParams = new URLSearchParams(respons.data.previous);
+              if(parseInt(urlParams.get('page')))
+                  this.pagination.prev = parseInt(urlParams.get('page'));
+              else 
+                  this.pagination.prev = 1
+          } else {
+              this.pagination.prev = null
+          }
+          if(respons.data.next) {
+              urlParams = new URLSearchParams(respons.data.next);
+              this.pagination.next = parseInt(urlParams.get('page'));
+          } else {
+              this.pagination.next = null
+          } 
+
           this.countItem = respons.data.count
           this.$store.dispatch('setClEvent', res)
-          // this.messages = res;
-          // console.log(res)
         })
         .catch(error => {
-          console.log(error)
         })
-        .finally(() => (this.loading = false))
-        this.info1 = this.$store.getters.getClEvent
+        .finally(() =>  {
 
-        for(let i = 0; i < this.info1.length; i++) {
-          this.info1[i].mounth = this.mounth [new Date(this.info1[i].start_date).getMonth()]
-          this.info1[i].day = new Date(this.info1[i].start_date).getDate()
-        }
-      }
+          this.info1 = this.$store.getters.getClEvent
+          for(let i = 0; i < this.info1.length; i++) {
+            this.info1[i].mounth = this.mounth [new Date(this.info1[i].start_date).getMonth()]
+            this.info1[i].day = new Date(this.info1[i].start_date).getDate()
+          }
+          this.loading = false
+        })
+        
     }
   },
   computed: {
-    pagination() {
-        let pag = 0
-        for( let i = 0; i < this.countItem; i+=6) {
-            pag+=1
-        }
-        return pag
+    nearestItem () {
+      const events = this.allEvents
+      const today = new Date();
+      const closestEvent = events.filter(event => new Date(event.start_date) > today);
+      // console.log(closestEvent)
+      if (closestEvent.length > 0) {
+        let nearestEvent =  closestEvent.reduce((prev, curr) => {
+          const currDate = new Date(curr.start_date);
+          const prevDate = new Date(prev.start_date);
+          return Math.abs(currDate - today) < Math.abs(prevDate - today) ? curr : prev;
+        });
+        // console.log(nearestEvent)
+        nearestEvent.mounth = this.mounth [new Date(nearestEvent.start_date).getMonth()]
+        nearestEvent.day = new Date(nearestEvent.start_date).getDate()
+        return nearestEvent
+      } else {
+        return null;
+      }
     },
+    mounth() {
+      return [
+        this.$t('month.January'),
+        this.$t('month.February'), 
+        this.$t('month.March'), 
+        this.$t('month.April'), 
+        this.$t('month.May'), 
+        this.$t('month.June'), 
+        this.$t('month.July'), 
+        this.$t('month.August'), 
+        this.$t('month.September'),
+        this.$t('month.October'), 
+        this.$t('month.November'), 
+        this.$t('month.December'),
+      ]
+    },
+    nearestMouth() {
+      if(this.nearestItem.start_date)
+        return this.mounth [new Date(this.nearestItem.start_date).getMonth()]
+      return ''
+    }
+    // pagination() {
+    //     let pag = 0
+    //     for( let i = 0; i < this.countItem; i+=6) {
+    //         pag+=1
+    //     }
+    //     return pag
+    // },
   }
 }
 </script>
@@ -405,7 +459,8 @@ export default {
 
     img {
       position: absolute;
-      object-fit: contain;
+      object-fit: cover;
+      width: 100%;
     }
   }
 }

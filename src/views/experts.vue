@@ -59,16 +59,16 @@ export default {
   methods: {
     async getNotify() {
       this.loading = true
+      let lang = "uk"
+      if(this.$i18n.locale != 'ua')
+          lang = this.$i18n.locale
       await axios
-        .get("https://asprof-test.azurewebsites.net/api/content/asprofosvit/experts/?format=json")
+        .get(`https://asprof-test.azurewebsites.net/${lang}/api/content/asprofosvit/experts/?format=json`)
         .then(respons => {
           let res = respons.data
           this.$store.dispatch('setExperts', res)
-          // this.messages = res;
-          // console.log("res event " + res)
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
       this.experts = this.$store.getters.getExperts

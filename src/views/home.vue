@@ -275,28 +275,31 @@ export default {
   created () {
     this.getNotify()
   },
+  mounted() {
+  },
   methods: {
     async getNotify () {
       // this.loading = true
+      let lang = "uk"
+      if(this.$i18n.locale != 'ua')
+          lang = this.$i18n.locale
       await axios
-        .get('https://asprof-test.azurewebsites.net/api/content/asprofosvit/main/?format=json')
+        .get(`https://asprof-test.azurewebsites.net/${lang}/api/content/asprofosvit/main/?format=json`)
         .then(respons => {
           let res = respons.data
           this.$store.dispatch('setHome', res)
         })
         .catch(error => {
-          console.log(error)
         })
       this.info = this.$store.getters.getHome
 
       await axios
-        .get('https://asprof-test.azurewebsites.net/api/content/asprofosvit/main/banners/?format=json')
+        .get(`https://asprof-test.azurewebsites.net/${lang}/api/content/asprofosvit/main/banners/?format=json`)
         .then(respons => {
           let res = respons.data
           this.$store.dispatch('setBanner', res)
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => {
           this.banner = this.$store.getters.getBanner

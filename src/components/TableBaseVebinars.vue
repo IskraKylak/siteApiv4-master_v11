@@ -171,7 +171,7 @@ export default {
   methods: {
     downloadAllEcel() {
       axios({
-        url: `https://asprof-test.azurewebsites.net/api/statistics/webinars/summary/excel/`,
+        url: `https://asprof-test.azurewebsites.net/uk/api/statistics/webinars/summary/excel/`,
         method: 'get',
         responseType : 'blob',
         headers: {
@@ -188,12 +188,11 @@ export default {
           a.remove();
       }).catch(error => {
         this.$message('Помилка')
-        console.log(error)
       })
     },
     downloadEcel(item) {
       axios({
-        url: `https://asprof-test.azurewebsites.net/api/statistics/webinars/summary/${item.id}/excel/`,
+        url: `https://asprof-test.azurewebsites.net/uk/api/statistics/webinars/summary/${item.id}/excel/`,
         method: 'get',
         responseType : 'blob',
         headers: {
@@ -210,7 +209,6 @@ export default {
           a.remove();
       }).catch(error => {
         this.$message('Помилка')
-        console.log(error)
       })
     },
     goToEvent (prodId) {
@@ -224,20 +222,16 @@ export default {
       this.isSearch = false
       // if (this.entries.length === 0) {
       await axios
-        .get(`https://asprof-test.azurewebsites.net/api/webinars/?ordering=${this.sort}&page_size=${this.currentEntries}&page=${this.openPage}`)
+        .get(`https://asprof-test.azurewebsites.net/uk/api/webinars/?ordering=${this.sort}&page_size=${this.currentEntries}&page=${this.openPage}`)
         .then(respons => {
           this.$store.dispatch('setMessage', respons.data.results)
           this.countEvent = respons.data.count
-          // this.messages = res;
-          // console.log("res event " + res)
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => {
           this.entries = this.$store.getters.getMessage
           this.entries.forEach(elem => elem.start_norm_date = new Date(elem.start_date).toLocaleDateString())
-          // this.paginateData(this.entries)
           this.filteredEntries = $array.paginate(this.entries, this.currentPage, this.currentEntries)
           this.allPages = 0
           for(let i = 0; i < this.countEvent; i+=this.currentEntries) {
@@ -248,7 +242,7 @@ export default {
     },
     async removeEvent (prodId) {
       await axios({
-        url: `https://asprof-test.azurewebsites.net/api/webinars/${prodId}/`,
+        url: `https://asprof-test.azurewebsites.net/uk/api/webinars/${prodId}/`,
         method: 'DELETE',
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
@@ -256,10 +250,8 @@ export default {
       }).then(respons => {
         this.$message('Дані видалено!')
         this.getNotify()
-        // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
     },
@@ -277,18 +269,16 @@ export default {
     },
     async search (page, value) {
       axios
-        .get(`https://asprof-test.azurewebsites.net/api/webinars/?page=${page}&page_size=${this.currentEntries}&search=${value}`)
+        .get(`https://asprof-test.azurewebsites.net/uk/api/webinars/?page=${page}&page_size=${this.currentEntries}&search=${value}`)
         .then(respons => {
           this.$store.dispatch('setMessage', respons.data.results)
           this.countEvent = respons.data.count
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => {
           this.entries = this.$store.getters.getMessage
           this.entries.forEach(elem => elem.start_norm_date = new Date(elem.start_date).toLocaleDateString())
-          // this.paginateData(this.entries)
           this.filteredEntries = $array.paginate(this.entries, this.currentPage, this.currentEntries)
           this.allPages = 0
           for(let i = 0; i < this.countEvent; i+=this.currentEntries) {
@@ -337,8 +327,6 @@ export default {
         this.isSearch = false
         this.getNotify()
       }
-      
-      // console.log(this.filteredEntries)
     }
   }
 }

@@ -102,15 +102,17 @@ export default {
   },
   methods: {
     async getNotify () {
+      let lang = "uk"
+      if(this.$i18n.locale != 'ua')
+          lang = this.$i18n.locale
       this.loading = true
       await axios
-        .get('https://asprof-test.azurewebsites.net/api/content/asprofosvit/presidium/?format=json')
+        .get(`https://asprof-test.azurewebsites.net/${lang}/api/content/asprofosvit/presidium/?format=json`)
         .then(respons => {
           let res = respons.data
           this.$store.dispatch('setPresidium', res)
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
       this.info = this.$store.getters.getPresidium

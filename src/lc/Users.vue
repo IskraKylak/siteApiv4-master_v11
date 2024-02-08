@@ -30,7 +30,7 @@ export default {
       this.loading = true
       await axios({
         method: 'GET',
-        url: ('https://asprof-test.azurewebsites.net/api/me/'),
+        url: ('https://asprof-test.azurewebsites.net/uk/api/me/'),
         headers: {
           'Authorization': 'Bearer ' + this.$store.getters.getToken
         }
@@ -40,7 +40,6 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
       this.myAcc = this.$store.getters.getMyAcc

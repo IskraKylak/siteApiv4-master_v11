@@ -3,7 +3,7 @@
     <div class="container">
       <span class="burger" v-on:click="openMenu = !openMenu"><span>☰</span></span>
       <div class="box_top">
-        <router-link class="logo" to="/">
+        <router-link class="logo" :to="`/${this.$i18n.locale}/`">
           <div class="strong">
             <img
               loading="lazy"
@@ -16,11 +16,11 @@
         </router-link>
         <div class="box_callback">
           <div class="box_enter" v-if="tokkent === ''">
-            <router-link class="link" to="/in-login">Вхід</router-link>
-            <router-link class="link" to="/register">Реєстрація</router-link>
+            <router-link class="link" :to="`/${this.$i18n.locale}/in-login`">Вхід</router-link>
+            <router-link class="link" :to="`/${this.$i18n.locale}/register`">Реєстрація</router-link>
           </div>
           <div class="box_enter" v-else>
-            <router-link class="link" to="/lc-profile">{{ myAcc.email }}</router-link>
+            <router-link class="link" :to="`/lc-profile`">{{ myAcc.email }}</router-link>
           </div>
           <div class="box_messendger">
             <a class="link_facebook" :href="infoContact.facebook_link"
@@ -37,6 +37,21 @@
               </li>
             </ul>
           </div> -->
+          <div class="nav_wrapLang">
+              <div class="nav_lang" @click="openLang = !openLang">
+                  {{ activeLang }}
+              </div>
+              <div class="nav_arrPhone" :class="{'active' : openLang}" @click="activeLang = !activeLang"></div>
+              <div class="nav_wrapListLang">
+                <slide-up-down class="nav_listPhone" v-model="openLang" :duration="300">
+                  <div class="nav_listLang">
+                    <a href="#" v-for="(item, idx) in lang" :key="idx" @click="switchLang(item.slag)" class="nav_lang" >
+                      {{ item.name }}
+                    </a>
+                  </div>
+                </slide-up-down>
+              </div>
+            </div>
         </div>
       </div>
       <div class="box_bottom" :class="openMenu ? 'open' : ''">
@@ -45,38 +60,38 @@
         </div>
         <div class="top-menu nav" id="navigation">
           <div class="box_enter modal" v-if="tokkent === ''">
-            <router-link class="link" v-on:click="openMenu = !openMenu" to="/in-login">Вхід</router-link>
-            <router-link class="link" v-on:click="openMenu = !openMenu" to="/register">Реєстрація</router-link>
+            <router-link class="link" v-on:click="openMenu = !openMenu" :to="`/${this.$i18n.locale}/in-login`">Вхід</router-link>
+            <router-link class="link" v-on:click="openMenu = !openMenu" :to="`/${this.$i18n.locale}/register`">Реєстрація</router-link>
           </div>
           <div class="box_enter modal" v-else>
-            <router-link class="link" v-on:click="openMenu = !openMenu" to="/lc-profile">{{ myAcc.email }}</router-link>
+            <router-link class="link" v-on:click="openMenu = !openMenu" :to="`/lc-profile`">{{ myAcc.email }}</router-link>
           </div>
           <ul>
             <li>
               <router-link
                 class="link link-2"
-                to="/"
+                :to="`/${this.$i18n.locale}/`"
                 v-on:click="openMenu = !openMenu"
               >
-                Про асоціацію
+                {{$t('menu.association')}}
               </router-link>
             </li>
             <li>
               <router-link
                 class="link link-2"
-                to="/presidium"
+                :to="`/${this.$i18n.locale}/presidium`"
                 v-on:click="openMenu = !openMenu"
               >
-                Президіум
+                {{$t('menu.Presidium')}}
               </router-link>
             </li>
             <li>
               <router-link
                 class="link link-2"
                 v-on:click="openMenu = !openMenu"
-                to="/calendarevent"
+                :to="`/${this.$i18n.locale}/calendarevent`"
               >
-                Календарь <br />заходів
+                {{$t('menu.Calendar')}} <br />{{$t('menu.measures')}}
               </router-link>
               <!-- <a class="link link-2" href="#">Календарь <br />заходів</a> -->
             </li>
@@ -86,7 +101,7 @@
                 v-on:click="openMenu = !openMenu"
                 href="#"
               >
-                Галерея
+                {{$t('menu.Gallery')}}
               </a>
             </li>
             <li>
@@ -95,35 +110,35 @@
                 href="#"
                 v-on:click="openMenu = !openMenu"
               >
-                Журнали
+                {{$t('menu.Magazines')}}
               </a>
             </li>
             <li>
               <router-link
                 class="link link-2"
-                to="/bmo"
+                :to="`/${this.$i18n.locale}/bmo`"
                 v-on:click="openMenu = !openMenu"
               >
-                БМО-БПР
+                {{$t('menu.BMO')}}
               </router-link>
               <!-- <a class="link link-2" href="#">БМО-БПР</a> -->
             </li>
             <li class="link link-2">
               <router-link
                 class="link link-2"
-                to="/experts"
+                :to="`/${this.$i18n.locale}/experts`"
                 v-on:click="openMenu = !openMenu"
               >
-                Експерти
+                {{$t('menu.Experts')}}
               </router-link>
             </li>
             <li>
               <router-link
                 class="link link-2"
-                to="/contact"
+                :to="`/${this.$i18n.locale}/contact`"
                 v-on:click="openMenu = !openMenu"
               >
-                Контакти
+                {{$t('menu.Contacts')}}
               </router-link>
             </li>
           </ul>
@@ -139,19 +154,42 @@
 <script>
 
 import axios from "axios";
+import SlideUpDown from 'vue3-slide-up-down'
 import {$array} from "alga-js";
 
 export default {
+  components: {
+    SlideUpDown
+  },
   data () {
     return {
       myAcc: [],
       openMenu: false,
       infoContact: {
         facebook_link: ''
-      }
+      },
+      openLang: false,
+      lang: [
+        {
+          name: 'UA',
+          slag: 'ua'
+        },
+        {
+          name: 'RU',
+          slag: 'ru'
+        },
+        {
+          name: 'EN',
+          slag: 'en'
+        }
+      ]
     }
   },
   computed: {
+    activeLang() {
+      let lang = this.lang.find (item => item.slag == this.$i18n.locale)
+      return lang.name
+    },
     tokkent() {
       return this.$store.getters.getToken
     }
@@ -160,22 +198,31 @@ export default {
     this.getNotify()
   },
   methods: {
+    switchLang(lang) {
+      this.$router.push({ params: { lang: lang } });
+      localStorage.setItem('lang', lang);
+      this.$i18n.locale = lang;
+      this.openLang = false
+      this.$emit('reloadCommponents')
+    },
     async getNotify () {
+      let lang = "uk"
+      if(this.$i18n.locale != 'ua')
+          lang = this.$i18n.locale
       await axios({
         method: 'GET',
-        url: ('https://asprof-test.azurewebsites.net/api/content/hippocrates/contacts/'),
+        url: (`https://asprof-test.azurewebsites.net/${lang}/api/content/hippocrates/contacts/`),
       }).then(response => {
         this.infoContact.facebook_link = response.data.facebook_link
         // this.messages = res;
       })
         .catch(error => {
           this.$store.dispatch('logout')
-          console.log(error)
         })
         .finally()
       await axios({
         method: 'GET',
-        url: ('https://asprof-test.azurewebsites.net/api/me/'),
+        url: (`https://asprof-test.azurewebsites.net/${lang}/api/me/`),
         headers: {
           'Authorization': 'Bearer ' + this.$store.getters.getToken
         }
@@ -186,7 +233,6 @@ export default {
       })
         .catch(error => {
           this.$store.dispatch('logout')
-          console.log(error)
         })
         .finally(() => (this.loading = false))
       this.myAcc = this.$store.getters.getMyAcc
@@ -197,7 +243,58 @@ export default {
 <style scoped src="@/assets/css/screen.css" >
 </style>
 
-<style>
+<style lang="scss">
+.nav {
+  &_wrapLang {
+    padding-right: 15px;
+    position: relative;
+    margin-top: 2px;
+  }
+
+  &_arrPhone {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5 6L0.669873 0.75L9.33013 0.750001L5 6Z' fill='white'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    width: 10px;
+    height: 6px;
+    position: absolute;
+    right: 0;
+    top: 7px;
+    cursor: pointer;
+
+    &.active {
+      transform: rotate(180deg)
+    }
+    
+  }
+
+  &_lang {
+    color: #fff;
+    font-style: normal;
+    font-weight: 700;
+    font-size: desktop-vw(16);
+    line-height: 130%;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  &_listLang {
+    display: flex;
+    flex-direction: column;
+    grid: 5px;
+    width: 100%;
+  }
+
+  &_wrapListLang {
+    position: absolute;
+    background: #fa5c18;
+    left: -4px;
+    top: 22px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
 
 .box_enter.modal {
   display: none;

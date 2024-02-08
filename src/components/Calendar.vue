@@ -2,17 +2,17 @@
   <div class="calendar">
     <div class="header">
       <button @click="prev">&#9668;</button>
-      <span class="title">{{ title }}</span>
+      <span class="title">{{ title }} {{ year }}</span>
       <button @click="next">&#9658;</button>
     </div>
     <div class="week days">
-      <div class="day">Нд</div>
-      <div class="day">Пн</div>
-      <div class="day">Вт</div>
-      <div class="day">Ср</div>
-      <div class="day">Чт</div>
-      <div class="day">Пт</div>
-      <div class="day">Сб</div>
+      <div class="day">{{$t('Calendar.days.Mon')}}</div>
+      <div class="day">{{$t('Calendar.days.Tue')}}</div>
+      <div class="day">{{$t('Calendar.days.Wed')}}</div>
+      <div class="day">{{$t('Calendar.days.Ths')}}</div>
+      <div class="day">{{$t('Calendar.days.Fri')}}</div>
+      <div class="day">{{$t('Calendar.days.Sat')}}</div>
+	    <div class="day">{{$t('Calendar.days.Sun')}}</div>
     </div>
     <div class="week" v-for="(week, idx) in weeks" :key="idx">
       <div class="day selectable"
@@ -33,9 +33,10 @@
 import axios from 'axios'
 const DATE = new Date()
 const DAYS = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
-const MONTHS = ['Cічень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень']
+// const MONTHS = ['Cічень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень']
 const daysInYearMonth = (y, m) => new Date(y, m, 0).getDate()
 export default {
+  props: ['content'],
   data () {
     return {
       eventTrue: [],
@@ -49,6 +50,25 @@ export default {
     this.init()
   },
   computed: {
+    MONTHS() {
+      return [
+        this.$t('Calendar.month.January'),
+        this.$t('Calendar.month.February'), 
+        this.$t('Calendar.month.March'), 
+        this.$t('Calendar.month.April'), 
+        this.$t('Calendar.month.May'), 
+        this.$t('Calendar.month.June'), 
+        this.$t('Calendar.month.July'), 
+        this.$t('Calendar.month.August'), 
+        this.$t('Calendar.month.September'),
+        this.$t('Calendar.month.October'), 
+        this.$t('Calendar.month.November'), 
+        this.$t('Calendar.month.December'),
+      ]
+    },
+    title() {
+      return `${this.MONTHS[this.month]}`
+    }
     // daySel () {
     //   let date = new Date('2021-02-12T12:00:00');
     //   return date.getDate()
@@ -62,16 +82,15 @@ export default {
     //   return date.getFullYear()
     // }
   },
-  created () {
-    this.getNotify()
-  },
+  // created () {
+  //   this.getNotify()
+  // },
   methods: {
     dayTrue (day, month, year) {
       let calendarStr = (day + 1) + "." + (month + 1) + "." + year
-      for (let index = 0; index < this.eventTrue.length; ++index) {
-        let date = new Date(this.eventTrue[index].start_date)
+      for (let index = 0; index < this.content.length; ++index) {
+        let date = new Date(this.content[index].start_date)
         let dataItem = (date.getDate() + 1) + "." + (date.getMonth() + 1) + "." + date.getFullYear()
-        console.log('dataItem ' + dataItem + ' calendarStr ' + calendarStr)
         if(dataItem == calendarStr) {
             return true
         }
@@ -79,20 +98,19 @@ export default {
       }
       return false
     },
-    async getNotify () {
-      await axios
-        .get('https://asprof-test.azurewebsites.net/api/events/?ordering=-start_date&page_size=100')
-        .then(respons => {
-          let res = respons.data.results
-          this.$store.dispatch('setClEvent', res)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-        .finally(() => (this.loading = false))
+    // async getNotify () {
+    //   await axios
+    //     .get('https://asprof-test.azurewebsites.net/uk/api/events/?ordering=-start_date&page_size=100')
+    //     .then(respons => {
+    //       let res = respons.data.results
+    //       this.$store.dispatch('setClEvent', res)
+    //     })
+    //     .catch(error => {
+    //     })
+    //     .finally(() => (this.loading = false))
       
-      this.eventTrue = this.$store.getters.getClEvent
-    },
+    //   this.eventTrue = this.$store.getters.getClEvent
+    // },
     returnData (day) {
       let strData = day + '-' + (this.month + 1) + '-' + this.year
       this.$emit('dataSelect', strData)
@@ -104,14 +122,14 @@ export default {
       this.update(new Date(this.year, this.month - 1, 1))
     },
     daysInMonth () {
-      return daysInYearMonth(this.year, this.month)
+      return daysInYearMonth(this.year, this.month + 1)
     },
     monthStartsOn () {
       return new Date(this.year, this.month, 1).getDay()
     },
-    setTitle () {
-      this.title = `${MONTHS[this.month]} ${this.year}`
-    },
+    // setTitle () {
+    //   this.title = `${this.MONTHS[this.month]} ${this.year}`
+    // },
     update (date) {
       
       if (date) {
@@ -119,13 +137,14 @@ export default {
         this.year = date.getFullYear()
         this.day = date.getDate()
       }
-      this.setTitle()
+      // this.setTitle()
       this.setDays()
       this.setWeeks()
     },
     setDays () {
-      let preDays = this.monthStartsOn() > 0 ? Array(this.monthStartsOn() - 1).fill(0) : []
-      this.days = [...preDays, ...Array(this.daysInMonth() + 2).keys()]
+      
+      let preDays = this.monthStartsOn() > 0 ? Array(this.monthStartsOn() - 1).fill(0) : [0, 0, 0, 0, 0, 0]
+      this.days = [...preDays, ...Array(this.daysInMonth() + 1).keys()].slice(1)
     },
     setWeeks () {
       let n = 0

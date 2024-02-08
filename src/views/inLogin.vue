@@ -1,6 +1,6 @@
 <template>
   <div class="wrap_form">
-    <h2 class="title_form">Вхід</h2>
+    <h2 class="title_form">{{$t("login.btnEnter")}}</h2>
     <form @submit.prevent="onSubmit">
       <div class="form-item" :class="{ errorInput: v$.email.$error }">
         <input
@@ -20,7 +20,7 @@
           v-model="password"
           :class="{ error: v$.password.$error }"
           @change="v$.password.$touch()"
-          placeholder="Пароль"
+          :placeholder="$t('login.placeholder.pass')"
         />
         <p class="errorText" v-if="v$.password.required.$invalid">
           Filed is required
@@ -30,8 +30,8 @@
         </p>
       </div>
 
-      <button class="my_btn" @click="modalFirst = false">Вхід</button>
-      <router-link class="my_btn" to="/register">Реєстрація</router-link>
+      <button class="my_btn" @click="modalFirst = false">{{ $t('login.btnEnter') }}</button>
+      <router-link class="my_btn" :to="`/${this.$i18n.locale}/register`">{{ $t('login.btnReg') }}</router-link>
     </form>
   </div>
 </template>
@@ -73,7 +73,7 @@ export default {
       this.$message(messages[this.$route.query.message])
     }
     if(this.$store.getters.getToken !== '') {
-      this.$router.push('/lc-profile')
+      this.$router.push("/lc-profile")
     }
   },
   methods: {
@@ -82,33 +82,26 @@ export default {
       if (!this.v$.$invalid) {
         const user = {
           email: this.email,
-          password: this.password
+          password: this.password,
+          lang: "uk"
         }
+        if(this.$i18n.locale != 'ua')
+            user.lang = this.$i18n.locale
         try {
           await this.$store.dispatch('login', user)
-          this.$router.push('/lc-profile')
+          this.$router.push("/lc-profile")
         } catch (e) {
-          console.log('inLogin')
           throw e
         }
-
-        //   console.log(user);
-        //   this.email = "";
-        //   this.v$.$reset();
-        //   this.$emit("close");
       }
-
-      // this.name = "";
-      // this.email = "";
-      // this.v$.$reset();
-      // this.$emit("close");
-    },
+    }
   },
 }
 </script>
 
 <style scoped src="@/assets/css/screen.css">
 </style>
+
 <style scoped lang="scss">
 
 .form-item .errorText {
@@ -193,10 +186,4 @@ h2.title_form:after {
   margin-bottom: 20px;
 }
 
-//body #toast-container {
-//  position: fixed!important;
-//  z-index: 99999!important;
-//  top: 50%;
-//  right: 20%;
-//}
 </style>

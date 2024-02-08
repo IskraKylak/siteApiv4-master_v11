@@ -147,7 +147,7 @@ export default {
           }
 
  
-          let api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/${quest.id}/answers/${quest.answers_set[i].id}/`
+          let api = `https://asprof-test.azurewebsites.net/uk/api/${this.content}/test/questions/${quest.id}/answers/${quest.answers_set[i].id}/`
 
 
           await axios({
@@ -163,7 +163,6 @@ export default {
             })
             .catch(error => {
               done = false
-              console.log(error)
             })
             .finally(() => (this.loading = false))
         }
@@ -181,12 +180,11 @@ export default {
         title: this.questions[idx].title,
         multiple_answers: this.questions[idx].multiple_answers,
       }
-      // console.log(elem)
       let api = ""
       if(this.course) {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/testing/questions/${this.questions[idx].id}/`
+        api = `https://asprof-test.azurewebsites.net/uk/api/${this.content}/testing/questions/${this.questions[idx].id}/`
       } else {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/${this.questions[idx].id}/`
+        api = `https://asprof-test.azurewebsites.net/uk/api/${this.content}/test/questions/${this.questions[idx].id}/`
       }
 
       await axios({
@@ -203,7 +201,6 @@ export default {
         })
         .catch(error => {
           this.$message('Помилка')
-          console.log(error)
         })
         .finally(() => (this.loading = false))
     },
@@ -213,7 +210,7 @@ export default {
     // удаление вопросов/ответов
     async removeAnsver (idx, idxA) {
 
-      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/${idx}/answers/${idxA}/`
+      let api = `https://asprof-test.azurewebsites.net/uk/api/${this.content}/test/questions/${idx}/answers/${idxA}/`
 
 
       await axios({
@@ -229,7 +226,6 @@ export default {
         })
         .catch(error => {
           this.$message('Помилка')
-          console.log(error)
         })
         .finally(() => (this.loading = false))
     },
@@ -237,9 +233,9 @@ export default {
 
       let api = ""
       if(this.course) {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/testing/questions/${idx}/`
+        api = `https://asprof-test.azurewebsites.net/uk/api/${this.content}/testing/questions/${idx}/`
       } else {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/${idx}/`
+        api = `https://asprof-test.azurewebsites.net/uk/api/${this.content}/test/questions/${idx}/`
       }
 
       await axios({
@@ -255,7 +251,6 @@ export default {
         })
         .catch(error => {
           this.$message('Помилка')
-          console.log(error)
         })
         .finally(() => (this.loading = false))
     },
@@ -265,9 +260,9 @@ export default {
 
       let api = ""
       if(this.course) {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/testing/questions/`
+        api = `https://asprof-test.azurewebsites.net/uk/api/${this.content}/testing/questions/`
       } else {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/`
+        api = `https://asprof-test.azurewebsites.net/uk/api/${this.content}/test/questions/`
       }
 
       
@@ -281,7 +276,6 @@ export default {
         }
       })
         .then(respons => {
-          // console.log(respons.data)
           this.questions = respons.data
           for (let i = 0; i < this.questions.length; i++) {
             this.questions[i].update = false
@@ -291,10 +285,8 @@ export default {
             }
           }
           // this.$store.dispatch('setSingleEvent', respons.data)
-          // console.log(typeof this.$store.getters.getSingleEvent.id)
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
     },
@@ -324,7 +316,7 @@ export default {
             is_correct: this.questions[idx].answers_set[i].is_correct
           }
 
-          let api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/${this.questions[idx].id}/answers/${this.questions[idx].answers_set[i].id}/`
+          let api = `https://asprof-test.azurewebsites.net/uk/api/${this.content}/test/questions/${this.questions[idx].id}/answers/${this.questions[idx].answers_set[i].id}/`
                 
           await axios({
             method: 'PUT',
@@ -337,7 +329,6 @@ export default {
             .then(respons => {
             })
             .catch(error => {
-              console.log(error)
             })
             .finally(() => (this.loading = false))
         }
@@ -348,7 +339,7 @@ export default {
       }
 
 
-      let api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/${this.questions[idx].id}/answers/`
+      let api = `https://asprof-test.azurewebsites.net/uk/api/${this.content}/test/questions/${this.questions[idx].id}/answers/`
 
 
       await axios({
@@ -363,7 +354,6 @@ export default {
         this.getNotify()
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
     },
@@ -376,13 +366,10 @@ export default {
       }
       let api = ''
       if(this.course) {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/testing/questions/`
+        api = `https://asprof-test.azurewebsites.net/uk/api/${this.content}/testing/questions/`
       } else {
-        api = `https://asprof-test.azurewebsites.net/api/${this.content}/test/questions/`
+        api = `https://asprof-test.azurewebsites.net/uk/api/${this.content}/test/questions/`
       }
-      
-
-      // console.log(elem)
       await axios({
         url: api,
         method: 'POST',
@@ -396,7 +383,6 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
     }

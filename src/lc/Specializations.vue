@@ -51,16 +51,12 @@ export default {
         }
       }).then(respons => {
         let res = respons.data
-        this.$store.dispatch('setMyAcc', res)
-        // this.messages = res;
+        this.$store.dispatch('setMyAcc', res);
       })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
       this.myAcc = this.$store.getters.getMyAcc
-      // console.log('this.myAcc')
-      // console.log(this.myAcc)
     }
   }
 }

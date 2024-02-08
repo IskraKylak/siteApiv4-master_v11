@@ -1,7 +1,9 @@
 <template>
-  <Header />
-  <router-view />
-  <Footer />
+  <div :key="langChanged">
+    <Header @reloadCommponents='reloadCommponents' />
+      <router-view />
+    <Footer />
+  </div>
 </template>
 <script>
 import Header from '@/components/app/Header'
@@ -11,15 +13,24 @@ export default {
   components: {
     Header, Footer
   },
+  data() {
+    return {
+      langChanged: 0,
+    }
+  },
   computed: {
     error () {
       return this.$store.getters.error
     }
   },
+  methods: {
+    reloadCommponents() {
+      this.langChanged++;
+    }
+  },
   watch: {
     error (e) {
-      console.log("Empty" + e)
-      this.$error(messages[e] || 'Что то пошло не так')
+      this.$error(messages[e] || this.$t('message.errors.error'))
     }
   }
 }

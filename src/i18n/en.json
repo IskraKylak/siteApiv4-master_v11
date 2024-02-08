@@ -1,0 +1,133 @@
+{
+    "Зареєструватися": "Sign up",
+    "menu": {
+        "association": "Association",
+        "Presidium": "Presidium",
+        "Calendar": "Calendar",
+        "measures": "measures",
+        "Gallery": "Gallery",
+        "Magazines": "Magazines",
+        "BMO": "BMO-BPR",
+        "Experts": "Experts",
+        "Contacts": "Contacts"
+    },
+    "Footer": {
+        "Address": "Address",
+        "signup": "SUBSCRIBE TO THE NEWS AND STAY INFORMED!",
+        "btnSing": "sign up"
+    },
+    "lc": {
+        "Personal": "Personal office",
+        "Login": "Login",
+        "Registration": "Registration"
+    },
+    "Calendar": {
+        "title": "calendar of scientific events",
+        "month": {
+            "January": "January",
+            "February": "February",
+            "March": "March",
+            "April": "April",
+            "May": "May",
+            "June": "June",
+            "July": "July",
+            "August": "August",
+            "September": "September",
+            "October": "October",
+            "November": "November",
+            "December": "December"
+        },
+        "days": {
+            "Mon": "Mon",
+            "Tue": "Tue",
+            "Wed": "Wed",
+            "Ths": "Ths",
+            "Fri": "Fri",
+            "Sat": "Sat",
+            "Sun": "Sun"
+        }
+    },
+    "message": {
+        "errors": {
+            "error": "Щось пішло не так"
+        }
+    },
+    "month": {
+        "January": "January",
+        "February": "February",
+        "March": "March",
+        "April": "April",
+        "May": "May",
+        "June": "June",
+        "July": "July",
+        "August": "August",
+        "September": "September",
+        "October": "October",
+        "November": "November",
+        "December": "December"
+    },
+    "details": {
+        "title11": "The broadcast takes place in two halls at the same time",
+        "title1": "Dear colleagues!",
+        "title2": "PREVIOUS REGISTRATION IS MANDATORY!",
+        "title3": "You are registered!",
+        "title4": "Register for the seminar",
+        "title5": "MEDIA PARTNERS",
+        "title6": "PARTNERS",
+        "title7": "CONTACTS",
+        "title8": "Contact phone",
+        "title9": "HALL 1",
+        "title10": "HALL 2",
+        "text1": "Click on the partner's logo to view information and promotional materials",
+        "text2": "If you have any questions, please contact us by phone or email below from 10:00 to 18:00",
+        "btnName1": "Register for the seminar",
+        "btnName2": "Purchase",
+        "btnName3": "Download hall program A",
+        "btnName4": "Send",
+        "btnName5": "Download hall program B",
+        "btnName6": "Send",
+        "btnName7": "Take the test",
+        "btnName8": "Program"
+    },
+    "login": {
+        "title": "AUTHORIZATION",
+        "btnEnter": "Login",
+        "btnReg": "Registration",
+        "placeholder": {
+            "pass": "Password"
+        },
+        "message": {
+            "login": "Invalid login or password"
+        }
+    },
+    "register": {
+        "title": "REGISTRATION",
+        "subtitle": "Already have a registered account?",
+        "subtitle1": "Information about the person",
+        "subtitle2": "Place of residence",
+        "subtitle3": "Professional activity",
+        "subtitle4": "Contacts",
+        "subtitle5": "Security",
+        "help1": "Fields marked with an asterisk (*) are mandatory.",
+        "help2": "By clicking on the 'Registration' button, you agree with",
+        "help2Link": "user agreement",
+        "btnName": "Registration",
+        "palaceHolder": {
+            "search": "Course search",
+            "surname": "Name",
+            "name": "Name",
+            "middleName": "Surname",
+            "selectedRegions": "Choose an area",
+            "locality": "Settlement",
+            "selectedSpeciality": "Choose a specialty",
+            "work": "job",
+            "position": "Position",
+            "email": "",
+            "tel": "Cellphone",
+            "password": "Password"
+        }
+    },
+    "home": {
+        "galery": "Галерея"
+    }
+}

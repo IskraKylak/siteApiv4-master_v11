@@ -172,7 +172,7 @@ export default {
       this.loading = true
       await axios({
         method: 'GET',
-        url: ('https://asprof-test.azurewebsites.net/api/statistics/events/summary/'),
+        url: ('https://asprof-test.azurewebsites.net/uk/api/statistics/events/summary/'),
         headers: {
           'Authorization': 'Bearer ' + this.$store.getters.getToken
         }
@@ -182,7 +182,6 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
       this.entries = this.$store.getters.getStatCurs

@@ -9,7 +9,7 @@
           <div class="wrap_img" v-if="product.image != null">
             <img :src="product.image" alt="img"/>
           </div>
-          <div class="box_content">
+          <!-- <div class="box_content">
             <div class="box_left">
               <h1 class="title_event">
                 {{ product.name }}
@@ -28,13 +28,23 @@
                 <p>{{ product.place }}</p>
               </div>
             </div>
-          </div>
+          </div> -->
+        </section>
+        <section class="mainBlock">
+            <h1 class="title_event">
+              {{ product.name }}
+            </h1>
+            <div v-html="product.description" class="description_event"></div>
+            <div class="box box_date">
+              <p>{{ day }} {{ monthString }} {{ year }} - {{ time }}</p>
+              <p>{{ product.place }}</p>
+            </div>
         </section>
         <section class="event_section-3" id="2">
           <div class="box_content">
-            <div class="box_left">
-              <h2>Любі колеги!</h2>
-            </div>
+            <!-- <div class="box_left">
+              <h2>{{$t('details.title1')}}</h2>
+            </div> -->
             <div class="box_right" v-html="product.text">
             </div>
           </div>
@@ -42,20 +52,20 @@
         <section class="event_section-4" id="3">
           <div class="box_content">
             <div class="box_title">
-              <h2>ПОПЕРЕДНЯ РЕЄСТРАЦІЯ ОБОВ'ЯЗКОВА!</h2>
+              <h2>{{$t('details.title2')}}</h2>
             </div>
             <h3 class="register" style="text-align: center; font-size: 30px" v-if="product.registered">
-              Ви зареєстровані!
+              {{$t('details.title3')}}
             </h3>
             <div class="box_link">
-              <a :href="product.event_documents" class="link link-1" target="_blank">Програма</a>
+              <a :href="product.event_documents" class="link link-1" target="_blank">{{$t('details.btnName8')}}</a>
               <a
                 href="#"
                 v-if="!product.registered"
                 @click.prevent="registerSeminar()"
                 class="link link-2"
               >
-                Зареєструватись на семінар
+                {{$t('details.btnName1')}}
               </a>
               <a
                 href="#"
@@ -64,12 +74,17 @@
                 class="link link-2"
                 target="_blank"
               >
-                Придбати
+                {{$t('details.btnName2')}}
               </a>
             </div>
           </div>
         </section>
-        <section class="event_section-5" id="4">
+        <section>
+          <div class="box_content">
+            <div v-html="product.ad_text"></div>
+          </div>
+        </section>
+        <!-- <section class="event_section-5" id="4">
           <div class="box_content">
             <div class="box_left">
               <h2>УВАГА!</h2>
@@ -98,8 +113,8 @@
               </ul>
             </div>
           </div>
-        </section>
-        <section class="event_section-6">
+        </section> -->
+        <!-- <section class="event_section-6">
           <div class="box_content">
             <div class="box_title">
               <h2>ONLINE ТРАНСЛЯЦІЯ</h2>
@@ -134,7 +149,6 @@
             </div>
           </div>
         </section>
-<!--        {{ product }}-->
         <section class="event_section-7" id="5">
           <div class="box_content">
             <div class="box_title">
@@ -231,14 +245,14 @@
             </p>
           </div>
           <hr/>
-        </section>
+        </section> -->
         <section
           class="event_section-9"
           id="6"
           v-if="product.youtube_id_1 !== null && product.youtube_id_1 !== ''" 
         >
           <div class="box_content">
-            <h2 v-if="product.youtube_id_2 !== null && product.youtube_id_2 !== ''">Трансляція відбувається у двох залах одночасно</h2>
+            <h2 v-if="product.youtube_id_2 !== null && product.youtube_id_2 !== ''">{{$t('details.title11')}}</h2>
             <div 
               :class="{'wrap_zal' : product.youtube_id_2 !== null && product.youtube_id_2 !== ''}" 
               v-if="product.youtube_id_1 !== null && product.youtube_id_1 !== ''"
@@ -247,27 +261,27 @@
                 class="box box-1"
               >
                 <div class="box_title">
-                  <h3>ЗАЛ 1</h3>
+                  <h3>{{$t('details.title9')}}</h3>
                 </div>
                 <div class="box_video" v-if="product.youtube_id_1 !== '' && product.youtube_id_1 !== null && product.youtube_id_1 !== undefined">
                   
                   <YoutubeVue3 ref="youtube" :controls="1" :videoid="product.youtube_id_1" :width="480" :height="320" @ended="onEnded"/>
                 </div>
                 <div class="wrap_programs_panel">
-                  <button class="btn-program">
-                    Завантажити програму хол №A
-                  </button>
+                  <!-- <button class="btn-program">
+                    {{$t('details.btnName3')}}
+                  </button> -->
                   <form class="wrap_form_question" @submit.prevent="onSubmit1">
                     <div class="wrap_inputs">
                       <input type="text" placeholder="Задати питання спікеру" v-model="form_question1.question">
                     </div>
-                    <button class="btn_post">Відправити</button>
+                    <button class="btn_post">{{$t('details.btnName4')}}</button>
                   </form>
                 </div>
               </div>
               <div class="box box-2" v-if="product.youtube_id_2 !== null && product.youtube_id_2 !== ''">
                 <div class="box_title">
-                  <h3>ЗАЛ 2</h3>
+                  <h3>{{$t('details.title10')}}</h3>
                 </div>
                 <div class="box_video" v-show="product.youtube_id_2 !== '' && product.youtube_id_2 !== null && product.youtube_id_2 !== undefined">
                   <YouTube 
@@ -279,14 +293,14 @@
                   />
                 </div>
                 <div class="wrap_programs_panel">
-                  <button class="btn-program">
-                    Завантажити програму хол №Б
-                  </button>
+                  <!-- <button class="btn-program">
+                    {{$t('details.btnName5')}}
+                  </button> -->
                   <form class="wrap_form_question" @submit.prevent="onSubmit2">
                     <div class="wrap_inputs">
                       <input type="text" placeholder="Задати питання спікеру" v-model="form_question2.question">
                     </div>
-                    <button class="btn_post">Відправити</button>
+                    <button class="btn_post">{{$t('details.btnName6')}}</button>
                   </form>
                 </div>
               </div>
@@ -298,14 +312,14 @@
               @click="goToTest(proId)"
               :disabled="ytVideo1 !== 0 && ytVideo2 !== 0"
             >
-              Пройти тестування
+              {{$t('details.btnName7')}}
             </button>
           </div>
         </section>
         <div v-if="product.media_partners_set">
           <section  class="event_section-10" id="7" v-if="product.media_partners_set.length !== 0">
           <div class="box_content" >
-            <h2>МЕДІА ПАРТНЕРИ</h2>
+            <h2>{{$t('details.title5')}}</h2>
             <div class="box_partners">
               <div class="box" v-for="(media_partner, idx) in product.media_partners_set" :key="idx">
                 <img
@@ -325,10 +339,9 @@
           <section class="event_section-11" v-if="product.main_partners_set.length != 0">
           <div class="box_content" >
             <div class="box_title">
-              <h2>ПАРТНЕРИ</h2>
+              <h2>{{$t('details.title6')}}</h2>
               <p>
-                Натисніть на логотип партнера, щоб переглянути інформацію та
-                промо-матеріали
+                {{$t('details.text1')}}
               </p>
             </div>
             <div class="box_partners">
@@ -373,15 +386,14 @@
         </div>
         <section class="event_section-13" id="8">
           <div class="box_title">
-            <h2>КОНТАКТИ</h2>
+            <h2>{{$t('details.title7')}}</h2>
             <p>
-              Якщо у Вас виникають запитання, будь ласка, звертайтесь до нас за
-              телефонами або email вказаними нижче з 10:00 до 18:00
+              {{$t('details.text2')}}
             </p>
           </div>
           <div class="box_content">
             <div class="box box-1">
-              <h5>Контактний телефон</h5>
+              <h5>{{$t('details.title8')}}</h5>
               <div class="box_tel">
                 <a class="tel" href="tel:+380679867256">067-986-72-56</a>
                 <a class="tel" href="tel:+380971622459">097-162-24-59</a>
@@ -443,13 +455,19 @@ export default {
       product: {},
       loading: false,
       mounth_mas: [
-        'cічня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня']
+        this.$t('month.January'), this.$t('month.February'), this.$t('month.March'), this.$t('month.April'), this.$t('month.May'), this.$t('month.June'), this.$t('month.July'), this.$t('month.August'), this.$t('month.September'), this.$t('month.October'), this.$t('month.November'), this.$t('month.December')]
     }
   },
   created () {
     this.getNotify()
   },
   computed: {
+    lang() {
+      let lang = "uk"
+      if(this.$i18n.locale != 'ua')
+          lang = this.$i18n.locale
+      return lang
+    },
     year () {
       if (this.product.start_date) {
         return new Date(this.product.start_date).getFullYear()
@@ -464,14 +482,15 @@ export default {
     },
     monthString () {
       let month = new Date(this.product.start_date).getMonth()
-      for (let i = 1; i < this.mounth_mas.length; i++) {
+      
+      for (let i = 0; i < this.mounth_mas.length; i++) {
         if (this.product.start_date !== undefined) {
           if (month == i) {
             return this.mounth_mas[i]
           }
         }
       }
-      return ''
+      return month + 1
     },
     day () {
       if (this.product.start_date) {
@@ -483,6 +502,8 @@ export default {
       if (this.product.start_date) {
         let hours = new Date(this.product.start_date).getHours()
         let minutes = new Date(this.product.start_date).getMinutes()
+        if(minutes < 10)
+          minutes = '0' + minutes
         return hours + ":" + minutes
       }
       return ''
@@ -501,14 +522,14 @@ export default {
     },
     monthEnd () {
       if (this.product.testing_end_date) {
-        return new Date(this.product.testing_end_date).getMonth()
+        return new Date(this.product.testing_end_date).getMonth() + 1
       }
       return ''
     },
     monthStringEnd () {
       
       let month = new Date(this.product.testing_end_date).getMonth()
-      for (let i = 1; i < this.mounth_mas.length; i++) {
+      for (let i = 0; i < this.mounth_mas.length; i++) {
         
         if (month == i) {
           return this.mounth_mas[i]
@@ -564,7 +585,6 @@ export default {
             this.getNotify()
           })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
       } else {
@@ -576,7 +596,7 @@ export default {
     async goLiqPay () {
       if (this.$store.getters.getToken) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/events/${this.$route.params.Pid}/pay/`,
+          url: `https://asprof-test.azurewebsites.net/${this.lang}/api/events/${this.$route.params.Pid}/pay/`,
           method: 'GET',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
@@ -586,7 +606,6 @@ export default {
           // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
@@ -616,7 +635,7 @@ export default {
     },
     async onSubmit1 () {
       await axios({
-        url: 'https://asprof-test.azurewebsites.net/api/events/create/question_to_event/',
+        url: `https://asprof-test.azurewebsites.net/${this.lang}/api/events/create/question_to_event/`,
         data: this.form_question1,
         method: 'POST',
         headers: {
@@ -624,28 +643,24 @@ export default {
         }
       }).then(respons => {
         this.$message('Ваше питання відправлено')
-        // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
         .finally(() => (this.loading = false))
     },
     async onSubmit2 () {
       await axios({
-        url: 'https://asprof-test.azurewebsites.net/api/events/create/question_to_event/',
+        url: `https://asprof-test.azurewebsites.net/${this.lang}/api/events/create/question_to_event/`,
         data: this.form_question2,
         method: 'POST',
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
         }
       }).then(respons => {
-        this.$message('Ваше питання відправлено')
-        // this.messages = res;
+        this.$message('Ваше питання відправлено');
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
         .finally(() => (this.loading = false))
@@ -654,36 +669,31 @@ export default {
       this.loading = true
       if (this.$store.getters.getToken) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/events/${this.proId}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.lang}/api/events/${this.proId}/`,
           method: 'GET',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
           }
         }).then(respons => {
           this.$store.dispatch('setClEvent', respons.data)
-          // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
       } else {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/events/${this.proId}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.lang}/api/events/${this.proId}/`,
           method: 'GET',
         }).then(respons => {
-          this.$store.dispatch('setClEvent', respons.data)
-          // this.messages = res;
+          this.$store.dispatch('setClEvent', respons.data);
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
       }
       this.product = this.$store.getters.getClEvent
-      // console.log(this.product.media_partners_set)
     }
   }
 }
@@ -693,6 +703,28 @@ export default {
 <style scoped src="@/assets/css/screen.css">
 </style>
 <style lang="scss">
+
+.main_page {
+
+  .mainBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px 0 20px;
+
+    h1.title_event {
+      color: #1f4e8c;
+      font-size: 50px;
+      text-align: center;
+    }
+
+    .description_event {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
+} 
 
 .event .event_section-4 .box_content .box_link {
   display: flex;
@@ -906,6 +938,27 @@ button[disabled] {
     grid-template-columns: 100%;
     grid-gap: 4%;
   }
+
+  .main_page {
+
+  .mainBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0 0 0;
+
+    h1.title_event {
+      color: #1f4e8c;
+      font-size: 30px;
+    }
+
+    .description_event {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
+} 
 }
 
 @media screen and (max-width: 768px) {
@@ -954,7 +1007,7 @@ button[disabled] {
   overflow: hidden;
 }
 
-.event_section-2 .wrap_img:before {
+/* .event_section-2 .wrap_img:before {
   content: "";
   top: 0;
   left: 0;
@@ -963,7 +1016,7 @@ button[disabled] {
   background: rgba(15, 48, 91, 0.4);
   position: absolute;
   z-index: 5;
-}
+} */
 
 .event_section-2 .box_content {
   position: relative;
@@ -978,21 +1031,24 @@ button[disabled] {
 .event .event_section-2 {
   background-image: none;
   position: relative;
+  height: auto;
 }
 
 .event .event_section-2 .wrap_img {
-  position: absolute;
-  top: 0;
+  position: relative;
+  /* top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 100%; */
+  display: flex;
+  justify-content: center;
 }
 
 .event .event_section-2 .wrap_img img {
-  position: absolute;
-  object-fit: cover;
+  /* position: absolute;
+  object-fit: cover; */
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 
 .event .event_section-8 div.box_title h2:before,

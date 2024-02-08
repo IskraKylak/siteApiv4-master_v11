@@ -144,7 +144,7 @@ export default {
         tmp.sort_id = this.singleEvent.sort_id
       }
       await axios({
-        url: 'https://asprof-test.azurewebsites.net/api/specializations/',
+        url: 'https://asprof-test.azurewebsites.net/uk/api/specializations/',
         data: tmp,
         method: 'POST',
         headers: {
@@ -157,7 +157,7 @@ export default {
         tmp.id = respons.data.id
         if (this.previewFile.click) {
           axios({
-            url: `https://asprof-test.azurewebsites.net/api/specializations/${tmp.id}/`,
+            url: `https://asprof-test.azurewebsites.net/uk/api/specializations/${tmp.id}/`,
             data: this.singleEvent.photo,
             method: 'PATCH',
             headers: {
@@ -170,7 +170,6 @@ export default {
             // this.messages = res;
           })
             .catch(error => {
-              console.log(error)
               this.$message('Помилка')
             })
             .finally(() => (this.loading = false))
@@ -178,7 +177,6 @@ export default {
         this.$emit('close')
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
         .finally(() => (this.loading = false))

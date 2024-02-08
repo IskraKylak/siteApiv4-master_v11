@@ -14,15 +14,15 @@
 
           <legend class="dropzone_title">Текст уроку <span title="обов'язкове">*</span></legend>
               <editor
-                api-key="no-api-key"
-                @init="handleInit"
-                @destroy="handleDestroy"
-                @change="handleChange"
-                @input="handleInput"
-                @error="handleError"
-                :config="config"
-                name="qwerty"
-                ref="ref"
+                api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+                :init="{
+                  height: 500,
+                  plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount'
+                  ],
+                }"
                 v-model="singleEvent.text"
               />
 
@@ -91,7 +91,7 @@ export default {
 
       }
       await axios({
-        url: `https://asprof-test.azurewebsites.net/api/courses/${this.content}/lessons/`,
+        url: `https://asprof-test.azurewebsites.net/uk/api/courses/${this.content}/lessons/`,
         data: tmp,
         method: 'POST',
         headers: {
@@ -102,7 +102,6 @@ export default {
         // this.messages = res;
       })
       .catch(error => {
-        console.log(error)
         this.$message('Помилка')
       })
       .finally(() => (this.$emit('close')))

@@ -342,7 +342,7 @@ export default {
         !this.v$.user.job_place.$invalid) {
         this.loading = true
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/users/${this.proId}/`,
+          url: `https://asprof-test.azurewebsites.net/uk/api/users/${this.proId}/`,
           data: this.user,
           method: 'PATCH',
           headers: {
@@ -355,7 +355,6 @@ export default {
           // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
@@ -366,18 +365,15 @@ export default {
       this.myAcc = this.$store.getters.getMyAcc
       await axios({
         method: 'GET',
-        url: (`https://asprof-test.azurewebsites.net/api/users/${this.proId}`),
+        url: (`https://asprof-test.azurewebsites.net/uk/api/users/${this.proId}`),
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
         }
       })
         .then(respons => {
-          console.log(respons.data)
           this.$store.dispatch('setUser', respons.data)
-          // console.log(typeof this.$store.getters.getSingleEvent.id)
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
       this.specializationList = this.$store.getters.getSpecialization

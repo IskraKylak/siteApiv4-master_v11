@@ -5,7 +5,7 @@
   <div v-if="!loading" class="wrap_table_component">
     <div class="import-excel">
       <h2 class="main_title">Користувачі</h2>
-      <a href="https://asprof-test.azurewebsites.net/api/users/excel/" class="import_btn">ЕКСПОРТ В EXCEL</a>
+      <a href="https://asprof-test.azurewebsites.net/uk/api/users/excel/" class="import_btn">ЕКСПОРТ В EXCEL</a>
     </div>
     <div class="wrap_search">
       <input type="search" class="input px:width-25" placeholder="Пошук" v-model="searchInput"
@@ -182,7 +182,7 @@ export default {
       this.loading = true
       await axios({
         method: 'GET',
-        url: (`https://asprof-test.azurewebsites.net/api/users/?format=json&ordering=${this.sort}&page=${this.openPage}`),
+        url: (`https://asprof-test.azurewebsites.net/uk/api/users/?format=json&ordering=${this.sort}&page=${this.openPage}`),
         headers: {
           'Authorization': 'Bearer ' + this.$store.getters.getToken
         }
@@ -193,7 +193,6 @@ export default {
         // this.messages = res;
       })
       .catch(error => {
-        console.log(error)
       })
       .finally(() => {
         this.entries = this.$store.getters.getUsers
@@ -228,7 +227,7 @@ export default {
     async search (page, value) {
       await axios({
         method: 'GET',
-        url: (`https://asprof-test.azurewebsites.net/api/users/?page=${page}&last_name=${value}`),
+        url: (`https://asprof-test.azurewebsites.net/uk/api/users/?page=${page}&last_name=${value}`),
         headers: {
           'Authorization': 'Bearer ' + this.$store.getters.getToken
         }
@@ -238,7 +237,6 @@ export default {
           this.countEvent = respons.data.count
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => {
           this.entries = this.$store.getters.getMessage
@@ -292,8 +290,6 @@ export default {
         this.isSearch = false
         this.getNotify()
       }
-      
-      // console.log(this.filteredEntries)
     }
   }
 }

@@ -8,7 +8,7 @@
         <h1 class="top-menu_name">{{ title_nav }}</h1>
       </div>
       <div class="top-menu_right">
-        <router-link to="/" class="top-menu_home">
+        <router-link :to="`/${this.$i18n.locale}/`" class="top-menu_home">
           <i class="fas fa-home"></i>
         </router-link>
         <div class="top-menu_right_name_item" >
@@ -52,9 +52,12 @@ export default {
   },
   methods: {
     async getNotify() {
+      let lang = "uk"
+      if(this.$i18n.locale != 'ua')
+          lang = this.$i18n.locale
       await axios({
         method: 'GET',
-        url: ('https://asprof-test.azurewebsites.net/api/me/'),
+        url: (`https://asprof-test.azurewebsites.net/${lang}/api/me/`),
         headers: {
           'Authorization': 'Bearer ' + this.$store.getters.getToken
         }
@@ -64,7 +67,6 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
       this.myAcc = this.$store.getters.getMyAcc
@@ -72,7 +74,7 @@ export default {
     async logout () {
       this.$store.dispatch('logout')
         .then(() => {
-          this.$router.push('/in-login?message=logout')
+          this.$router.push(`/${this.$i18n.locale}/in-login?message=logout`)
         })
       // await this.$store.dispatch('logout')
       // this.$router.push('/in-login?message=logout')

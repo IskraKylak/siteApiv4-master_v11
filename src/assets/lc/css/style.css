@@ -1342,9 +1342,9 @@ fieldset:hover {
   height: 280px;
 }
 
-.title_event {
+/* .title_event {
   margin-bottom: 20px;
-}
+} */
 
 .custom-checkbox:checked + label::before {
   border-color: #0b76ef;

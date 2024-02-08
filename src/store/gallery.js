@@ -16,7 +16,6 @@ export default {
         commit('SET_INFO4', info4.data);
         return info4;
       }).catch((error) => {
-        console.log(error)
       });
     }
   },

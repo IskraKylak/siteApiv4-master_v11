@@ -41,7 +41,6 @@ export default {
 //         commit('SET_INFO5', info5.data);
 //         return info5;
 //       }).catch((error) => {
-//         console.log(error)
 //       });
 //     }
 //   },

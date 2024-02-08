@@ -1,9 +1,9 @@
   <template>
   <div class="container">
     <div class="wrap_form_reg">
-      <h2 class="title_form">РЕЄСТРАЦІЯ</h2>
+      <h2 class="title_form">{{$t("register.title")}}</h2>
       <form @submit.prevent="onSubmit">
-        <p>Інформація про особу</p>
+        <p>{{$t("register.subtitle1")}}</p>
 <!--        {{ v$.surname }}-->
         <div class="wrap_form_row">
           <div class="form-item" :class="{ errorInput: v$.surname.$error }">
@@ -11,7 +11,7 @@
               v-model="surname"
               :class="{ error: v$.surname.$error }"
               @change="v$.surname.$touch()"
-              placeholder="Прізвище"
+              :placeholder="$t('register.palaceHolder.surname')"
             />
             <p class="errorText" v-if="v$.surname.required.$invalid">
               Filed is required
@@ -26,7 +26,7 @@
               v-model="name"
               :class="{ error: v$.name.$error }"
               @change="v$.name.$touch()"
-              placeholder="Ім'я"
+              :placeholder="$t('register.palaceHolder.name')"
             />
             <p class="errorText" v-if="v$.name.required.$invalid">
               Filed is required
@@ -40,7 +40,7 @@
               v-model="middleName"
               :class="{ error: v$.middleName.$error }"
               @change="v$.middleName.$touch()"
-              placeholder="Побатькові"
+              :placeholder="$t('register.palaceHolder.middleName')"
             />
             <p class="errorText" v-if="v$.middleName.required.$invalid">
               Filed is required
@@ -51,7 +51,7 @@
             </p>
           </div>
         </div>
-        <p>Місце проживання</p>
+        <p>{{$t("register.subtitle2")}}</p>
         <div class="wrap_form_row">
           <div
             class="form-item"
@@ -61,9 +61,9 @@
               v-model="selectedRegions"
               :class="{ error: v$.selectedRegions.$error }"
               @change="v$.selectedRegions.$touch()"
-              placeholder="Оберіть область"
+              :placeholder="$t('register.palaceHolder.selectedRegions')"
             >
-              <option value="" disabled selected>Виберіть область</option>
+              <option value="" disabled selected>{{ $t('register.palaceHolder.selectedRegions') }}</option>
               <option
                 v-for="region in regions"
                 :value="region.name"
@@ -81,7 +81,7 @@
               v-model="locality"
               :class="{ error: v$.locality.$error }"
               @change="v$.locality.$touch()"
-              placeholder="Населенний пункт"
+              :placeholder="$t('register.palaceHolder.locality')"
             />
             <p class="errorText" v-if="v$.locality.required.$invalid">
               Filed is required
@@ -92,7 +92,7 @@
             </p>
           </div>
         </div>
-        <p>Професійна діяльність</p>
+        <p>{{$t("register.subtitle3")}}</p>
         <div class="wrap_form_row">
           <div
             class="form-item"
@@ -102,9 +102,9 @@
               v-model="selectedSpeciality"
               :class="{ error: v$.selectedSpeciality.$error }"
               @change="v$.selectedSpeciality.$touch()"
-              placeholder="Оберіть область"
+              :placeholder="$t('register.palaceHolder.selectedSpeciality')"
             >
-              <option value="" disabled selected>Виберіть спеціальність</option>
+              <option value="" disabled selected>{{ $t('register.palaceHolder.selectedSpeciality') }}</option>
               <option
                 v-for="spec in speciality"
                 :value="spec.id"
@@ -122,7 +122,7 @@
               v-model="work"
               :class="{ error: v$.work.$error }"
               @change="v$.work.$touch()"
-              placeholder="місце роботи"
+              :placeholder="$t('register.palaceHolder.work')"
             />
             <p class="errorText" v-if="v$.work.required.$invalid">
               Filed is required
@@ -137,7 +137,7 @@
               v-model="position"
               :class="{ error: v$.position.$error }"
               @change="v$.position.$touch()"
-              placeholder="Посада"
+              :placeholder="$t('register.palaceHolder.position')"
             />
             <p class="errorText" v-if="v$.position.required.$invalid">
               Filed is required
@@ -148,7 +148,7 @@
             </p>
           </div>
         </div>
-        <p>Контактні дані</p>
+        <p>{{$t("register.subtitle4")}}</p>
         <div class="wrap_form_row">
           <div class="form-item" :class="{ errorInput: v$.email.$error }">
             <input
@@ -167,7 +167,7 @@
               v-model="tel"
               :class="{ error: v$.tel.$error }"
               @change="v$.tel.$touch()"
-              placeholder="Мобільний телефон"
+              :placeholder="$t('register.palaceHolder.tel')"
             />
             <p class="errorText" v-if="v$.tel.required.$invalid">
               Filed is required
@@ -181,7 +181,7 @@
             </p>
           </div>
         </div>
-        <p>Безпека</p>
+        <p>{{$t("register.subtitle5")}}</p>
         <div class="wrap_form_row">
           <div class="form-item" :class="{ errorInput: v$.password1.$error }">
             <input
@@ -189,7 +189,7 @@
               v-model="password1"
               :class="{ error: v$.password1.$error }"
               @change="v$.password1.$touch()"
-              placeholder="Пароль"
+              :placeholder="$t('register.palaceHolder.password')"
               ref="password"
               autocomplete="off"
             />
@@ -207,7 +207,7 @@
               v-model="password2"
               :class="{ error: v$.password2.$error }"
               @change="v$.password2.$touch()"
-              placeholder="Пароль"
+              :placeholder="$t('register.palaceHolder.password')"
             />
             <p class="errorText"  v-if="v$.password2.sameAsPassword.$params.equalTo">Password and Confirm Password should match</p>
             <p class="errorText" v-if="v$.password2.required.$invalid">
@@ -215,7 +215,7 @@
             </p>
           </div>
         </div>
-        <button class="my_btn" >Реєстрація</button>
+        <button class="my_btn" >{{$t("register.btnName")}}</button>
       </form>
     </div>
   </div>
@@ -279,7 +279,7 @@ export default {
   created () {
     this.speciality = this.$store.getters.getSpecialization
     if(this.$store.getters.getToken !== '') {
-      this.$router.push('/lc-profile')
+      this.$router.push("/lc-profile")
     }
   },
   validations () {
@@ -354,16 +354,14 @@ export default {
           diploma: "",
           job_place: this.work,
           job_name: this.selectedSpeciality,
-          specialization: null
+          specialization: null,
+          lang: "uk"
         }
-        console.log(user1)
+        if(this.$i18n.locale != 'ua')
+          user1.lang = this.$i18n.locale
         this.$store.dispatch('register', user1)
-          .then(() => this.$router.push('/lc-profile'))
-          .catch(err => console.log(err))
-        // this.name = ''
-        // this.email = ''
-        // this.v$.$reset()
-        // this.$emit('close')
+          .then(() => this.$router.push("/lc-profile"))
+          .catch()
       }
     },
   },

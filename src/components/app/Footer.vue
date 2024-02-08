@@ -3,7 +3,7 @@
     <div class="box_content container">
       <div class="box_left">
         <div class="box_adress">
-          <h5>Адреса:</h5>
+          <h5>{{$t('Footer.Address')}}:</h5>
           <p>{{ infoContact.location }}</p>
         </div>
         <div class="box_mail">
@@ -16,11 +16,11 @@
       </div>
       <div class="box_right">
         <div class="box_top">
-          <h4>Підпишіться на новини та залишайтесь в курсі!</h4>
+          <h4>{{$t('Footer.signup')}}</h4>
           <div class="box_find">
             <form>
               <input type="text" class="input_email" placeholder="e-mail" />
-              <input type="submit" class="input_submit" value="підписатись" />
+              <input type="submit" class="input_submit" :value="$t('Footer.btnSing')" />
             </form>
             <div class="box_messendger">
               <a class="link_facebook" :href="infoContact.facebook_link"
@@ -33,50 +33,50 @@
           <div class="box1 box-1">
             <ul>
               <li>
-                <a href="/">Про асоціацію</a>
+                <a href="/">{{$t('menu.association')}}</a>
               </li>
               <li>
-                <router-link class="link link-2" to="/presidium"
-                >Президіум</router-link
+                <router-link class="link link-2" :to="`/${this.$i18n.locale}/presidium`"
+                >{{$t('menu.Presidium')}}</router-link
                 >
               </li>
               <li>
-                <router-link class="link link-2" to="/calendarevent"
-                >Календарь <br />заходів</router-link
+                <router-link class="link link-2" :to="`/${this.$i18n.locale}/calendarevent`"
+                >{{$t('menu.Calendar')}} <br />{{$t('menu.measures')}}</router-link
                 >
               </li>
               <li>
-                <a href="#">Галерея</a>
+                <a href="#">{{$t('menu.Gallery')}}</a>
               </li>
             </ul>
           </div>
           <div class="box1 box-2">
             <ul>
               <li>
-                <a href="#">Журнали</a>
+                <a href="#">{{$t('menu.Magazines')}}</a>
               </li>
               <li>
-                <router-link class="link link-2" to="/bmo"
-                >БМО-БПР</router-link
+                <router-link class="link link-2" :to="`/${this.$i18n.locale}/bmo`"
+                >{{$t('menu.BMO')}}</router-link
                 >
               </li>
               <li>
-                <a href="#">ГЕО співпраці</a>
+                <a href="#">{{$t('menu.Contacts')}}</a>
               </li>
             </ul>
           </div>
           <div class="box1 box-3">
             <ul v-if="tokkent === ''">
               <li>
-                <router-link class="link" to="/register">Реєстрація</router-link>
+                <router-link class="link" :to="`/${this.$i18n.locale}/register`">{{$t('lc.Registration')}}</router-link>
               </li>
               <li>
-                <router-link class="link" to="/in-login">Вхід</router-link>
+                <router-link class="link" :to="`/${this.$i18n.locale}/in-login`">{{$t('lc.Login')}}</router-link>
               </li>
             </ul>
             <ul v-else>
               <li>
-                <router-link class="link" to="/lc-profile">Особистий кабінет</router-link>
+                <router-link class="link" to="/lc-profile">{{$t('lc.Personal')}}</router-link>
               </li>
             </ul>
           </div>
@@ -112,9 +112,12 @@ export default {
   },
   methods: {
     async getNotify () {
+      let lang = "uk"
+      if(this.$i18n.locale != 'ua')
+          lang = this.$i18n.locale
       await axios({
         method: 'GET',
-        url: ('https://asprof-test.azurewebsites.net/api/content/hippocrates/contacts/'),
+        url: (`https://asprof-test.azurewebsites.net/${lang}/api/content/hippocrates/contacts/`),
       }).then(response => {
         this.infoContact.title = response.data.title
         this.infoContact.text = response.data.text
@@ -127,7 +130,6 @@ export default {
       })
         .catch(error => {
           this.$store.dispatch('logout')
-          console.log(error)
         })
         .finally()
     }

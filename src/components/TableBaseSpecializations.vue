@@ -178,7 +178,6 @@ export default {
     //       a.remove();
     //   }).catch(error => {
     //     this.$message('Помилка')
-    //     console.log(error)
     //   })
     // },
     // downloadEcel(item) {
@@ -200,7 +199,6 @@ export default {
     //       a.remove();
     //   }).catch(error => {
     //     this.$message('Помилка')
-    //     console.log(error)
     //   })
     // },
     goToEvent (prodId) {
@@ -211,7 +209,7 @@ export default {
     },
     async removeEvent (prodId) {
       await axios({
-        url: `https://asprof-test.azurewebsites.net/api/specializations/${prodId}/`,
+        url: `https://asprof-test.azurewebsites.net/uk/api/specializations/${prodId}/`,
         method: 'DELETE',
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
@@ -222,7 +220,6 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
     },
@@ -231,15 +228,11 @@ export default {
       this.isSearch = false
       // if (this.entries.length === 0) {
       await axios
-        .get(`https://asprof-test.azurewebsites.net/api/specializations/`)
+        .get(`https://asprof-test.azurewebsites.net/uk/api/specializations/`)
         .then(respons => {
           this.$store.dispatch('setMessage', respons.data)
-          // this.countEvent = respons.data.count
-          // this.messages = res;
-          // console.log("res event " + res)
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => {
           this.loading = false
@@ -275,7 +268,6 @@ export default {
     //       this.countEvent = respons.data.count
     //     })
     //     .catch(error => {
-    //       console.log(error)
     //     })
     //     .finally(() => {
     //       this.entries = this.$store.getters.getMessage
@@ -327,8 +319,6 @@ export default {
   //       this.isSearch = false
   //       this.getNotify()
   //     }
-      
-  //     // console.log(this.filteredEntries)
   //   }
   // }
 }

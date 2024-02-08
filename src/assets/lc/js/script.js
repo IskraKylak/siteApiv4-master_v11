@@ -101,10 +101,8 @@ $(".burger").click(function(){
 
 
 
-// console.log('1');
 
 
-// console.log('2');
 
 // function rotate(event){
 //     arrow.classList.toggle("active");
@@ -143,7 +141,6 @@ Dropzone.options.dropzone =
     addRemoveLinks: true,
     timeout: 60000,
     success: function (file, response) {
-        console.log(response);
     },
     error: function (file, response) {
         return false;

@@ -2,13 +2,16 @@
   <div class="wrap_preloader lc" v-if="loading">
     <preloader :width="90" :height="90"></preloader>
   </div>
-  <div class="container" v-if="myAcc.role === 'admin' && !loading">
+  <div class="container">
 <!--    {{ singleEvent }}-->
     <div class="profile_success">
       <router-link to="/lc-specializations" class="back_btn">Назад</router-link>
     </div>
-    <h1 class="title_event">Редагування спеціализації</h1>
-    <form @submit.prevent="onSubmit">
+    <div class="wrap_title">
+      <h1 class="title_event">Редагування спеціализації</h1>
+      <swicherLang @changeLang="changeLang" />
+    </div>
+    <form @submit.prevent="onSubmit" v-if="myAcc.role === 'admin' && !loading">
       <fieldset>
         <legend>Назва спеціаліста <span title="обов'язкове">*</span></legend>
         <input type="text" class="profile_input" v-model="singleEvent.name">
@@ -61,33 +64,12 @@ import Editor from '@tinymce/tinymce-vue'
 import axios from 'axios'
 import ModalAddLesson from '@/components/ModalAddLesson.vue'
 import preloader from '@/components/UI/Preloader.vue'
-const config = {
-  height: 500,
-  inline: false,
-  theme: 'modern',
-  fontsize_formats: '8px 10px 12px 14px 16px 18px 20px 22px 24px 26px 28px 30px 34px 38px 42px 48px 54px 60px',
-  plugins: 'textcolor print preview fullpage powerpaste searchreplace autolink directionality advcode visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount tinymcespellchecker a11ychecker imagetools mediaembed  linkchecker contextmenu colorpicker textpattern help',
-  toolbar1: 'forecolor backcolor formatselect fontsizeselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
-  image_advtab: true,
-  templates: [
-    {
-      title: 'Test template 1',
-      content: 'Test 1'
-    },
-    {
-      title: 'Test template 2',
-      content: 'Test 2'
-    }
-  ],
-  content_css: [
-    '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-    '//www.tinymce.com/css/codepen.min.css'
-  ]
-}
+import swicherLang from '@/components/swicherLang'
 
 export default {
   data () {
     return {
+      activeLang: "uk",
       loading: false,
       idEvent: null,
       myAcc: '',
@@ -123,12 +105,17 @@ export default {
   components: {
     editor: Editor,
     ModalAddLesson,
-    preloader
+    preloader,
+    swicherLang
   },
   created () {
     this.getNotify()
   },
   methods: {
+    changeLang(data) {
+      this.activeLang = data
+      this.getNotify()
+    },
     async onSubmit () {
       this.loading = true
       var tmp = {
@@ -140,7 +127,7 @@ export default {
         sort_id: this.singleEvent.sort_id,
       }
       await axios({
-        url: `https://asprof-test.azurewebsites.net/api/specializations/${this.proId}/`,
+        url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/specializations/${this.proId}/`,
         data: tmp,
         method: 'PATCH',
         headers: {
@@ -153,13 +140,12 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
         .finally(() => (this.loading = false))
       if (this.previewFile.click) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/specializations/${this.proId}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/specializations/${this.proId}/`,
           data: this.singleEvent.photo,
           method: 'PATCH',
           headers: {
@@ -172,7 +158,6 @@ export default {
           // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
@@ -181,7 +166,7 @@ export default {
     async getNotify () {
       await axios({
         method: 'GET',
-        url: ('https://asprof-test.azurewebsites.net/api/me/'),
+        url: (`https://asprof-test.azurewebsites.net/${this.activeLang}/api/me/`),
         headers: {
           'Authorization': 'Bearer ' + this.$store.getters.getToken
         }
@@ -192,14 +177,13 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
 
       this.loading = true
       await axios({
         method: 'GET',
-        url: (`https://asprof-test.azurewebsites.net/api/specializations/${this.proId}`),
+        url: (`https://asprof-test.azurewebsites.net/${this.activeLang}/api/specializations/${this.proId}`),
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
         }
@@ -208,7 +192,6 @@ export default {
           this.$store.dispatch('setSingleEvent', respons.data)
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
       this.singleEvent = this.$store.getters.getSingleEvent
@@ -269,31 +252,19 @@ export default {
         this.$emit('input', file[0])
       }
     },
-    handleInit (editor) {
-      // console.log('Initialized')
-    },
-
-    handleDestroy (editor) {
-      // console.log('Destroyed')
-    },
-
-    handleChange (value) {
-      // console.log('Changed')
-    },
-
-    handleInput (value) {
-      // console.log('Input')
-    },
-
-    handleError (err) {
-      // console.log('An error occurred')
-    }
   }
 }
 
 </script>
 
 <style scoped>
+
+.wrap_title {
+  display: flex;
+  align-items: center;
+  grid-gap: 20px;
+  margin-bottom: 20px;
+}
 
 legend span {
   color: red;

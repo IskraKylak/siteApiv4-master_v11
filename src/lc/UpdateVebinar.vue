@@ -2,13 +2,15 @@
   <div class="wrap_preloader lc" v-if="loading">
     <preloader :width="90" :height="90"></preloader>
   </div>
-  <div class="container" v-if="myAcc.role === 'admin' && !loading">
-<!--    {{ singleEvent }}-->
+  <div class="container">
     <div class="profile_success">
       <router-link to="/lc-vebinar" class="back_btn">Назад</router-link>
     </div>
-    <h1 class="title_event">Редагування події</h1>
-    <form @submit.prevent="onSubmit">
+    <div class="wrap_title">
+      <h1 class="title_event">Редагування вебінару</h1>
+      <swicherLang @changeLang="changeLang" />
+    </div>
+    <form v-if="myAcc.role === 'admin' && !loading" @submit.prevent="onSubmit">
       <fieldset>
         <legend>Назва вебінару <span title="обов'язкове">*</span></legend>
         <input type="text" class="profile_input" v-model="singleEvent.name">
@@ -16,15 +18,15 @@
 
       <legend class="dropzone_title">Опис вебінару <span title="обов'язкове">*</span></legend>
           <editor
-            api-key="no-api-key"
-            @init="handleInit"
-            @destroy="handleDestroy"
-            @change="handleChange"
-            @input="handleInput"
-            @error="handleError"
-            :config="config"
-            name="qwerty"
-            ref="ref"
+            api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+            :init="{
+              height: 500,
+              plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+              ],
+            }"
             v-model="singleEvent.description"
           />
       <fieldset>
@@ -105,15 +107,15 @@
 
       <legend class="dropzone_title">Основний текст події <span title="обов'язкове">*</span></legend>
           <editor
-            api-key="no-api-key2"
-            @init="handleInit"
-            @destroy="handleDestroy"
-            @change="handleChange"
-            @input="handleInput"
-            @error="handleError"
-            :config="config"
-            name="qwerty"
-            ref="ref"
+            api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+            :init="{
+              height: 500,
+              plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+              ],
+            }"
             v-model="singleEvent.text"
           />
 
@@ -373,33 +375,12 @@ import Editor from '@tinymce/tinymce-vue'
 import axios from 'axios'
 import modalValidate from '@/components/ModalValidate.vue'
 import preloader from '@/components/UI/Preloader.vue'
-const config = {
-  height: 500,
-  inline: false,
-  theme: 'modern',
-  fontsize_formats: '8px 10px 12px 14px 16px 18px 20px 22px 24px 26px 28px 30px 34px 38px 42px 48px 54px 60px',
-  plugins: 'textcolor print preview fullpage powerpaste searchreplace autolink directionality advcode visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount tinymcespellchecker a11ychecker imagetools mediaembed  linkchecker contextmenu colorpicker textpattern help',
-  toolbar1: 'forecolor backcolor formatselect fontsizeselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
-  image_advtab: true,
-  templates: [
-    {
-      title: 'Test template 1',
-      content: 'Test 1'
-    },
-    {
-      title: 'Test template 2',
-      content: 'Test 2'
-    }
-  ],
-  content_css: [
-    '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-    '//www.tinymce.com/css/codepen.min.css'
-  ]
-}
+import swicherLang from '@/components/swicherLang'
 
 export default {
   data () {
     return {
+      activeLang: "uk",
       loading: false,
       idEvent: null,
       myAcc: '',
@@ -468,26 +449,29 @@ export default {
   components: {
     editor: Editor,
     modalValidate,
-    preloader
+    preloader,
+    swicherLang
   },
   created () {
     this.getNotify()
   },
   methods: {
+    changeLang(data) {
+      this.activeLang = data
+      this.getNotify()
+    },
     async goToTest (prodId) {
       if (this.singleEvent.test == null) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/webinars/${prodId}/test/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/webinars/${prodId}/test/`,
           method: 'POST',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
           }
         }).then(respons => {
           this.$message('Тест створено')
-          // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка створення тесту')
           })
           .finally(() => (this.loading = false))
@@ -530,7 +514,7 @@ export default {
         // partners_set: this.singleEvent.id
       }
       await axios({
-        url: `https://asprof-test.azurewebsites.net/api/webinars/${this.proId}/`,
+        url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/webinars/${this.proId}/`,
         data: tmp,
         method: 'PATCH',
         headers: {
@@ -540,16 +524,14 @@ export default {
         const res = respons.data
         this.$store.dispatch('setSingleEvent', res)
         this.$message('Дані успішно змінені')
-        // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
         .finally(() => (this.loading = false))
       if (this.previewFile.click) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/webinars/${this.proId}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/webinars/${this.proId}/`,
           data: this.singleEvent.image,
           method: 'PATCH',
           headers: {
@@ -562,7 +544,6 @@ export default {
           // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
@@ -570,7 +551,7 @@ export default {
 
       if (this.previewImage.click) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/webinars/${this.proId}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/webinars/${this.proId}/`,
           data: this.singleEvent.event_documents,
           method: 'PATCH',
           headers: {
@@ -580,10 +561,8 @@ export default {
           const res = respons.data
           this.$store.dispatch('setSingleEvent', res)
           this.$message('Картинка змінена!')
-          // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
@@ -591,7 +570,7 @@ export default {
 
       if (this.previewIneractive.click) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/webinars/${this.proId}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/webinars/${this.proId}/`,
           data: this.singleEvent.partners_banner,
           method: 'PATCH',
           headers: {
@@ -601,10 +580,8 @@ export default {
           const res = respons.data
           this.$store.dispatch('setSingleEvent', res)
           this.$message('Картинка змінена!')
-          // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
@@ -613,49 +590,43 @@ export default {
     async removePartner (tab, id) {
       if (tab === 'mainPartner') {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/webinars/${this.singleEvent.id}/main_partners/${id}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/webinars/${this.singleEvent.id}/main_partners/${id}/`,
           method: 'DELETE',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
           }
         }).then(respons => {
-          // console.log(respons)
           this.$message('Партнера видалено!')
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
       } else if (tab === 'partner') {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/webinars/${this.singleEvent.id}/partners/${id}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/webinars/${this.singleEvent.id}/partners/${id}/`,
           method: 'DELETE',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
           }
         }).then(respons => {
-          // console.log(respons)
           this.$message('Партнера видалено!')
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
       } else if (tab === 'mediaPartner') {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/webinars/${this.singleEvent.id}/media_partners/${id}/`,
+          url: `https://asprof-test.azurewebsites.net/${this.activeLang}/api/webinars/${this.singleEvent.id}/media_partners/${id}/`,
           method: 'DELETE',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
           }
         }).then(respons => {
-          // console.log(respons)
           this.$message('Партнера видалено!')
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
@@ -664,9 +635,6 @@ export default {
     },
     // eslint-disable-next-line camelcase
     clickModal (tab, id, id_event) {
-      // console.log('clickModal: ' + id)
-      // console.log('clickModal tab: ' + tab)
-      // console.log('clickModal id_event: ' + id_event)
       this.modalValidate = !this.modalValidate
       this.isPartner = tab
       this.idItem = id
@@ -682,7 +650,7 @@ export default {
     async getNotify () {
       await axios({
         method: 'GET',
-        url: ('https://asprof-test.azurewebsites.net/api/me/'),
+        url: (`https://asprof-test.azurewebsites.net/${this.activeLang}/api/me/`),
         headers: {
           'Authorization': 'Bearer ' + this.$store.getters.getToken
         }
@@ -693,31 +661,24 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
 
       this.loading = true
       await axios({
         method: 'GET',
-        url: (`https://asprof-test.azurewebsites.net/api/webinars/${this.proId}`),
+        url: (`https://asprof-test.azurewebsites.net/${this.activeLang}/api/webinars/${this.proId}`),
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
         }
       })
         .then(respons => {
-          // console.log(respons.data)
           this.$store.dispatch('setSingleEvent', respons.data)
-          // console.log(typeof this.$store.getters.getSingleEvent.id)
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
       this.singleEvent = this.$store.getters.getSingleEvent
-      // this.singleEvent.start_date = (this.singleEvent.start_date).split('T')[0]
-      // this.singleEvent.end_date = (this.singleEvent.end_date).split('T')[0]
-      // this.singleEvent.testing_end_date = (this.singleEvent.testing_end_date).split('T')[0]
       this.previewFile.val = this.singleEvent.image
       this.previewImage.val = this.singleEvent.event_documents
       this.previewIneractive.val = this.singleEvent.partners_banner
@@ -786,31 +747,19 @@ export default {
         this.$emit('input', file[0])
       }
     },
-    handleInit (editor) {
-      // console.log('Initialized')
-    },
-
-    handleDestroy (editor) {
-      // console.log('Destroyed')
-    },
-
-    handleChange (value) {
-      // console.log('Changed')
-    },
-
-    handleInput (value) {
-      // console.log('Input')
-    },
-
-    handleError (err) {
-      // console.log('An error occurred')
-    }
   }
 }
 
 </script>
 
 <style scoped>
+
+.wrap_title {
+  display: flex;
+  align-items: center;
+  grid-gap: 20px;
+  margin-bottom: 20px;
+}
 
 legend span {
   color: red;

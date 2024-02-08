@@ -12,15 +12,15 @@
 
               <p class="dropzone_title">Опис події</p>
               <editor
-                api-key="no-api-key4"
-                @init="handleInit"
-                @destroy="handleDestroy"
-                @change="handleChange"
-                @input="handleInput"
-                @error="handleError"
-                :config="config"
-                name="qwerty"
-                ref="ref"
+                api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+                :init="{
+                  height: 500,
+                  plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount'
+                  ],
+                }"
                 v-model="singleEvent.description"
               />
               <fieldset>
@@ -88,16 +88,30 @@
 
               <p class="dropzone_title">Основний текст події</p>
               <editor
-                api-key="no-api-key5"
-                @init="handleInit"
-                @destroy="handleDestroy"
-                @change="handleChange"
-                @input="handleInput"
-                @error="handleError"
-                :config="config"
-                name="qwerty"
-                ref="ref"
+                api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+                :init="{
+                  height: 200,
+                  plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount'
+                  ],
+                }"
                 v-model="singleEvent.text"
+              />
+              <br>
+              <p class="dropzone_title">Рекламный текст події</p>
+              <editor
+                api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+                :init="{
+                  height: 200,
+                  plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount'
+                  ],
+                }"
+                v-model="singleEvent.ad_text"
               />
 
               <div class="radio_block">
@@ -242,6 +256,7 @@ export default {
         success_percent: '',
         max_tries: '',
         points: '',
+        ad_text: '',
         registered: false,
         certificate_title: '',
         language: 'ua',
@@ -337,10 +352,13 @@ export default {
       if (this.singleEvent.certificate_title !== '') {
         tmp.certificate_title = this.singleEvent.certificate_title
       }
+      if (this.singleEvent.ad_text !== '') {
+        tmp.ad_text = this.singleEvent.ad_text
+      }
       tmp.is_draft = this.singleEvent.is_draft
       tmp.private = this.singleEvent.private
       await axios({
-        url: 'https://asprof-test.azurewebsites.net/api/events/',
+        url: 'https://asprof-test.azurewebsites.net/uk/api/events/',
         data: tmp,
         method: 'POST',
         headers: {
@@ -353,7 +371,7 @@ export default {
         tmp.id = respons.data.id
         if (this.previewFile.click) {
           axios({
-            url: `https://asprof-test.azurewebsites.net/api/events/${tmp.id}/`,
+            url: `https://asprof-test.azurewebsites.net/uk/api/events/${tmp.id}/`,
             data: this.singleEvent.image,
             method: 'PATCH',
             headers: {
@@ -366,14 +384,13 @@ export default {
             // this.messages = res;
           })
             .catch(error => {
-              console.log(error)
               this.$message('Помилка')
             })
             .finally(() => (this.loading = false))
         }
         if (this.previewImage.click) {
           axios({
-            url: `https://asprof-test.azurewebsites.net/api/events/${tmp.id}/`,
+            url: `https://asprof-test.azurewebsites.net/uk/api/events/${tmp.id}/`,
             data: this.singleEvent.event_documents,
             method: 'PATCH',
             headers: {
@@ -386,14 +403,13 @@ export default {
             // this.messages = res;
           })
             .catch(error => {
-              console.log(error)
               this.$message('Помилка')
             })
             .finally(() => (this.loading = false))
         }
         if (this.previewIneractive.click) {
           axios({
-            url: `https://asprof-test.azurewebsites.net/api/events/${tmp.id}/`,
+            url: `https://asprof-test.azurewebsites.net/uk/api/events/${tmp.id}/`,
             data: this.singleEvent.partners_banner,
             method: 'PATCH',
             headers: {
@@ -406,7 +422,6 @@ export default {
             // this.messages = res;
           })
             .catch(error => {
-              console.log(error)
               this.$message('Помилка')
             })
             .finally(() => (this.loading = false))
@@ -415,7 +430,6 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
         .finally(() => (this.loading = false))

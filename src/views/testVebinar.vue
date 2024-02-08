@@ -104,8 +104,6 @@ export default {
   },
   methods: {
     async getSertificat(id) {
-      console.log(`https://asprof-test.azurewebsites.net/api/events/${id}/test/results/certificate/`)
-      console.log(this.$store.getters.getToken)
       this.$message('Очікуйте зараз іде підготовка сертифіката')
       await axios({
         url: `https://asprof-test.azurewebsites.net/api/events/${id}/test/results/certificate/`,
@@ -115,8 +113,6 @@ export default {
           Authorization: 'Bearer ' + this.$store.getters.getToken
         }
       }).then(respons => {
-        console.log(respons.data)
-        
         var a = document.createElement("a");
         a.style = "display: none";
         a.href = `data:application/pdf;base64,<?= ${respons.data} ?>`;
@@ -127,7 +123,6 @@ export default {
 
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
         .finally()
@@ -169,7 +164,6 @@ export default {
         this.resultInfo = respons.data
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
         .finally(() => (this.loading = false))
@@ -187,7 +181,6 @@ export default {
         this.infoTest = respons.data
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
         .finally(() => (this.loading = false))
@@ -214,7 +207,6 @@ export default {
           // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))
@@ -231,7 +223,6 @@ export default {
           this.resultInfo = respons.data[0]
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка')
           })
           .finally(() => (this.loading = false))

@@ -16,15 +16,15 @@
 
       <legend class="dropzone_title">Текст уроку <span title="обов'язкове">*</span></legend>
           <editor
-            api-key="no-api-key"
-            @init="handleInit"
-            @destroy="handleDestroy"
-            @change="handleChange"
-            @input="handleInput"
-            @error="handleError"
-            :config="config"
-            name="qwerty"
-            ref="ref"
+            api-key="iu3f89j47o5ydom6c8ci9rih8nrow5z0hkbbzcblkmjz7li8"
+            :init="{
+              height: 500,
+              plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+              ],
+            }"
             v-model="singleEvent.text"
           />
 
@@ -124,7 +124,7 @@ export default {
     async goToTest (prodId) {
       if (this.singleEvent.lesson_test === null) {
         await axios({
-          url: `https://asprof-test.azurewebsites.net/api/courses/${this.singleEvent.course}/lessons/${this.singleEvent.id}/test`,
+          url: `https://asprof-test.azurewebsites.net/uk/api/courses/${this.singleEvent.course}/lessons/${this.singleEvent.id}/test`,
           method: 'get',
           headers: {
             Authorization: 'Bearer ' + this.$store.getters.getToken
@@ -134,7 +134,6 @@ export default {
           // this.messages = res;
         })
           .catch(error => {
-            console.log(error)
             this.$message('Помилка створення тесту')
           })
           .finally(() => (this.loading = false))
@@ -157,7 +156,7 @@ export default {
 
       }
       await axios({
-        url: `https://asprof-test.azurewebsites.net/api/courses/${this.singleEvent.course}/lessons/${this.proId2}/`,
+        url: `https://asprof-test.azurewebsites.net/uk/api/courses/${this.singleEvent.course}/lessons/${this.proId2}/`,
         data: tmp,
         method: 'PATCH',
         headers: {
@@ -170,7 +169,6 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
           this.$message('Помилка')
         })
         .finally(() => (this.loading = false))
@@ -179,7 +177,7 @@ export default {
     async getNotify () {
       await axios({
         method: 'GET',
-        url: ('https://asprof-test.azurewebsites.net/api/me/'),
+        url: ('https://asprof-test.azurewebsites.net/uk/api/me/'),
         headers: {
           'Authorization': 'Bearer ' + this.$store.getters.getToken
         }
@@ -190,25 +188,21 @@ export default {
         // this.messages = res;
       })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
 
       this.loading = true
       await axios({
         method: 'GET',
-        url: (`https://asprof-test.azurewebsites.net/api/courses/${this.proId1}/lessons/${this.proId2}`),
+        url: (`https://asprof-test.azurewebsites.net/uk/api/courses/${this.proId1}/lessons/${this.proId2}`),
         headers: {
           Authorization: 'Bearer ' + this.$store.getters.getToken
         }
       })
         .then(respons => {
-          // console.log(respons.data)
           this.$store.dispatch('setSingleEvent', respons.data)
-          // console.log(typeof this.$store.getters.getSingleEvent.id)
         })
         .catch(error => {
-          console.log(error)
         })
         .finally(() => (this.loading = false))
       this.singleEvent = this.$store.getters.getSingleEvent
