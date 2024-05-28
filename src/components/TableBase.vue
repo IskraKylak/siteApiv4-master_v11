@@ -227,9 +227,9 @@ export default {
         this.getNotify()
         // this.messages = res;
       })
-        .catch(error => {
-          this.$message('Помилка')
-        })
+      .catch(error => {
+        this.$message('Помилка')
+      })
     },
     async getNotify () {
       this.loading = true

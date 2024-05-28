@@ -1,6 +1,6 @@
   <template>
   <div class="container">
-    <div class="wrap_form_reg">
+    <div v-if="!isRegister" class="wrap_form_reg">
       <h2 class="title_form">{{$t("register.title")}}</h2>
       <form @submit.prevent="onSubmit">
         <p>{{$t("register.subtitle1")}}</p>
@@ -218,6 +218,11 @@
         <button class="my_btn" >{{$t("register.btnName")}}</button>
       </form>
     </div>
+    <div v-else class="container reg-success">
+      <h2>
+        {{$t('register.success')}}
+      </h2>
+    </div>
   </div>
 </template>
 
@@ -232,6 +237,7 @@ export default {
   },
   data () {
     return {
+      isRegister: false,
       surname: '',
       name: '',
       middleName: '',
@@ -284,6 +290,7 @@ export default {
   },
   validations () {
     return {
+      isRegister: false,
       surname: {
         required,
         minLength: minLength(4),
@@ -360,8 +367,10 @@ export default {
         if(this.$i18n.locale != 'ua')
           user1.lang = this.$i18n.locale
         this.$store.dispatch('register', user1)
-          .then(() => this.$router.push("/lc-profile"))
-          .catch()
+        .then(() => {
+          this.isRegister = true;
+        })
+        .catch()
       }
     },
   },
@@ -370,6 +379,10 @@ export default {
 <style scoped src="@/assets/css/screen.css">
 </style>
 <style scoped lang="scss">
+.reg-success {
+  text-align: center;
+  padding: 50px 0;
+}
 
 .wrap_form_reg {
   width: 100%;

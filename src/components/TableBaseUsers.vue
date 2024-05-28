@@ -39,7 +39,7 @@
                         d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
                     </svg>
                   </div>
-                  <span class="icon_svg_table icon_svg_table_remove" title="Видалити">
+                  <span @click="removeEvent(td.id)" class="icon_svg_table icon_svg_table_remove" title="Видалити">
                     <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path
                       d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
                   </span>
@@ -156,7 +156,7 @@ export default {
         tel: '',
         email: '',
         action: ''
-      }
+      },
     }
   },
   computed: {
@@ -176,6 +176,22 @@ export default {
       this.$router.push({
         name: 'lc-updateuser',
         params: { Pid: prodId }
+      })
+    },
+    async removeEvent (prodId) {
+      await axios({
+        url: `https://asprof-test.azurewebsites.net/uk/api/users/${prodId}/`,
+        method: 'DELETE',
+        headers: {
+          Authorization: 'Bearer ' + this.$store.getters.getToken
+        }
+      }).then(respons => {
+        this.$message('Дані видалено!')
+        this.getNotify()
+        // this.messages = res;
+      })
+      .catch(error => {
+        this.$message('Помилка')
       })
     },
     async getNotify () {
@@ -227,7 +243,7 @@ export default {
     async search (page, value) {
       await axios({
         method: 'GET',
-        url: (`https://asprof-test.azurewebsites.net/uk/api/users/?page=${page}&last_name=${value}`),
+        url: (`https://asprof-test.azurewebsites.net/uk/api/users/?email=${value}`),
         headers: {
           'Authorization': 'Bearer ' + this.$store.getters.getToken
         }

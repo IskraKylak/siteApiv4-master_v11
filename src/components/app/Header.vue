@@ -16,8 +16,8 @@
         </router-link>
         <div class="box_callback">
           <div class="box_enter" v-if="tokkent === ''">
-            <router-link class="link" :to="`/${this.$i18n.locale}/in-login`">Вхід</router-link>
-            <router-link class="link" :to="`/${this.$i18n.locale}/register`">Реєстрація</router-link>
+            <router-link class="link" :to="`/${this.$i18n.locale}/in-login`">{{ $t('lc.Login') }}</router-link>
+            <router-link class="link" :to="`/${this.$i18n.locale}/register`">{{ $t('lc.Registration') }}</router-link>
           </div>
           <div class="box_enter" v-else>
             <router-link class="link" :to="`/lc-profile`">{{ myAcc.email }}</router-link>
@@ -60,8 +60,8 @@
         </div>
         <div class="top-menu nav" id="navigation">
           <div class="box_enter modal" v-if="tokkent === ''">
-            <router-link class="link" v-on:click="openMenu = !openMenu" :to="`/${this.$i18n.locale}/in-login`">Вхід</router-link>
-            <router-link class="link" v-on:click="openMenu = !openMenu" :to="`/${this.$i18n.locale}/register`">Реєстрація</router-link>
+            <router-link class="link" v-on:click="openMenu = !openMenu" :to="`/${this.$i18n.locale}/in-login`">{{ $t('lc.Login') }}</router-link>
+            <router-link class="link" v-on:click="openMenu = !openMenu" :to="`/${this.$i18n.locale}/register`">{{ $t('lc.Registration') }}</router-link>
           </div>
           <div class="box_enter modal" v-else>
             <router-link class="link" v-on:click="openMenu = !openMenu" :to="`/lc-profile`">{{ myAcc.email }}</router-link>
@@ -107,8 +107,9 @@
             <li>
               <a
                 class="link link-3"
-                href="#"
+                href="https://professional-event.com.ua/"
                 v-on:click="openMenu = !openMenu"
+                target="_blank"
               >
                 {{$t('menu.Magazines')}}
               </a>

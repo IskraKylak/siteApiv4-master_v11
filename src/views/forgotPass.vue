@@ -1,6 +1,6 @@
 <template>
   <div class="wrap_form">
-    <h2 class="title_form">{{$t("login.btnEnter")}}</h2>
+    <h2 class="title_form">{{ $t("password.title1") }}</h2>
     <form @submit.prevent="onSubmit">
       <div class="form-item" :class="{ errorInput: v$.email.$error }">
         <input
@@ -14,26 +14,7 @@
         </p>
         <p class="errorText" v-if="v$.email.email">Email is not correct</p>
       </div>
-      <div class="form-item" :class="{ errorInput: v$.password.$error }">
-        <input
-          type="password"
-          v-model="password"
-          :class="{ error: v$.password.$error }"
-          @change="v$.password.$touch()"
-          :placeholder="$t('login.placeholder.pass')"
-        />
-        <p class="errorText" v-if="v$.password.required.$invalid">
-          Filed is required
-        </p>
-        <p class="errorText" v-if="v$.password.minLength.$invalid">
-          Password mast have at least {{ v$.password.minLength.$params.min }} !
-        </p>
-        <div class="group-link">
-          <router-link class="link-pass" :to="`/${this.$i18n.locale}/forgot-password`">{{ $t('login.forgot_password') }}</router-link>
-        </div>
-      </div>
-      <button class="my_btn" @click="modalFirst = false">{{ $t('login.btnEnter') }}</button>
-      <router-link class="my_btn" :to="`/${this.$i18n.locale}/register`">{{ $t('login.btnReg') }}</router-link>
+      <button class="my_btn" @click="modalFirst = false">{{ $t('password.btn') }}</button>
     </form>
   </div>
 </template>
@@ -43,22 +24,19 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, minLength, email } from '@vuelidate/validators'
 import messages from '@/utils/messages'
 import 'materialize-css/dist/js/materialize.min'
+import axios from "axios";
+
 export default {
   setup () {
     return { v$: useVuelidate() }
   },
   data () {
     return {
-      password: '',
       email: '',
     }
   },
   validations () {
     return {
-      password: {
-        required,
-        minLength: minLength(4),
-      },
       email: {
         required,
         email,
@@ -82,19 +60,16 @@ export default {
     async onSubmit () {
       this.v$.$touch()
       if (!this.v$.$invalid) {
-        const user = {
-          email: this.email,
-          password: this.password,
-          lang: "uk"
-        }
-        if(this.$i18n.locale != 'ua')
-            user.lang = this.$i18n.locale
-        try {
-          await this.$store.dispatch('login', user)
-          this.$router.push("/lc-profile")
-        } catch (e) {
-          throw e
-        }
+        await axios({
+          method: 'POST',
+          url: (`https://asprof-test.azurewebsites.net/en/api/auth/forgot_password/`),
+          data: { email: this.email },
+        }).then(() => {
+          this.$message(this.$t('password.message_forgot_success'));
+        })
+        .catch(() => {
+          this.$message(this.$t('password.message_forgot_error'));
+        })
       }
     }
   },
@@ -143,7 +118,7 @@ export default {
       .group-link {
         margin-top: 10px;
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         grid-gap: 5px;
       }
 
@@ -176,16 +151,6 @@ h2.title_form {
   position: relative;
   text-align: center;
   width: max-content;
-}
-
-h2.title_form:after {
-  content: "";
-  position: absolute;
-  width: 120%;
-  left: -10%;
-  bottom: 0;
-  height: 2px;
-  background: #002678;
 }
 
 .my_btn {

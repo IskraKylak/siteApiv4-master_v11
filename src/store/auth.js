@@ -108,12 +108,4 @@ export default {
       return state.user
     }
   }
-  // async logout () {
-  //   await signOut(auth).then(() => {
-  //     // Sign-out successful.
-  //   }).catch((error) => {
-  //     // An error happened.
-  //   })
-  // },
 }
-

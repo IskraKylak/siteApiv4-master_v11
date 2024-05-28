@@ -27,6 +27,7 @@
                 'searchreplace visualblocks code fullscreen',
                 'insertdatetime media table paste code help wordcount'
               ],
+              paste_data_images: true,
             }"
             v-model="singleEvent.description"
           />
@@ -116,6 +117,7 @@
                 'searchreplace visualblocks code fullscreen',
                 'insertdatetime media table paste code help wordcount'
               ],
+              paste_data_images: true,
             }"
             v-model="singleEvent.text"
           />

@@ -19,7 +19,9 @@
     "lc": {
         "Personal": "Personal office",
         "Login": "Login",
-        "Registration": "Registration"
+        "Registration": "Registration",
+        "Exit": "Exit",
+        "My_profile": "My profile"
     },
     "Calendar": {
         "title": "calendar of scientific events",
@@ -90,6 +92,7 @@
         "btnName8": "Program"
     },
     "login": {
+        "forgot_password": "Forgot the password",
         "title": "AUTHORIZATION",
         "btnEnter": "Login",
         "btnReg": "Registration",
@@ -128,6 +131,18 @@
         }
     },
     "home": {
-        "galery": "Галерея"
-    }
+      "galery": "Галерея"
+    },
+    "password": {
+			"title1": "Restore Password",
+			"title2": "Change Password",
+			"old_password": "Old Password",
+			"confirm_password": "Confirm Password",
+			"new_password": "New Password",
+			"btn": "Send",
+			"message_change_success": "Password has been changed!",
+			"message_forgot_success": "Email with new password has been sent successfully",
+			"message_forgot_error": "User with specified email does not exist.",
+			"message_error": "Error"
+	}
 }

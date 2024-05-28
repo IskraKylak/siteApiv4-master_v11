@@ -4,6 +4,15 @@ import store from '@/store/index.js'
 
 const routes = [
   {
+    path: '/',
+    name: 'redirect',
+    meta: { layout: 'empty' },
+    beforeEnter(to, from, next) {
+      // Редирект на главную страницу
+      next('/ua/');
+    }
+  },
+  {
     path: '/:lang/',
     name: 'home',
     meta: { layout: 'empty' },
@@ -58,10 +67,31 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/inLogin.vue')
   },
   {
+    path: '/:lang/forgot-password',
+    name: 'forgotPass',
+    meta: { layout: 'empty' },
+    component: () => import(/* webpackChunkName: "about" */ '../views/forgotPass.vue')
+  },
+  {
+    path: '/:lang/change-password',
+    name: 'changePass',
+    meta: { layout: 'empty' },
+    component: () => import(/* webpackChunkName: "about" */ '../views/changePass.vue')
+  },
+  {
     path: '/:lang/register',
     name: 'register',
     meta: { layout: 'empty' },
     component: () => import(/* webpackChunkName: "about" */ '../views/register.vue')
+  },
+  {
+    path: '/:lang/api/users/confirmation/:cod/:token',
+    name: 'register-succes',
+    meta: { layout: 'empty' },
+    beforeEnter(to, from, next) {
+      // Редирект на главную страницу
+      next('/'+ to.params.lang + '/');
+    }
   },
   {
     path: '/another_domen_auth/:auth_token',
@@ -257,7 +287,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes
 })
 router.beforeEach((to, from, next) => {

@@ -19,10 +19,13 @@
           </i>
           <div id="dropdown" class="dropdown-content dropdown-menu">
             <router-link to="/lc-profile" class="black-text p_header">
-              <p>Мій профіль</p>
+              <p>{{ $t('lc.My_profile') }}</p>
+            </router-link>
+            <router-link :to="`/${this.$i18n.locale}/change-password`" class="black-text p_header">
+              <p>{{ $t('Змінити пароль') }}</p>
             </router-link>
             <div class="p_header" @click.prevent="logout">
-              <p>Вихід</p>
+              <p>{{ $t('lc.Exit') }}</p>
             </div>
           </div>
         </div>

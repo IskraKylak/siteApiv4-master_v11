@@ -15,6 +15,8 @@ import messagePlugin from './utils/message.plugin'
 import { laguages } from './i18n'
 import { defaultLocate } from './i18n'
 import {createI18n, useI18n} from 'vue-i18n'
+import VueGtag from "vue-gtag"
+
 
 const messages = Object.assign(laguages)
 const i18n = createI18n({
@@ -30,7 +32,9 @@ const token = localStorage.getItem('token')
 if (token) {
   app.config.globalProperties.$http.defaults.headers.common['Authorization'] = token
 }
-app.use(messagePlugin).use(store).use(router).use(VueAxios, axios).use(i18n);
+app.use(messagePlugin).use(store).use(router).use(VueAxios, axios).use(i18n).use(VueGtag, {
+  config: { id: "G-C9ZQPL8HCV" }
+});
 
 
 router.beforeEach((to, from, next) => {

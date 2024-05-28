@@ -20,6 +20,7 @@
                     'searchreplace visualblocks code fullscreen',
                     'insertdatetime media table paste code help wordcount'
                   ],
+                  paste_data_images: true,
                 }"
                 v-model="singleEvent.description"
               />
@@ -96,6 +97,7 @@
                     'searchreplace visualblocks code fullscreen',
                     'insertdatetime media table paste code help wordcount'
                   ],
+                  paste_data_images: true,
                 }"
                 v-model="singleEvent.text"
               />
@@ -339,7 +341,7 @@ export default {
       tmp.is_draft = this.singleEvent.is_draft
       tmp.private = this.singleEvent.private
       await axios({
-        url: 'https://asprof-test.azurewebsites.net/api/webinars/',
+        url: 'https://asprof-test.azurewebsites.net/uk/api/webinars/',
         data: tmp,
         method: 'POST',
         headers: {
@@ -352,7 +354,7 @@ export default {
         tmp.id = respons.data.id
         if (this.previewFile.click) {
           axios({
-            url: `https://asprof-test.azurewebsites.net/api/webinars/${tmp.id}/`,
+            url: `https://asprof-test.azurewebsites.net/uk/api/webinars/${tmp.id}/`,
             data: this.singleEvent.image,
             method: 'PATCH',
             headers: {
@@ -371,7 +373,7 @@ export default {
         }
         if (this.previewImage.click) {
           axios({
-            url: `https://asprof-test.azurewebsites.net/api/webinars/${tmp.id}/`,
+            url: `https://asprof-test.azurewebsites.net/uk/api/webinars/${tmp.id}/`,
             data: this.singleEvent.event_documents,
             method: 'PATCH',
             headers: {
@@ -390,7 +392,7 @@ export default {
         }
         if (this.previewIneractive.click) {
           axios({
-            url: `https://asprof-test.azurewebsites.net/api/webinars/${tmp.id}/`,
+            url: `https://asprof-test.azurewebsites.net/uk/api/webinars/${tmp.id}/`,
             data: this.singleEvent.partners_banner,
             method: 'PATCH',
             headers: {
